@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Harness phase outputs
+phases/**/phase*-output.json
+phases/**/step*-output.json
+scripts/__pycache__/
