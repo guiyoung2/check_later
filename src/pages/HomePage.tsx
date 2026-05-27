@@ -4,7 +4,6 @@ import { useItems } from '../hooks/useItems';
 import { FilterBar } from '../components/FilterBar';
 import { ItemCard } from '../components/ItemCard';
 import { ThemeToggleButton } from '../components/ThemeToggleButton';
-import { supabase } from '../lib/supabase';
 
 const EMPTY_STATE_POINTS = [
   '공유 메뉴나 + 버튼으로 URL, 영상, 메모를 저장하세요.',
@@ -23,13 +22,6 @@ export default function HomePage(): JSX.Element {
         <div className="flex items-center gap-1">
           <ThemeToggleButton />
           <Link
-            to="/new"
-            aria-label="새 항목 추가"
-            className="flex items-center justify-center w-9 h-9 rounded-[8px] bg-[var(--color-accent)] text-white text-xl font-medium"
-          >
-            +
-          </Link>
-          <Link
             to="/settings"
             aria-label="설정"
             className="flex items-center justify-center w-9 h-9 rounded-[8px] text-[var(--color-text-sub)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)] transition-colors"
@@ -39,19 +31,19 @@ export default function HomePage(): JSX.Element {
               <circle cx="12" cy="12" r="3"/>
             </svg>
           </Link>
-          <button
-            type="button"
-            onClick={() => void supabase.auth.signOut()}
-            className="h-9 px-2 rounded-[8px] text-xs font-medium text-[var(--color-text-sub)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)] transition-colors"
-          >
-            로그아웃
-          </button>
         </div>
       </header>
 
       <FilterBar />
 
       <main className="px-4 py-2">
+        <Link
+          to="/new"
+          className="mb-3 flex min-h-11 items-center justify-center rounded-[8px] bg-[var(--color-accent)] px-4 text-sm font-medium text-white"
+        >
+          새 항목 추가
+        </Link>
+
         {isLoading && (
           <p className="text-[var(--color-text-sub)] text-sm py-8 text-center">불러오는 중...</p>
         )}

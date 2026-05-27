@@ -29,7 +29,9 @@
     {
       "step": 3,
       "name": "home-actions",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-27T18:07:20+0900",
+      "summary": "홈 헤더 중복 로그아웃 제거, 새 항목 추가 액션을 목록 영역으로 이동"
     },
     {
       "step": 4,

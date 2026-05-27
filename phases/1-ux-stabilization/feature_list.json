@@ -46,17 +46,17 @@
       "id": "feat-6",
       "name": "새 항목 생성 액션 위치 조정",
       "description": "+ 새 항목 생성 액션을 최상단 메뉴 묶음이 아니라 필터/목록 영역의 맥락에 맞는 위치로 옮긴다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T18:09:08+0900",
+      "verified_by_step": 3
     },
     {
       "id": "feat-7",
       "name": "설정과 로그아웃 중복 제거",
       "description": "홈 헤더에서 설정 진입과 로그아웃 버튼이 나란히 중복 기능처럼 보이지 않도록 정리한다. 설정 페이지를 유지한다면 PWA 설치 등 고유 목적이 남아야 한다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T18:09:08+0900",
+      "verified_by_step": 3
     },
     {
       "id": "feat-8",
