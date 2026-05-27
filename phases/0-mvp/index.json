@@ -35,7 +35,7 @@
       "status": "completed",
       "summary": "5개 TanStack Query 훅(useItems/useItem/useCreateItem/usePatchItem/useDeleteItem) + Zustand filterStore 생성",
       "started_at": "2026-05-27T10:51:34+0900",
-      "completed_at": "2026-05-27T10:52:30+0900"
+      "completed_at": "2026-05-27T10:53:28+0900"
     },
     {
       "step": 5,
