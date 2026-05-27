@@ -1,7 +1,7 @@
 # 0-mvp 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T11:01:00+0900 — Step 7/11 시작 전
+2026-05-27T11:00:23+0900 — Step 7/11 완료
 
 ## 완료된 작업
 - Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성
@@ -10,10 +10,10 @@
 - Step 3: services-and-utils — CreateItemInput에 id?: string 추가, itemsService/storageService/og-parser/form-type-detect 생성
 - Step 4: query-hooks-and-store — 5개 TanStack Query 훅(useItems/useItem/useCreateItem/usePatchItem/useDeleteItem) + Zustand filterStore 생성
 - Step 5: home-page — FilterBar(type/status 칩) + ItemCard(텍스트 우선 리스트 행) + HomePage(로딩/빈상태/목록) 구현
-- Step 6: new-item-form — NewItemPage 구현: URL 파라미터 파싱, type 자동 판정 + 칩 UI, og:title 추출, 저장 후 / 이동
+- Step 6: new-item-form — NewItemPage 구현: URL 파라미터 파싱, type 자동 판정 + 사용자 변경 가능 칩 UI, og:title 추출, 저장(이미지 없음) 후 / 이동
 
 ## 현재 진행 중
-없음
+- Step 7: image-upload-flow
 
 ## 다음 할 일
 - Step 7: image-upload-flow
