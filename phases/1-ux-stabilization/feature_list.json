@@ -30,9 +30,9 @@
       "id": "feat-4",
       "name": "랜딩페이지 다크모드 토글",
       "description": "비인증 랜딩페이지 헤더에서 다크모드 토글을 사용할 수 있으며, 토글은 텍스트가 아닌 접근 가능한 아이콘 버튼으로 표시된다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T18:14:33+0900",
+      "verified_by_step": 4
     },
     {
       "id": "feat-5",
@@ -62,17 +62,17 @@
       "id": "feat-8",
       "name": "랜딩페이지 디자인 보강",
       "description": "LandingPage가 docs/UI_GUIDE.md의 Warm-Minimal Personal Tool 방향을 따르며, 빈약한 텍스트 나열이 아니라 저장과 재방문 흐름을 명확히 보여준다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T18:14:33+0900",
+      "verified_by_step": 4
     },
     {
       "id": "feat-9",
       "name": "모바일/PWA 동작 확인",
       "description": "모바일 폭에서 헤더, 랜딩, 홈 액션이 겹치지 않고 터치 타깃 44px 기준을 만족하며, PWA standalone 및 Web Share Target 관련 설정이 유지되는지 확인한다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T18:14:33+0900",
+      "verified_by_step": 4
     }
   ]
 }
