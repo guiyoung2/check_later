@@ -48,7 +48,10 @@
     {
       "step": 6,
       "name": "new-item-form",
-      "status": "pending"
+      "status": "completed",
+      "summary": "NewItemPage 구현: URL 파라미터 파싱, type 자동 판정 + 사용자 변경 가능 칩 UI, og:title 추출, 저장(이미지 없음) 후 / 이동",
+      "started_at": "2026-05-27T10:57:30+0900",
+      "completed_at": "2026-05-27T11:01:00+0900"
     },
     {
       "step": 7,

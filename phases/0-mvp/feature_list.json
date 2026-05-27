@@ -118,9 +118,9 @@
       "id": "feat-14b",
       "name": "type 자동 판정 후 사용자 변경 가능",
       "description": "/new 폼에서 detectType이 판정한 type을 사용자가 직접 변경할 수 있는 UI가 있고 변경 값이 저장에 반영됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T11:01:00+0900",
+      "verified_by_step": 6
     },
     {
       "id": "feat-15",
@@ -166,9 +166,9 @@
       "id": "feat-20",
       "name": "Web Share Target 파라미터 파싱",
       "description": "/new?title=&text=&url= 진입 시 title/memo/url 필드가 자동으로 채워짐",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T11:01:00+0900",
+      "verified_by_step": 6
     },
     {
       "id": "feat-20b",
@@ -182,9 +182,9 @@
       "id": "feat-21",
       "name": "새 항목 저장",
       "description": "/new 폼 제출 시 Supabase에 저장 후 / 로 이동",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T11:01:00+0900",
+      "verified_by_step": 6
     },
     {
       "id": "feat-22",
