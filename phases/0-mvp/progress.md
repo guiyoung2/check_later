@@ -1,15 +1,15 @@
 # 0-mvp 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T10:49:00+0900 — Step 2 (auth) 완료
+2026-05-27T10:49:33+0900 — Step 3/11 완료
 
 ## 완료된 작업
-- Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤
-- Step 1: supabase-schema — items 테이블 + RLS 4개 + item-images Storage 버킷 + RLS 3개
-- Step 2: auth — AuthProvider + useAuth(src/lib/auth.tsx), LoginPage(Google OAuth), ProtectedRoute, main.tsx AuthProvider 래핑
+- Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성
+- Step 1: supabase-schema — items 테이블 + RLS 4개 정책 + item-images Storage 버킷 + Storage RLS 3개 정책 수동 설정 완료
+- Step 2: auth — AuthProvider(src/lib/auth.tsx) + LoginPage(Google OAuth) + ProtectedRoute 구현, main.tsx에 AuthProvider 래핑 추가
 
 ## 현재 진행 중
-- 없음
+- Step 3: services-and-utils
 
 ## 다음 할 일
 - Step 3: services-and-utils
