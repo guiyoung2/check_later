@@ -1,0 +1,31 @@
+{
+  "project": "check-later",
+  "phase": "1-ux-stabilization",
+  "steps": [
+    {
+      "step": 0,
+      "name": "routing-deploy",
+      "status": "pending"
+    },
+    {
+      "step": 1,
+      "name": "theme-system",
+      "status": "pending"
+    },
+    {
+      "step": 2,
+      "name": "auth-navigation",
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "name": "home-actions",
+      "status": "pending"
+    },
+    {
+      "step": 4,
+      "name": "landing-mobile-polish",
+      "status": "pending"
+    }
+  ]
+}

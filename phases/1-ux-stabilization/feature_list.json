@@ -1,0 +1,78 @@
+{
+  "task": "1-ux-stabilization",
+  "created_at": "2026-05-27T17:38:53+0900",
+  "features": [
+    {
+      "id": "feat-1",
+      "name": "SPA 직접 진입 새로고침 대응",
+      "description": "배포 환경에서 /login, /new, /items/:id 직접 진입 또는 새로고침 시 404: NOT_FOUND가 발생하지 않도록 fallback 설정 또는 동등한 대응을 추가한다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-2",
+      "name": "로그아웃 후 랜딩 이동",
+      "description": "사용자가 로그아웃하면 /login이 아니라 / 랜딩페이지로 이동하고, 비인증 상태의 루트는 LandingPage를 보여준다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-3",
+      "name": "다크모드 상태 유지",
+      "description": "다크모드 선택이 localStorage.theme과 html.dark에 유지되어 로그아웃과 랜딩 전환 후에도 풀리지 않는다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-4",
+      "name": "랜딩페이지 다크모드 토글",
+      "description": "비인증 랜딩페이지 헤더에서 다크모드 토글을 사용할 수 있으며, 토글은 텍스트가 아닌 접근 가능한 아이콘 버튼으로 표시된다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-5",
+      "name": "홈 다크모드 아이콘 토글",
+      "description": "홈 헤더의 다크모드 토글이 '다크/라이트' 텍스트 버튼이 아니라 접근 가능한 아이콘 버튼으로 표시된다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-6",
+      "name": "새 항목 생성 액션 위치 조정",
+      "description": "+ 새 항목 생성 액션을 최상단 메뉴 묶음이 아니라 필터/목록 영역의 맥락에 맞는 위치로 옮긴다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-7",
+      "name": "설정과 로그아웃 중복 제거",
+      "description": "홈 헤더에서 설정 진입과 로그아웃 버튼이 나란히 중복 기능처럼 보이지 않도록 정리한다. 설정 페이지를 유지한다면 PWA 설치 등 고유 목적이 남아야 한다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-8",
+      "name": "랜딩페이지 디자인 보강",
+      "description": "LandingPage가 docs/UI_GUIDE.md의 Warm-Minimal Personal Tool 방향을 따르며, 빈약한 텍스트 나열이 아니라 저장과 재방문 흐름을 명확히 보여준다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-9",
+      "name": "모바일/PWA 동작 확인",
+      "description": "모바일 폭에서 헤더, 랜딩, 홈 액션이 겹치지 않고 터치 타깃 44px 기준을 만족하며, PWA standalone 및 Web Share Target 관련 설정이 유지되는지 확인한다.",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    }
+  ]
+}
