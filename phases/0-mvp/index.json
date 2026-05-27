@@ -24,7 +24,10 @@
     {
       "step": 3,
       "name": "services-and-utils",
-      "status": "pending"
+      "status": "completed",
+      "summary": "CreateItemInput에 id?: string 추가, itemsService/storageService/og-parser/form-type-detect 생성",
+      "started_at": "2026-05-27T10:49:33+0900",
+      "completed_at": "2026-05-27T10:51:00+0900"
     },
     {
       "step": 4,

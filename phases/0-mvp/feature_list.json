@@ -86,9 +86,9 @@
       "id": "feat-11",
       "name": "items CRUD 서비스",
       "description": "itemsService.list/getById/create/update/remove가 Supabase RLS를 통해 정상 통신",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:51:00+0900",
+      "verified_by_step": 3
     },
     {
       "id": "feat-12",
@@ -102,17 +102,17 @@
       "id": "feat-13",
       "name": "이미지 업로드 서비스",
       "description": "storageService.upload가 {userId}/{itemId}.{ext} 경로로 Supabase Storage에 업로드 후 경로 반환",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:51:00+0900",
+      "verified_by_step": 3
     },
     {
       "id": "feat-14",
       "name": "type 자동 판정 유틸",
       "description": "form-type-detect가 이미지→screenshot, YouTube URL→video, 일반 URL→article, 텍스트만→memo 순으로 판정",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:51:00+0900",
+      "verified_by_step": 3
     },
     {
       "id": "feat-14b",
@@ -190,9 +190,9 @@
       "id": "feat-22",
       "name": "og:title 추출 시도",
       "description": "URL 입력 시 og-parser가 og:title 추출 시도, CORS 실패 시 URL 자체를 title로 fallback",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:51:00+0900",
+      "verified_by_step": 3
     },
     {
       "id": "feat-23",

@@ -16,6 +16,7 @@ export interface Item {
 }
 
 export interface CreateItemInput {
+  id?: string;
   type: ItemType;
   status?: ItemStatus;
   title: string;
