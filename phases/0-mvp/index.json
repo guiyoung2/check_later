@@ -72,7 +72,10 @@
     {
       "step": 9,
       "name": "settings-page",
-      "status": "pending"
+      "status": "completed",
+      "summary": "SettingsPage 구현: 계정 정보 표시, 로그아웃(signOut), PWA 설치 프롬프트(beforeinstallprompt)",
+      "started_at": "2026-05-27T13:04:15+0900",
+      "completed_at": "2026-05-27T13:05:30+0900"
     },
     {
       "step": 10,

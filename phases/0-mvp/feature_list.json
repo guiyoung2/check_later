@@ -174,9 +174,9 @@
       "id": "feat-20b",
       "name": "앱 내부 이미지 업로드",
       "description": "/new에서 이미지 파일 선택 시 screenshot으로 type 판정되고, 저장 시 Storage 업로드 후 image_path가 items에 저장됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T11:02:00+0900",
+      "verified_by_step": 7
     },
     {
       "id": "feat-21",
@@ -230,17 +230,17 @@
       "id": "feat-27",
       "name": "로그아웃",
       "description": "/settings에서 로그아웃 버튼 클릭 → supabase.auth.signOut() → /login으로 이동",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T13:05:30+0900",
+      "verified_by_step": 9
     },
     {
       "id": "feat-28",
       "name": "PWA 설치 프롬프트",
       "description": "/settings에서 beforeinstallprompt 이벤트 캡처 후 설치 버튼 표시, 클릭 시 prompt() 호출",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T13:05:30+0900",
+      "verified_by_step": 9
     },
     {
       "id": "feat-29",
