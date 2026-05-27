@@ -56,7 +56,10 @@
     {
       "step": 7,
       "name": "image-upload-flow",
-      "status": "pending"
+      "status": "completed",
+      "summary": "NewItemPage에 이미지 업로드 추가: 파일 input, preAssignedId(crypto.randomUUID), storageService.upload, image_path 포함 저장",
+      "started_at": "2026-05-27T11:00:23+0900",
+      "completed_at": "2026-05-27T11:02:17+0900"
     },
     {
       "step": 8,
