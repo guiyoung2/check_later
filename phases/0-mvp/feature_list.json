@@ -94,9 +94,9 @@
       "id": "feat-12",
       "name": "TanStack Query 훅",
       "description": "useItems, useItem, useCreateItem, usePatchItem, useDeleteItem 훅이 정의되고 낙관적 업데이트 포함",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:52:30+0900",
+      "verified_by_step": 4
     },
     {
       "id": "feat-13",
@@ -126,9 +126,9 @@
       "id": "feat-15",
       "name": "Zustand 필터 스토어",
       "description": "filterStore에서 type(ItemType|null)과 status(ItemStatus|null) 상태 관리 및 setType/setStatus/reset 액션",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:52:30+0900",
+      "verified_by_step": 4
     },
     {
       "id": "feat-16",
