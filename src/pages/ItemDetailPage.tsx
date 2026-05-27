@@ -48,14 +48,6 @@ export default function ItemDetailPage(): JSX.Element {
   const [signedImageUrl, setSignedImageUrl] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // 항목 로드 시 편집 초기값 세팅
-  useEffect(() => {
-    if (item) {
-      setEditTitle(item.title);
-      setEditMemo(item.memo ?? '');
-    }
-  }, [item]);
-
   // 이미지 signed URL 로드 (실패 시 조용히 숨김)
   useEffect(() => {
     if (!item?.image_path) return;
@@ -64,17 +56,17 @@ export default function ItemDetailPage(): JSX.Element {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[--color-bg] flex items-center justify-center">
-        <p className="text-sm text-[--color-text-sub]">불러오는 중...</p>
+      <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center">
+        <p className="text-sm text-[var(--color-text-sub)]">불러오는 중...</p>
       </div>
     );
   }
 
   if (!item) {
     return (
-      <div className="min-h-screen bg-[--color-bg] flex flex-col items-center justify-center gap-3">
-        <p className="text-sm text-[--color-text-sub]">항목을 찾을 수 없어요</p>
-        <Link to="/" className="text-sm text-[--color-accent] underline">
+      <div className="min-h-screen bg-[var(--color-bg)] flex flex-col items-center justify-center gap-3">
+        <p className="text-sm text-[var(--color-text-sub)]">항목을 찾을 수 없어요</p>
+        <Link to="/" className="text-sm text-[var(--color-accent)] underline">
           목록으로 돌아가기
         </Link>
       </div>
@@ -104,20 +96,20 @@ export default function ItemDetailPage(): JSX.Element {
   }
 
   return (
-    <div className="min-h-screen bg-[--color-bg]">
-      <header className="sticky top-0 z-10 bg-[--color-bg] border-b border-[--color-border] flex items-center justify-between px-4 h-14">
+    <div className="min-h-screen bg-[var(--color-bg)]">
+      <header className="sticky top-0 z-10 bg-[var(--color-bg)] border-b border-[var(--color-border)] flex items-center justify-between px-4 h-14">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="뒤로가기"
-          className="flex items-center justify-center w-9 h-9 rounded-[8px] text-[--color-text-sub] hover:text-[--color-text-primary] hover:bg-[--color-surface]"
+          className="flex items-center justify-center w-9 h-9 rounded-[8px] text-[var(--color-text-sub)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)]"
         >
           ←
         </button>
         <button
           type="button"
           onClick={() => setShowDeleteConfirm(true)}
-          className="text-xs text-[--color-text-sub] hover:text-[--color-text-primary] px-2 py-1 rounded-[6px] hover:bg-[--color-surface]"
+          className="text-xs text-[var(--color-text-sub)] hover:text-[var(--color-text-primary)] px-2 py-1 rounded-[6px] hover:bg-[var(--color-surface)]"
         >
           삭제
         </button>
@@ -135,7 +127,7 @@ export default function ItemDetailPage(): JSX.Element {
 
         {/* 제목 인라인 편집 */}
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-medium text-[--color-text-sub]">제목</span>
+          <span className="text-xs font-medium text-[var(--color-text-sub)]">제목</span>
           {isEditingTitle ? (
             <div className="flex gap-2">
               <input
@@ -147,13 +139,13 @@ export default function ItemDetailPage(): JSX.Element {
                   if (e.key === 'Enter') handleSaveTitle();
                   if (e.key === 'Escape') setIsEditingTitle(false);
                 }}
-                className="flex-1 px-3 py-2 text-sm rounded-[6px] border border-[--color-border] bg-[--color-surface] text-[--color-text-primary] outline-none focus:border-[--color-accent]"
+                className="flex-1 px-3 py-2 text-sm rounded-[6px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-accent)]"
               />
               <button
                 type="button"
                 onClick={handleSaveTitle}
                 disabled={isPatching || !editTitle.trim()}
-                className="px-3 py-2 rounded-[8px] bg-[--color-accent] text-white text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-2 rounded-[8px] bg-[var(--color-accent)] text-white text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 저장
               </button>
@@ -161,8 +153,8 @@ export default function ItemDetailPage(): JSX.Element {
           ) : (
             <button
               type="button"
-              onClick={() => setIsEditingTitle(true)}
-              className="text-left text-base font-semibold text-[--color-text-primary] hover:text-[--color-accent] transition-colors"
+              onClick={() => { setEditTitle(item.title); setIsEditingTitle(true); }}
+              className="text-left text-base font-semibold text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors"
             >
               {item.title}
             </button>
@@ -170,8 +162,8 @@ export default function ItemDetailPage(): JSX.Element {
         </div>
 
         {/* 유형 · 날짜 */}
-        <div className="flex items-center gap-2 text-xs text-[--color-text-sub]">
-          <span className="px-2 py-0.5 rounded-[999px] bg-[--color-surface] border border-[--color-border]">
+        <div className="flex items-center gap-2 text-xs text-[var(--color-text-sub)]">
+          <span className="px-2 py-0.5 rounded-[999px] bg-[var(--color-surface)] border border-[var(--color-border)]">
             {TYPE_LABELS[item.type]}
           </span>
           <span aria-hidden>·</span>
@@ -180,7 +172,7 @@ export default function ItemDetailPage(): JSX.Element {
 
         {/* 상태 변경 (인라인 버튼 3개) */}
         <div className="flex flex-col gap-1.5">
-          <span className="text-xs font-medium text-[--color-text-sub]">상태</span>
+          <span className="text-xs font-medium text-[var(--color-text-sub)]">상태</span>
           <div className="flex gap-2">
             {STATUS_ORDER.map((s) => (
               <button
@@ -193,8 +185,8 @@ export default function ItemDetailPage(): JSX.Element {
                 }}
                 className={`px-3 py-1.5 rounded-[999px] text-sm font-medium transition-colors ${
                   item.status === s
-                    ? 'bg-[--color-accent-bg] text-[--color-accent]'
-                    : 'bg-[--color-surface] border border-[--color-border] text-[--color-text-sub]'
+                    ? 'bg-[var(--color-accent-bg)] text-[var(--color-accent)]'
+                    : 'bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-sub)]'
                 }`}
               >
                 {STATUS_LABELS[s]}
@@ -206,12 +198,12 @@ export default function ItemDetailPage(): JSX.Element {
         {/* URL */}
         {item.url && (
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-[--color-text-sub]">URL</span>
+            <span className="text-xs font-medium text-[var(--color-text-sub)]">URL</span>
             <a
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-[--color-accent] underline break-all"
+              className="text-sm text-[var(--color-accent)] underline break-all"
             >
               {item.url}
             </a>
@@ -220,7 +212,7 @@ export default function ItemDetailPage(): JSX.Element {
 
         {/* 메모 인라인 편집 */}
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-medium text-[--color-text-sub]">메모</span>
+          <span className="text-xs font-medium text-[var(--color-text-sub)]">메모</span>
           {isEditingMemo ? (
             <div className="flex flex-col gap-2">
               <textarea
@@ -228,21 +220,21 @@ export default function ItemDetailPage(): JSX.Element {
                 value={editMemo}
                 onChange={(e) => setEditMemo(e.target.value)}
                 rows={3}
-                className="px-3 py-2 text-sm rounded-[6px] border border-[--color-border] bg-[--color-surface] text-[--color-text-primary] outline-none focus:border-[--color-accent] resize-none"
+                className="px-3 py-2 text-sm rounded-[6px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-accent)] resize-none"
               />
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={handleSaveMemo}
                   disabled={isPatching}
-                  className="px-3 py-1.5 rounded-[8px] bg-[--color-accent] text-white text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-[8px] bg-[var(--color-accent)] text-white text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   저장
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsEditingMemo(false)}
-                  className="px-3 py-1.5 rounded-[8px] border border-[--color-border] text-sm text-[--color-text-sub]"
+                  className="px-3 py-1.5 rounded-[8px] border border-[var(--color-border)] text-sm text-[var(--color-text-sub)]"
                 >
                   취소
                 </button>
@@ -251,10 +243,10 @@ export default function ItemDetailPage(): JSX.Element {
           ) : (
             <button
               type="button"
-              onClick={() => setIsEditingMemo(true)}
-              className="text-left text-sm text-[--color-text-primary] min-h-[2.5rem] hover:text-[--color-accent] transition-colors"
+              onClick={() => { setEditMemo(item.memo ?? ''); setIsEditingMemo(true); }}
+              className="text-left text-sm text-[var(--color-text-primary)] min-h-[2.5rem] hover:text-[var(--color-accent)] transition-colors"
             >
-              {item.memo || <span className="text-[--color-text-sub] italic">메모 없음 (클릭하여 추가)</span>}
+              {item.memo || <span className="text-[var(--color-text-sub)] italic">메모 없음 (클릭하여 추가)</span>}
             </button>
           )}
         </div>
@@ -263,9 +255,9 @@ export default function ItemDetailPage(): JSX.Element {
       {/* 삭제 확인 인라인 */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/30 flex items-end justify-center z-50">
-          <div className="w-full max-w-lg bg-[--color-surface] rounded-t-[12px] p-5 flex flex-col gap-4">
-            <p className="text-sm text-[--color-text-primary] font-medium">이 항목을 삭제할까요?</p>
-            <p className="text-xs text-[--color-text-sub]">삭제하면 되돌릴 수 없어요.</p>
+          <div className="w-full max-w-lg bg-[var(--color-surface)] rounded-t-[12px] p-5 flex flex-col gap-4">
+            <p className="text-sm text-[var(--color-text-primary)] font-medium">이 항목을 삭제할까요?</p>
+            <p className="text-xs text-[var(--color-text-sub)]">삭제하면 되돌릴 수 없어요.</p>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -278,7 +270,7 @@ export default function ItemDetailPage(): JSX.Element {
               <button
                 type="button"
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-2.5 rounded-[8px] border border-[--color-border] text-sm text-[--color-text-sub]"
+                className="flex-1 py-2.5 rounded-[8px] border border-[var(--color-border)] text-sm text-[var(--color-text-sub)]"
               >
                 취소
               </button>

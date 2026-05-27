@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+﻿import type { JSX } from 'react';
 import { useFilterStore } from '../stores/filterStore';
 import type { ItemType, ItemStatus } from '../types';
 
@@ -36,22 +36,22 @@ export function FilterBar(): JSX.Element {
           onClick={() => setType(type === t ? null : t)}
           className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium transition-colors ${
             type === t
-              ? 'bg-[--color-accent-bg] text-[--color-accent]'
-              : 'bg-[--color-surface] border border-[--color-border] text-[--color-text-sub]'
+              ? 'bg-[var(--color-accent-bg)] text-[var(--color-accent)]'
+              : 'bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-sub)]'
           }`}
         >
           {TYPE_LABELS[t]}
         </button>
       ))}
-      <div className="w-px shrink-0 self-stretch bg-[--color-border] mx-1" />
+      <div className="w-px shrink-0 self-stretch bg-[var(--color-border)] mx-1" />
       {STATUS_VALUES.map((s) => (
         <button
           key={s}
           onClick={() => setStatus(status === s ? null : s)}
           className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium transition-colors ${
             status === s
-              ? 'bg-[--color-accent-bg] text-[--color-accent]'
-              : 'bg-[--color-surface] border border-[--color-border] text-[--color-text-sub]'
+              ? 'bg-[var(--color-accent-bg)] text-[var(--color-accent)]'
+              : 'bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-sub)]'
           }`}
         >
           {STATUS_LABELS[s]}

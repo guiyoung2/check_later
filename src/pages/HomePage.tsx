@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+﻿import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import { useItems } from '../hooks/useItems';
 import { FilterBar } from '../components/FilterBar';
@@ -9,13 +9,13 @@ export default function HomePage(): JSX.Element {
   const { data: items, isLoading, isError } = useItems();
 
   return (
-    <div className="min-h-screen bg-[--color-bg]">
-      <header className="sticky top-0 z-10 bg-[--color-bg] border-b border-[--color-border] flex items-center justify-between px-4 h-14">
-        <span className="font-semibold text-[--color-text-primary] text-base">Check Later</span>
+    <div className="min-h-screen bg-[var(--color-bg)]">
+      <header className="sticky top-0 z-10 bg-[var(--color-bg)] border-b border-[var(--color-border)] flex items-center justify-between px-4 h-14">
+        <span className="font-semibold text-[var(--color-text-primary)] text-base">Check Later</span>
         <Link
           to="/new"
           aria-label="새 항목 추가"
-          className="flex items-center justify-center w-11 h-11 rounded-[8px] bg-[--color-accent] text-white text-xl font-medium"
+          className="flex items-center justify-center w-11 h-11 rounded-[8px] bg-[var(--color-accent)] text-white text-xl font-medium"
         >
           +
         </Link>
@@ -25,21 +25,21 @@ export default function HomePage(): JSX.Element {
 
       <main className="px-4 py-2">
         {isLoading && (
-          <p className="text-[--color-text-sub] text-sm py-8 text-center">불러오는 중...</p>
+          <p className="text-[var(--color-text-sub)] text-sm py-8 text-center">불러오는 중...</p>
         )}
 
         {isError && (
-          <p className="text-[--color-text-sub] text-sm py-8 text-center">
+          <p className="text-[var(--color-text-sub)] text-sm py-8 text-center">
             잠시 후 다시 시도해주세요
           </p>
         )}
 
         {!isLoading && !isError && items?.length === 0 && (
           <div className="flex flex-col items-center gap-4 py-16 text-center">
-            <p className="text-[--color-text-sub] text-sm">아직 저장한 항목이 없어요</p>
+            <p className="text-[var(--color-text-sub)] text-sm">아직 저장한 항목이 없어요</p>
             <Link
               to="/new"
-              className="px-4 py-2 rounded-[8px] bg-[--color-accent] text-white text-sm font-medium"
+              className="px-4 py-2 rounded-[8px] bg-[var(--color-accent)] text-white text-sm font-medium"
             >
               첫 항목 저장하기
             </Link>

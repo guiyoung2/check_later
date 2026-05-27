@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+﻿import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import type { Item, ItemType, ItemStatus } from '../types';
 
@@ -35,13 +35,13 @@ export function ItemCard({ item }: ItemCardProps): JSX.Element {
   return (
     <Link
       to={`/items/${item.id}`}
-      className="flex items-center gap-3 rounded-[6px] bg-[--color-surface] px-4 py-3 shadow-[0_1px_3px_oklch(20%_0.01_80_/_0.08)] dark:shadow-none hover:bg-[--color-accent-bg] transition-colors"
+      className="flex items-center gap-3 rounded-[6px] bg-[var(--color-surface)] px-4 py-3 shadow-[0_1px_3px_oklch(20%_0.01_80_/_0.08)] dark:shadow-none hover:bg-[var(--color-accent-bg)] transition-colors"
     >
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-[--color-text-primary] truncate text-sm leading-snug">
+        <p className="font-semibold text-[var(--color-text-primary)] truncate text-sm leading-snug">
           {item.title}
         </p>
-        <div className="mt-1 flex items-center gap-1.5 text-xs text-[--color-text-sub]">
+        <div className="mt-1 flex items-center gap-1.5 text-xs text-[var(--color-text-sub)]">
           <span>{TYPE_LABELS[item.type]}</span>
           <span aria-hidden>·</span>
           <span>{STATUS_LABELS[item.status]}</span>
@@ -50,7 +50,7 @@ export function ItemCard({ item }: ItemCardProps): JSX.Element {
         </div>
       </div>
       {item.image_path && (
-        <div className="shrink-0 w-12 h-12 rounded-[4px] bg-[--color-border]" aria-hidden />
+        <div className="shrink-0 w-12 h-12 rounded-[4px] bg-[var(--color-border)]" aria-hidden />
       )}
     </Link>
   );

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+﻿import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
@@ -24,18 +24,18 @@ export default function LoginPage() {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[--color-bg] px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--color-bg)] px-6">
       <div className="w-full max-w-sm flex flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <h1 className="text-xl font-semibold text-[--color-text-primary]">Check Later</h1>
-          <p className="text-sm text-[--color-text-sub]">
+          <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">Check Later</h1>
+          <p className="text-sm text-[var(--color-text-sub)]">
             나중에 볼 것들을 빠르게 저장하고, 원할 때 찾아보세요.
           </p>
         </div>
 
         <button
           onClick={handleGoogleLogin}
-          className="flex items-center justify-center gap-3 w-full py-3 px-4 rounded-[8px] bg-[--color-accent] text-white text-sm font-medium cursor-pointer"
+          className="flex items-center justify-center gap-3 w-full py-3 px-4 rounded-[8px] bg-[var(--color-accent)] text-white text-sm font-medium cursor-pointer"
         >
           <GoogleIcon />
           Google로 계속하기
