@@ -1,7 +1,7 @@
 # 1-ux-stabilization 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T18:14:33+0900 — Step 4/5 완료
+2026-05-27T18:17:05+0900 — Step 5/5 완료
 
 ## 완료된 작업
 - Step 0: routing-deploy — SPA fallback 배포 설정 추가로 /login 등 직접 진입 404 대응
@@ -11,7 +11,7 @@
 - Step 4: landing-mobile-polish — 랜딩페이지 디자인 보강, 랜딩 테마 토글 추가, 모바일/PWA 설정 확인
 
 ## 현재 진행 중
-- 없음
+- 모든 step 완료
 
 ## 다음 할 일
 - `1-ux-stabilization`의 모든 feature가 통과 상태인지 확인한 뒤 다음 phase를 결정
