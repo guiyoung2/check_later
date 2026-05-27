@@ -1,7 +1,7 @@
 # 0-mvp 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T13:07:00+0900 — Step 10/11 완료 (모든 step 완료)
+2026-05-27T13:08:18+0900 — Step 11/11 완료
 
 ## 완료된 작업
 - Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성
@@ -17,7 +17,7 @@
 - Step 10: pwa-config — VitePWA 설정 확장: manifest(Web Share Target GET /new), Workbox networkFirst(Supabase), PWA 아이콘 placeholder 추가
 
 ## 현재 진행 중
-- 없음 (모든 step 완료)
+- 모든 step 완료
 
 ## 다음 할 일
 - 0-mvp 전체 완료. 배포 또는 다음 phase 준비
