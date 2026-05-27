@@ -1,7 +1,7 @@
 # 0-mvp 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T13:03:00+0900 — Step 9/11 완료
+2026-05-27T13:04:15+0900 — Step 9/11 완료
 
 ## 완료된 작업
 - Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성
@@ -12,7 +12,7 @@
 - Step 5: home-page — FilterBar(type/status 칩) + ItemCard(텍스트 우선 리스트 행) + HomePage(로딩/빈상태/목록) 구현
 - Step 6: new-item-form — NewItemPage 구현: URL 파라미터 파싱, type 자동 판정 + 사용자 변경 가능 칩 UI, og:title 추출, 저장(이미지 없음) 후 / 이동
 - Step 7: image-upload-flow — NewItemPage에 이미지 업로드 추가: 파일 input, preAssignedId(crypto.randomUUID), storageService.upload, image_path 포함 저장
-- Step 8: item-detail-page — ItemDetailPage 구현: 항목 표시, 인라인 편집(title/memo), 상태 변경(인라인 버튼 3개), 이미지 signed URL 표시, 바텀시트 삭제 확인
+- Step 8: item-detail-page — ItemDetailPage 구현: 항목 표시, 인라인 편집(title/memo), 상태 변경(인라인 버튼), 이미지 signed URL, 삭제
 
 ## 현재 진행 중
 - Step 9: settings-page
