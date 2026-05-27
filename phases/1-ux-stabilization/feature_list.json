@@ -14,9 +14,9 @@
       "id": "feat-2",
       "name": "로그아웃 후 랜딩 이동",
       "description": "사용자가 로그아웃하면 /login이 아니라 / 랜딩페이지로 이동하고, 비인증 상태의 루트는 LandingPage를 보여준다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T18:06:08+0900",
+      "verified_by_step": 2
     },
     {
       "id": "feat-3",

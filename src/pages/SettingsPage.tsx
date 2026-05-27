@@ -35,9 +35,10 @@ export default function SettingsPage(): JSX.Element {
     setDeferredPrompt(null);
   }
 
-  // 로그아웃: signOut 후 AuthProvider가 자동으로 /login으로 리다이렉트
+  // 로그아웃 후 루트에서 비인증 랜딩을 보여준다
   async function handleSignOut() {
     await supabase.auth.signOut();
+    navigate('/', { replace: true });
   }
 
   return (
