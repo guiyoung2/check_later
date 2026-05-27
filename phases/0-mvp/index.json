@@ -64,10 +64,10 @@
     {
       "step": 8,
       "name": "item-detail-page",
-      "status": "error",
-      "started_at": "2026-05-27T11:02:18+0900",
-      "error_message": "[3회 시도 후 실패] Step did not update status",
-      "failed_at": "2026-05-27T11:02:25+0900"
+      "status": "completed",
+      "summary": "ItemDetailPage 구현: 항목 표시, 인라인 편집(title/memo), 상태 변경(인라인 버튼), 이미지 signed URL, 삭제",
+      "started_at": "2026-05-27T13:01:34+0900",
+      "completed_at": "2026-05-27T13:03:00+0900"
     },
     {
       "step": 9,

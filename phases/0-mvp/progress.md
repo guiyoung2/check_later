@@ -1,7 +1,7 @@
 # 0-mvp 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T11:02:17+0900 — Step 8/11 완료
+2026-05-27T13:03:00+0900 — Step 9/11 완료
 
 ## 완료된 작업
 - Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성
@@ -12,16 +12,16 @@
 - Step 5: home-page — FilterBar(type/status 칩) + ItemCard(텍스트 우선 리스트 행) + HomePage(로딩/빈상태/목록) 구현
 - Step 6: new-item-form — NewItemPage 구현: URL 파라미터 파싱, type 자동 판정 + 사용자 변경 가능 칩 UI, og:title 추출, 저장(이미지 없음) 후 / 이동
 - Step 7: image-upload-flow — NewItemPage에 이미지 업로드 추가: 파일 input, preAssignedId(crypto.randomUUID), storageService.upload, image_path 포함 저장
+- Step 8: item-detail-page — ItemDetailPage 구현: 항목 표시, 인라인 편집(title/memo), 상태 변경(인라인 버튼 3개), 이미지 signed URL 표시, 바텀시트 삭제 확인
 
 ## 현재 진행 중
-- Step 8: item-detail-page
+- Step 9: settings-page
 
 ## 다음 할 일
-- Step 7: image-upload-flow
-  - NewItemPage에 이미지 파일 input 추가
-  - 이미지 선택 시 type 자동 판정 → screenshot
-  - 저장 시 storageService.upload() 호출 후 image_path를 CreateItemInput에 포함
-  - ItemCard의 image_path 썸네일 signed URL 연동
+- Step 9: settings-page
+  - SettingsPage 구현: 로그아웃 버튼(supabase.auth.signOut → /login 이동)
+  - PWA 설치 프롬프트 UI: beforeinstallprompt 이벤트 캡처, 설치 버튼 표시
+  - 설치 완료/불가 상태 처리
 
 ## 주의사항
 - Supabase Auth Google OAuth는 Supabase Dashboard에서 Google provider 활성화 + OAuth 클라이언트 ID/Secret 설정이 필요하다 (수동 설정, 코드로 불가).
@@ -33,4 +33,6 @@
 - usePatchItem 낙관적 업데이트: cancelQueries → setQueryData → 실패 시 롤백 패턴. onSettled에서 ['items'] + ['items', id] 모두 invalidate한다.
 - CSS 변수는 `bg-[--color-accent]` 형식(LoginPage 패턴)으로 사용한다. Tailwind v4 @theme 등록 후에도 일관성을 위해 이 패턴 유지.
 - `JSX.Element` 반환 타입 명시 시 `import type { JSX } from 'react'` 필요. 전역 JSX 네임스페이스가 없기 때문.
-- ItemCard의 image_path 썸네일은 step 7(이미지 업로드 플로우)에서 signed URL로 교체 예정. 현재는 회색 placeholder만 표시.
+- ItemDetailPage의 삭제 확인은 window.confirm 대신 바텀시트(fixed inset-0 오버레이) 방식으로 구현. UI_GUIDE 안티패턴(상태 변경 전용 모달 금지) 준수.
+- storageService.getSignedUrl() 실패 시 페이지 전체 에러가 아닌 이미지만 조용히 숨기는 방식 채택.
+- feat-20b(이미지 업로드 feature)는 step 7에서 구현됐으나 feature_list.json 업데이트가 누락된 상태로 남아있음. step 9에서 확인 필요.

@@ -198,33 +198,33 @@
       "id": "feat-23",
       "name": "항목 상세 페이지",
       "description": "/items/:id에서 항목 전체 정보(title, memo, url, type, status, 이미지) 표시",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T13:03:00+0900",
+      "verified_by_step": 8
     },
     {
       "id": "feat-24",
       "name": "상태 변경",
       "description": "상세 페이지에서 pending→reviewed→archived 상태 변경, 모달 없이 인라인 버튼으로",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T13:03:00+0900",
+      "verified_by_step": 8
     },
     {
       "id": "feat-25",
       "name": "항목 편집",
       "description": "상세 페이지에서 title/memo 수정 후 저장 가능",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T13:03:00+0900",
+      "verified_by_step": 8
     },
     {
       "id": "feat-26",
       "name": "항목 삭제",
       "description": "상세 페이지에서 삭제 확인 후 Supabase에서 제거되고 /로 이동",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T13:03:00+0900",
+      "verified_by_step": 8
     },
     {
       "id": "feat-27",
