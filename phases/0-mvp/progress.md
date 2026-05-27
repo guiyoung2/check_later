@@ -1,7 +1,7 @@
 # 0-mvp 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T13:06:06+0900 — Step 10/11 완료
+2026-05-27T13:07:00+0900 — Step 10/11 완료 (모든 step 완료)
 
 ## 완료된 작업
 - Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성
@@ -14,15 +14,15 @@
 - Step 7: image-upload-flow — NewItemPage에 이미지 업로드 추가: 파일 input, preAssignedId(crypto.randomUUID), storageService.upload, image_path 포함 저장
 - Step 8: item-detail-page — ItemDetailPage 구현: 항목 표시, 인라인 편집(title/memo), 상태 변경(인라인 버튼), 이미지 signed URL, 삭제
 - Step 9: settings-page — SettingsPage 구현: 계정 정보 표시, 로그아웃(signOut), PWA 설치 프롬프트(beforeinstallprompt)
+- Step 10: pwa-config — VitePWA 설정 확장: manifest(Web Share Target GET /new), Workbox networkFirst(Supabase), PWA 아이콘 placeholder 추가
 
 ## 현재 진행 중
-- Step 10: pwa-config
+- 없음 (모든 step 완료)
 
 ## 다음 할 일
-- Step 10: pwa-config
-  - vite-plugin-pwa manifest에 Web Share Target 설정 (method:GET, action:/new, params:{title,text,url})
-  - Service Worker autoUpdate 설정
-  - registerSW.js 등록 확인
+- 0-mvp 전체 완료. 배포 또는 다음 phase 준비
+- 실제 PWA 아이콘 제작: public/pwa-192x192.png, public/pwa-512x512.png를 실제 디자인으로 교체 (현재 1×1 placeholder)
+- apple-touch-icon.png 추가 시 includeAssets에 이미 포함되어 있으므로 public/에 파일만 추가하면 됨
 
 ## 주의사항
 - Supabase Auth Google OAuth는 Supabase Dashboard에서 Google provider 활성화 + OAuth 클라이언트 ID/Secret 설정이 필요하다 (수동 설정, 코드로 불가).
@@ -36,4 +36,5 @@
 - `JSX.Element` 반환 타입 명시 시 `import type { JSX } from 'react'` 필요. 전역 JSX 네임스페이스가 없기 때문.
 - ItemDetailPage의 삭제 확인은 window.confirm 대신 바텀시트(fixed inset-0 오버레이) 방식으로 구현. UI_GUIDE 안티패턴(상태 변경 전용 모달 금지) 준수.
 - storageService.getSignedUrl() 실패 시 페이지 전체 에러가 아닌 이미지만 조용히 숨기는 방식 채택.
-- feat-20b(이미지 업로드 feature)는 step 7에서 구현됐으나 feature_list.json 업데이트가 누락된 상태로 남아있음. step 9에서 확인 필요.
+- PWA share_target method는 반드시 GET. POST 방식은 Service Worker 처리 복잡도가 크게 늘어남.
+- public/pwa-192x192.png, pwa-512x512.png는 현재 1×1 placeholder. 홈화면 설치 시 실제 아이콘으로 교체 필요.

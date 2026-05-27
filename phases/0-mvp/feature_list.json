@@ -246,17 +246,17 @@
       "id": "feat-29",
       "name": "PWA manifest Web Share Target 설정",
       "description": "manifest의 share_target이 method:GET, action:/new, params:{title,text,url}로 설정됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T13:07:00+0900",
+      "verified_by_step": 10
     },
     {
       "id": "feat-30",
       "name": "Service Worker 등록",
       "description": "앱 로드 시 SW가 등록되고 autoUpdate로 동작, 오프라인 fallback 응답",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T13:07:00+0900",
+      "verified_by_step": 10
     }
   ]
 }
