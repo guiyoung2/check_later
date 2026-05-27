@@ -40,7 +40,10 @@
     {
       "step": 5,
       "name": "home-page",
-      "status": "pending"
+      "status": "completed",
+      "summary": "FilterBar(type/status 칩) + ItemCard(텍스트 우선 리스트 행) + HomePage(로딩/빈상태/목록) 구현",
+      "started_at": "2026-05-27T10:53:29+0900",
+      "completed_at": "2026-05-27T10:57:00+0900"
     },
     {
       "step": 6,

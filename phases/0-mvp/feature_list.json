@@ -134,33 +134,33 @@
       "id": "feat-16",
       "name": "메인 목록 렌더링",
       "description": "/ 경로에서 items를 텍스트 우선 리스트 행으로 표시, created_at desc 정렬",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:57:00+0900",
+      "verified_by_step": 5
     },
     {
       "id": "feat-17",
       "name": "type 필터 동작",
       "description": "type 칩(video/article/screenshot/memo) 선택/해제 시 목록 필터링됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:57:00+0900",
+      "verified_by_step": 5
     },
     {
       "id": "feat-18",
       "name": "status 필터 동작",
       "description": "status 칩(pending/reviewed/archived) 선택/해제 시 목록 필터링됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:57:00+0900",
+      "verified_by_step": 5
     },
     {
       "id": "feat-19",
       "name": "빈 상태 표시",
       "description": "항목이 없을 때 'Nothing here yet' 없이 따뜻한 안내 문구 + /new 행동 유도 버튼 표시",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T10:57:00+0900",
+      "verified_by_step": 5
     },
     {
       "id": "feat-20",
