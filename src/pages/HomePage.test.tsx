@@ -34,6 +34,7 @@ describe('HomePage', () => {
     );
 
     const darkToggle = screen.getByRole('button', { name: '다크 모드로 전환' });
+    expect(darkToggle).not.toHaveTextContent(/다크|라이트/);
     expect(screen.getByRole('link', { name: '설정' })).toHaveAttribute('href', '/settings');
     expect(screen.getByRole('button', { name: '로그아웃' })).toBeInTheDocument();
     expect(screen.getByText('나중에 볼 것들을 빠르게 저장하고, 원할 때 바로 찾아보세요.')).toBeInTheDocument();
@@ -43,7 +44,7 @@ describe('HomePage', () => {
 
     expect(document.documentElement).toHaveClass('dark');
     expect(localStorage.getItem('theme')).toBe('dark');
-    expect(screen.getByRole('button', { name: '라이트 모드로 전환' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '라이트 모드로 전환' })).not.toHaveTextContent(/다크|라이트/);
 
     await user.click(screen.getByRole('button', { name: '로그아웃' }));
 

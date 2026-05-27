@@ -1,8 +1,9 @@
-﻿import { useState, type JSX } from 'react';
+﻿import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import { useItems } from '../hooks/useItems';
 import { FilterBar } from '../components/FilterBar';
 import { ItemCard } from '../components/ItemCard';
+import { ThemeToggleButton } from '../components/ThemeToggleButton';
 import { supabase } from '../lib/supabase';
 
 const EMPTY_STATE_POINTS = [
@@ -14,28 +15,13 @@ const EMPTY_STATE_POINTS = [
 // 메인 목록 페이지
 export default function HomePage(): JSX.Element {
   const { data: items, isLoading, isError } = useItems();
-  const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'));
-
-  function toggleDark() {
-    const next = !dark;
-    document.documentElement.classList.toggle('dark', next);
-    localStorage.setItem('theme', next ? 'dark' : 'light');
-    setDark(next);
-  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
       <header className="sticky top-0 z-10 bg-[var(--color-bg)] border-b border-[var(--color-border)] flex items-center justify-between px-4 h-14">
         <span className="font-semibold text-[var(--color-text-primary)] text-base">Check Later</span>
         <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={toggleDark}
-            aria-label={dark ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            className="flex items-center justify-center h-9 px-2 rounded-[8px] text-xs font-medium text-[var(--color-text-sub)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)] transition-colors"
-          >
-            {dark ? '라이트' : '다크'}
-          </button>
+          <ThemeToggleButton />
           <Link
             to="/new"
             aria-label="새 항목 추가"

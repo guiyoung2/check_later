@@ -13,7 +13,10 @@
     {
       "step": 1,
       "name": "theme-system",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-27T17:58:40+0900",
+      "completed_at": "2026-05-27T18:02:36+0900",
+      "summary": "useTheme와 ThemeToggleButton 추가, 홈 다크모드 토글을 아이콘 버튼으로 변경"
     },
     {
       "step": 2,

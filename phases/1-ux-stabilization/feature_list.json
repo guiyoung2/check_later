@@ -22,9 +22,9 @@
       "id": "feat-3",
       "name": "다크모드 상태 유지",
       "description": "다크모드 선택이 localStorage.theme과 html.dark에 유지되어 로그아웃과 랜딩 전환 후에도 풀리지 않는다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T18:02:36+0900",
+      "verified_by_step": 1
     },
     {
       "id": "feat-4",
@@ -38,9 +38,9 @@
       "id": "feat-5",
       "name": "홈 다크모드 아이콘 토글",
       "description": "홈 헤더의 다크모드 토글이 '다크/라이트' 텍스트 버튼이 아니라 접근 가능한 아이콘 버튼으로 표시된다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T18:02:36+0900",
+      "verified_by_step": 1
     },
     {
       "id": "feat-6",
