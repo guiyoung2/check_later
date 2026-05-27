@@ -3,13 +3,17 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 
-// 시스템 다크모드 감지 → <html class="dark"> 토글
+// 시스템 감지 + localStorage override 우선
 const _mql = window.matchMedia('(prefers-color-scheme: dark)');
-const _applyDark = (e: MediaQueryList | MediaQueryListEvent) => {
-  document.documentElement.classList.toggle('dark', e.matches);
-};
-_applyDark(_mql);
-_mql.addEventListener('change', _applyDark);
+const _stored = localStorage.getItem('theme');
+const _isDark = _stored !== null ? _stored === 'dark' : _mql.matches;
+document.documentElement.classList.toggle('dark', _isDark);
+_mql.addEventListener('change', (e) => {
+  // 수동 설정이 없을 때만 시스템 따라감
+  if (localStorage.getItem('theme') === null) {
+    document.documentElement.classList.toggle('dark', e.matches);
+  }
+});
 
 import App from './App.tsx'
 import { AuthProvider } from './lib/auth'
