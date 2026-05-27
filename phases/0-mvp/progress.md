@@ -1,14 +1,14 @@
 # 0-mvp 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T10:52:30+0900 — Step 5/11 시작 준비
+2026-05-27T10:53:29+0900 — Step 5/11 완료
 
 ## 완료된 작업
 - Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성
 - Step 1: supabase-schema — items 테이블 + RLS 4개 정책 + item-images Storage 버킷 + Storage RLS 3개 정책 수동 설정 완료
 - Step 2: auth — AuthProvider(src/lib/auth.tsx) + LoginPage(Google OAuth) + ProtectedRoute 구현, main.tsx에 AuthProvider 래핑 추가
 - Step 3: services-and-utils — CreateItemInput에 id?: string 추가, itemsService/storageService/og-parser/form-type-detect 생성
-- Step 4: query-hooks-and-store — useItems/useItem/useCreateItem/usePatchItem/useDeleteItem 훅 + filterStore 생성
+- Step 4: query-hooks-and-store — 5개 TanStack Query 훅(useItems/useItem/useCreateItem/usePatchItem/useDeleteItem) + Zustand filterStore 생성
 
 ## 현재 진행 중
 - Step 5: home-page
