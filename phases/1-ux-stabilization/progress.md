@@ -1,7 +1,7 @@
 # 1-ux-stabilization 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T18:09:08+0900 — Step 3/5 완료
+2026-05-27T18:10:24+0900 — Step 4/5 완료
 
 ## 완료된 작업
 - Step 0: routing-deploy — SPA fallback 배포 설정 추가로 /login 등 직접 진입 404 대응
@@ -10,7 +10,7 @@
 - Step 3: home-actions — 홈 헤더 중복 로그아웃 제거, 새 항목 추가 액션을 목록 영역으로 이동
 
 ## 현재 진행 중
-- 없음
+- Step 4: landing-mobile-polish
 
 ## 다음 할 일
 - Step 4: landing-mobile-polish 진행
