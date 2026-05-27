@@ -6,9 +6,9 @@
       "id": "feat-1",
       "name": "SPA 직접 진입 새로고침 대응",
       "description": "배포 환경에서 /login, /new, /items/:id 직접 진입 또는 새로고침 시 404: NOT_FOUND가 발생하지 않도록 fallback 설정 또는 동등한 대응을 추가한다.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-27T17:56:32+0900",
+      "verified_by_step": 0
     },
     {
       "id": "feat-2",
