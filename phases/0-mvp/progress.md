@@ -1,7 +1,7 @@
 # 0-mvp 진행 현황
 
 ## 마지막 업데이트
-2026-05-27T10:51:00+0900 — Step 4/11 완료
+2026-05-27T10:51:34+0900 — Step 4/11 완료
 
 ## 완료된 작업
 - Step 0: foundation — react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성
