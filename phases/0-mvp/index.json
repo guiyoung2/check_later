@@ -18,7 +18,8 @@
       "step": 2,
       "name": "auth",
       "status": "completed",
-      "summary": "AuthProvider(src/lib/auth.tsx) + LoginPage(Google OAuth) + ProtectedRoute 구현, main.tsx에 AuthProvider 래핑 추가"
+      "summary": "AuthProvider(src/lib/auth.tsx) + LoginPage(Google OAuth) + ProtectedRoute 구현, main.tsx에 AuthProvider 래핑 추가",
+      "completed_at": "2026-05-27T10:49:33+0900"
     },
     {
       "step": 3,
