@@ -67,7 +67,7 @@
       "status": "completed",
       "summary": "ItemDetailPage 구현: 항목 표시, 인라인 편집(title/memo), 상태 변경(인라인 버튼), 이미지 signed URL, 삭제",
       "started_at": "2026-05-27T13:01:34+0900",
-      "completed_at": "2026-05-27T13:03:00+0900"
+      "completed_at": "2026-05-27T13:04:15+0900"
     },
     {
       "step": 9,
