@@ -23,7 +23,7 @@
       "name": "auth-navigation",
       "status": "completed",
       "started_at": "2026-05-27T18:04:16+0900",
-      "completed_at": "2026-05-27T18:06:08+0900",
+      "completed_at": "2026-05-27T18:07:20+0900",
       "summary": "SettingsPage 로그아웃 후 / 랜딩 이동 적용, ProtectedRoute 정책 유지"
     },
     {
