@@ -1,0 +1,17 @@
+{
+  "project": "check-later",
+  "phase": "0-mvp",
+  "steps": [
+    { "step": 0, "name": "foundation", "status": "completed", "summary": "react-router-dom·@supabase/supabase-js 설치, 타입 정의, 라우팅 스켈레톤, 페이지 스텁 생성" },
+    { "step": 1, "name": "supabase-schema", "status": "completed", "summary": "items 테이블 + RLS 4개 정책 + item-images Storage 버킷 + Storage RLS 3개 정책 수동 설정 완료" },
+    { "step": 2, "name": "auth", "status": "pending" },
+    { "step": 3, "name": "services-and-utils", "status": "pending" },
+    { "step": 4, "name": "query-hooks-and-store", "status": "pending" },
+    { "step": 5, "name": "home-page", "status": "pending" },
+    { "step": 6, "name": "new-item-form", "status": "pending" },
+    { "step": 7, "name": "image-upload-flow", "status": "pending" },
+    { "step": 8, "name": "item-detail-page", "status": "pending" },
+    { "step": 9, "name": "settings-page", "status": "pending" },
+    { "step": 10, "name": "pwa-config", "status": "pending" }
+  ]
+}

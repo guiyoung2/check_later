@@ -1,0 +1,262 @@
+{
+  "task": "0-mvp",
+  "created_at": "2026-05-27T00:00:00Z",
+  "features": [
+    {
+      "id": "feat-1",
+      "name": "react-router-dom + @supabase/supabase-js 설치",
+      "description": "두 패키지가 package.json dependencies에 존재하고 import 가능",
+      "passes": true,
+      "verified_at": "2026-05-27T00:00:00Z",
+      "verified_by_step": 0
+    },
+    {
+      "id": "feat-2",
+      "name": "Supabase 클라이언트 설정",
+      "description": "src/lib/supabase.ts가 VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY 환경변수로 초기화됨",
+      "passes": true,
+      "verified_at": "2026-05-27T00:00:00Z",
+      "verified_by_step": 0
+    },
+    {
+      "id": "feat-3",
+      "name": "TypeScript 핵심 타입 정의",
+      "description": "ItemType, ItemStatus, Item, CreateItemInput, UpdateItemInput, ItemFilters가 src/types/index.ts에 정의됨",
+      "passes": true,
+      "verified_at": "2026-05-27T00:00:00Z",
+      "verified_by_step": 0
+    },
+    {
+      "id": "feat-4",
+      "name": "React Router 라우팅 구조",
+      "description": "/login, /, /new, /items/:id, /settings 5개 라우트가 App.tsx에 정의됨",
+      "passes": true,
+      "verified_at": "2026-05-27T00:00:00Z",
+      "verified_by_step": 0
+    },
+    {
+      "id": "feat-5",
+      "name": "Supabase items 테이블 + enum 타입 생성",
+      "description": "item_type·item_status enum과 items 테이블이 ARCHITECTURE.md 스키마대로 생성됨",
+      "passes": true,
+      "verified_at": "2026-05-27T00:00:00Z",
+      "verified_by_step": 1
+    },
+    {
+      "id": "feat-6",
+      "name": "RLS 정책 적용 (items)",
+      "description": "user_id = auth.uid() 조건으로 SELECT/INSERT/UPDATE/DELETE 4개 정책이 활성화됨",
+      "passes": true,
+      "verified_at": "2026-05-27T00:00:00Z",
+      "verified_by_step": 1
+    },
+    {
+      "id": "feat-7",
+      "name": "item-images Storage 버킷 + RLS",
+      "description": "private 버킷 생성 및 (storage.foldername(name))[1] = auth.uid()::text 기반 INSERT/SELECT/DELETE 정책 적용",
+      "passes": true,
+      "verified_at": "2026-05-27T00:00:00Z",
+      "verified_by_step": 1
+    },
+    {
+      "id": "feat-8",
+      "name": "Google OAuth 로그인",
+      "description": "로그인 페이지에서 Google 버튼 클릭 → OAuth 플로우 완료 → / 리다이렉트",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-9",
+      "name": "인증 세션 유지",
+      "description": "새로고침 후에도 로그인 상태 유지 (onAuthStateChange 기반)",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-10",
+      "name": "ProtectedRoute 동작",
+      "description": "비인증 사용자가 보호 라우트 접근 시 /login으로 리다이렉트, 로그인 성공 후 /로 이동",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-11",
+      "name": "items CRUD 서비스",
+      "description": "itemsService.list/getById/create/update/remove가 Supabase RLS를 통해 정상 통신",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-12",
+      "name": "TanStack Query 훅",
+      "description": "useItems, useItem, useCreateItem, usePatchItem, useDeleteItem 훅이 정의되고 낙관적 업데이트 포함",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-13",
+      "name": "이미지 업로드 서비스",
+      "description": "storageService.upload가 {userId}/{itemId}.{ext} 경로로 Supabase Storage에 업로드 후 경로 반환",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-14",
+      "name": "type 자동 판정 유틸",
+      "description": "form-type-detect가 이미지→screenshot, YouTube URL→video, 일반 URL→article, 텍스트만→memo 순으로 판정",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-14b",
+      "name": "type 자동 판정 후 사용자 변경 가능",
+      "description": "/new 폼에서 detectType이 판정한 type을 사용자가 직접 변경할 수 있는 UI가 있고 변경 값이 저장에 반영됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-15",
+      "name": "Zustand 필터 스토어",
+      "description": "filterStore에서 type(ItemType|null)과 status(ItemStatus|null) 상태 관리 및 setType/setStatus/reset 액션",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-16",
+      "name": "메인 목록 렌더링",
+      "description": "/ 경로에서 items를 텍스트 우선 리스트 행으로 표시, created_at desc 정렬",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-17",
+      "name": "type 필터 동작",
+      "description": "type 칩(video/article/screenshot/memo) 선택/해제 시 목록 필터링됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-18",
+      "name": "status 필터 동작",
+      "description": "status 칩(pending/reviewed/archived) 선택/해제 시 목록 필터링됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-19",
+      "name": "빈 상태 표시",
+      "description": "항목이 없을 때 'Nothing here yet' 없이 따뜻한 안내 문구 + /new 행동 유도 버튼 표시",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-20",
+      "name": "Web Share Target 파라미터 파싱",
+      "description": "/new?title=&text=&url= 진입 시 title/memo/url 필드가 자동으로 채워짐",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-20b",
+      "name": "앱 내부 이미지 업로드",
+      "description": "/new에서 이미지 파일 선택 시 screenshot으로 type 판정되고, 저장 시 Storage 업로드 후 image_path가 items에 저장됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-21",
+      "name": "새 항목 저장",
+      "description": "/new 폼 제출 시 Supabase에 저장 후 / 로 이동",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-22",
+      "name": "og:title 추출 시도",
+      "description": "URL 입력 시 og-parser가 og:title 추출 시도, CORS 실패 시 URL 자체를 title로 fallback",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-23",
+      "name": "항목 상세 페이지",
+      "description": "/items/:id에서 항목 전체 정보(title, memo, url, type, status, 이미지) 표시",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-24",
+      "name": "상태 변경",
+      "description": "상세 페이지에서 pending→reviewed→archived 상태 변경, 모달 없이 인라인 버튼으로",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-25",
+      "name": "항목 편집",
+      "description": "상세 페이지에서 title/memo 수정 후 저장 가능",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-26",
+      "name": "항목 삭제",
+      "description": "상세 페이지에서 삭제 확인 후 Supabase에서 제거되고 /로 이동",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-27",
+      "name": "로그아웃",
+      "description": "/settings에서 로그아웃 버튼 클릭 → supabase.auth.signOut() → /login으로 이동",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-28",
+      "name": "PWA 설치 프롬프트",
+      "description": "/settings에서 beforeinstallprompt 이벤트 캡처 후 설치 버튼 표시, 클릭 시 prompt() 호출",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-29",
+      "name": "PWA manifest Web Share Target 설정",
+      "description": "manifest의 share_target이 method:GET, action:/new, params:{title,text,url}로 설정됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-30",
+      "name": "Service Worker 등록",
+      "description": "앱 로드 시 SW가 등록되고 autoUpdate로 동작, 오프라인 fallback 응답",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    }
+  ]
+}
