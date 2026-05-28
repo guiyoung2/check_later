@@ -166,17 +166,17 @@
       "id": "feat-21",
       "name": "NewItemPage renewal",
       "description": "Renew new item page with quick option chips, autofocus textarea, and URL detection.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T23:40:00+0900",
+      "verified_by_step": 7
     },
     {
       "id": "feat-22",
       "name": "Web Share Target entry",
       "description": "Preserve title, text, and url parameter handling with confirmation screen.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T23:40:00+0900",
+      "verified_by_step": 7
     },
     {
       "id": "feat-23",

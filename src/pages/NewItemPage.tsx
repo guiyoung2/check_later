@@ -1,5 +1,5 @@
 import type { ChangeEvent, FormEvent, JSX } from 'react';
-import { useState, useEffect, useMemo } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { detectType } from '../lib/form-type-detect';
 import { fetchOgTitle } from '../lib/og-parser';
@@ -7,6 +7,11 @@ import { useCreateItem } from '../hooks/useCreateItem';
 import { storageService } from '../services/storageService';
 import { itemAttachmentsService } from '../services/itemAttachmentsService';
 import { useAuth } from '../lib/auth';
+import { useToast } from '../components/ui/Toast';
+import { Button } from '../components/ui/Button';
+import { Chip } from '../components/ui/Chip';
+import { Textarea } from '../components/ui/Textarea';
+import { Divider } from '../components/ui/Divider';
 import type { ItemType } from '../types';
 
 const TYPE_LABELS: Record<ItemType, string> = {
@@ -16,92 +21,202 @@ const TYPE_LABELS: Record<ItemType, string> = {
   memo: '메모',
 };
 
-const TYPE_LIST: ItemType[] = ['video', 'article', 'screenshot', 'memo'];
+// URL 패턴 감지 (http/https로 시작)
+function isUrl(text: string): boolean {
+  return /^https?:\/\//i.test(text.trim());
+}
 
-// 새 항목 추가 확인 폼
+function LinkIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" stroke="currentColor" fill="none" strokeWidth="1.8">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function TextIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" stroke="currentColor" fill="none" strokeWidth="1.8">
+      <path d="M4 7h16M4 12h10M4 17h7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ImageIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" stroke="currentColor" fill="none" strokeWidth="1.8">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <path d="m21 15-5-5L5 21" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CloseIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" stroke="currentColor" fill="none" strokeWidth="1.8">
+      <path d="M6 6l12 12M6 18L18 6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SpinnerIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 animate-spin" fill="none">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
+
+function ArrowIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" stroke="currentColor" fill="none" strokeWidth="2">
+      <path d="M5 12h14m-7-7 7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+interface QuickOptionButtonProps {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  icon: JSX.Element;
+}
+
+// quick option 선택 버튼 (링크/텍스트/이미지)
+function QuickOptionButton({ label, active, onClick, icon }: QuickOptionButtonProps): JSX.Element {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={[
+        'flex min-h-[44px] items-center justify-center gap-1.5 rounded-sm border px-3 py-2',
+        'text-[13px] font-medium leading-[1.2] tracking-[0.02em]',
+        'transition-[background-color,border-color,color] duration-200 ease-out',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-strong',
+        active
+          ? 'border-border-strong bg-surface-sub text-text-primary'
+          : 'border-border bg-surface text-text-muted hover:bg-surface-sub hover:text-text-secondary',
+      ].join(' ')}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}
+
+// 새 항목 추가 페이지 — 모바일: BottomSheet 스타일, 데스크탑: 중앙 카드
 export default function NewItemPage(): JSX.Element {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { mutateAsync: createItem, isPending } = useCreateItem();
   const { user } = useAuth();
+  const { showToast } = useToast();
 
-  const initUrl = searchParams.get('url') ?? '';
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [preAssignedId] = useState(() => crypto.randomUUID());
 
-  const [title, setTitle] = useState(searchParams.get('title') ?? '');
-  const [urls, setUrls] = useState<string[]>([initUrl]);
-  const [memo, setMemo] = useState(searchParams.get('text') ?? '');
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  // Web Share Target 파라미터 → textarea 초기값
+  const sharedUrl = searchParams.get('url') ?? '';
+  const sharedText = searchParams.get('text') ?? '';
+  const sharedTitle = searchParams.get('title') ?? '';
+  const initContent = sharedUrl || sharedText || sharedTitle;
+
+  const [content, setContent] = useState(initContent);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const [typeOverride, setTypeOverride] = useState<ItemType | null>(null);
-  const primaryUrl = urls.find((item) => item.trim() !== '') ?? '';
-  const detectedType = useMemo(
-    () => detectType({ hasImage: imageFiles.length > 0, url: primaryUrl }),
-    [primaryUrl, imageFiles.length]
-  );
-  const type = typeOverride ?? detectedType;
+  const [ogTitle, setOgTitle] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // URL 변경 시 og:title 자동 채움
+  // content + imageFile 기반 type 자동 판정
+  const detectedType = useMemo(
+    () => detectType({ hasImage: imageFile !== null, url: isUrl(content) ? content.trim() : undefined }),
+    [content, imageFile],
+  );
+  const type = typeOverride ?? detectedType;
+
+  // URL 감지 시 OG title 비동기 조회
   useEffect(() => {
-    const trimmed = primaryUrl.trim();
-    if (!trimmed) return;
-
-    fetchOgTitle(trimmed).then((ogTitle) => {
-      if (ogTitle) {
-        setTitle((prev) => (prev.trim() === '' ? ogTitle : prev));
-      } else {
-        setTitle((prev) => (prev.trim() === '' ? trimmed : prev));
-      }
+    const trimmed = content.trim();
+    if (!isUrl(trimmed)) {
+      setOgTitle('');
+      return;
+    }
+    fetchOgTitle(trimmed).then((title) => {
+      setOgTitle(title ?? '');
     });
-  }, [primaryUrl]);
+  }, [content]);
 
-  // 이미지 파일 선택/해제 핸들러
+  // 이미지 파일 선택
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []);
-    setImageFiles((prev) => [...prev, ...files]);
-    e.target.value = '';
+    const file = e.target.files?.[0] ?? null;
+    if (!file) return;
+    if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+    setImageFile(file);
+    setImagePreviewUrl(URL.createObjectURL(file));
+    setTypeOverride('screenshot');
     setError(null);
+    e.target.value = '';
   }
 
-  function updateUrl(index: number, value: string) {
-    setUrls((prev) => prev.map((url, currentIndex) => (currentIndex === index ? value : url)));
+  // 이미지 제거
+  function removeImage() {
+    if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+    setImageFile(null);
+    setImagePreviewUrl(null);
+    setTypeOverride(null);
   }
 
-  function addUrl() {
-    setUrls((prev) => [...prev, '']);
+  // quick option chip 클릭 처리
+  function handleQuickOption(option: 'link' | 'text' | 'image') {
+    if (option === 'image') {
+      fileInputRef.current?.click();
+      return;
+    }
+    removeImage();
+    setTypeOverride(option === 'text' ? 'memo' : null);
   }
 
+  // 저장 핸들러
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!user) return;
     setError(null);
 
     try {
-      const trimmedUrls = urls.map((item) => item.trim()).filter(Boolean);
-      let imagePaths: string[] = [];
+      const trimmedContent = content.trim();
+      const url = isUrl(trimmedContent) ? trimmedContent : undefined;
+      const textMemo = !url && trimmedContent ? trimmedContent : undefined;
+      const title = url
+        ? ogTitle || url
+        : textMemo
+          ? textMemo.slice(0, 300)
+          : imageFile
+            ? imageFile.name
+            : '';
 
-      if (imageFiles.length > 0) {
+      let imagePath: string | undefined;
+      if (imageFile) {
         setIsUploading(true);
-        imagePaths = [];
-        for (const file of imageFiles) {
-          imagePaths.push(await storageService.upload(file, user.id, preAssignedId));
-        }
+        imagePath = await storageService.upload(imageFile, user.id, preAssignedId);
         setIsUploading(false);
       }
 
-      await createItem({
-        id: preAssignedId,
-        title: title.trim(),
-        type,
-        url: trimmedUrls[0],
-        memo: memo.trim() || undefined,
-        image_path: imagePaths[0],
-      });
-      await itemAttachmentsService.createMany(preAssignedId, user.id, [
-        ...trimmedUrls.map((value) => ({ kind: 'url' as const, value })),
-        ...imagePaths.map((value) => ({ kind: 'image' as const, value })),
-      ]);
+      await createItem({ id: preAssignedId, title, type, url, memo: textMemo, image_path: imagePath });
+
+      const attachments: Array<{ kind: 'url' | 'image'; value: string }> = [];
+      if (url) attachments.push({ kind: 'url', value: url });
+      if (imagePath) attachments.push({ kind: 'image', value: imagePath });
+      if (attachments.length > 0) {
+        await itemAttachmentsService.createMany(preAssignedId, user.id, attachments);
+      }
+
+      showToast({ message: '저장됨', duration: 4000 });
       navigate('/');
     } catch (err) {
       setIsUploading(false);
@@ -110,134 +225,119 @@ export default function NewItemPage(): JSX.Element {
   }
 
   const isLoading = isUploading || isPending;
+  const canSave = !!(content.trim() || imageFile);
 
   return (
-    <div className="min-h-screen bg-bg">
-      <header className="sticky top-0 z-10 bg-bg border-b border-border flex items-center gap-3 px-4 h-14">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          aria-label="뒤로가기"
-          className="flex items-center justify-center w-9 h-9 rounded-[8px] text-text-sub hover:text-text-primary hover:bg-surface"
-        >
-          ←
-        </button>
-        <span className="font-semibold text-text-primary text-base">새 항목</span>
-      </header>
+    <div className="flex min-h-screen flex-col justify-end bg-bg md:items-start md:justify-center md:px-4 md:pt-16">
+      {/* 카드: 모바일=하단 시트, 데스크탑=중앙 카드 */}
+      <div className="w-full rounded-t-lg border-t border-border bg-surface px-4 pb-8 pt-3 md:mx-auto md:max-w-[480px] md:rounded-lg md:border md:px-8 md:py-8">
+        {/* 드래그 핸들 (모바일 전용) */}
+        <div aria-hidden="true" className="mx-auto mb-4 h-1 w-8 rounded-full bg-border md:hidden" />
 
-      <form onSubmit={handleSubmit} className="px-4 py-4 flex flex-col gap-5 max-w-lg mx-auto">
-        {/* URL 입력 */}
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-medium text-text-sub">URL</span>
-          {urls.map((url, index) => (
-            <input
-              key={index}
-              aria-label={`URL ${index + 1}`}
-              type="text"
-              value={url}
-              onChange={(e) => updateUrl(index, e.target.value)}
-              placeholder="https://"
-              className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary placeholder:text-text-sub outline-none focus:border-accent"
-            />
-          ))}
+        {/* 헤더 */}
+        <div className="mb-5 flex items-center justify-between">
+          <span className="text-[18px] font-medium leading-[1.5] text-text-primary">새로운 기록</span>
           <button
             type="button"
-            onClick={addUrl}
-            className="self-start min-h-9 rounded-[8px] border border-border px-3 text-sm font-medium text-text-sub hover:bg-surface"
+            aria-label="닫기"
+            onClick={() => navigate(-1)}
+            className="flex h-11 w-11 items-center justify-center rounded-sm text-text-muted transition-[background-color,color] duration-200 ease-out hover:bg-surface-sub hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-strong"
           >
-            URL 추가
+            <CloseIcon />
           </button>
         </div>
 
-        {/* 제목 입력 */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="title" className="text-xs font-medium text-text-sub">
-            제목 <span className="text-accent">*</span>
-          </label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="제목을 입력하세요"
-            className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary placeholder:text-text-sub outline-none focus:border-accent"
-          />
-        </div>
-
-        {/* 유형 칩 선택 */}
-        <div className="flex flex-col gap-1.5">
-          <span className="text-xs font-medium text-text-sub">유형</span>
-          <div className="flex gap-2 flex-wrap">
-            {TYPE_LIST.map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setTypeOverride(t)}
-                className={`px-3 py-1.5 rounded-[999px] text-sm font-medium transition-colors ${
-                  type === t
-                    ? 'bg-accent-bg text-accent'
-                    : 'bg-surface border border-border text-text-sub'
-                }`}
-              >
-                {TYPE_LABELS[t]}
-              </button>
-            ))}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* 3-grid quick option chip */}
+          <div className="grid grid-cols-3 gap-2">
+            <QuickOptionButton
+              label="링크"
+              active={type === 'article' || type === 'video'}
+              onClick={() => handleQuickOption('link')}
+              icon={<LinkIcon />}
+            />
+            <QuickOptionButton
+              label="텍스트"
+              active={type === 'memo'}
+              onClick={() => handleQuickOption('text')}
+              icon={<TextIcon />}
+            />
+            <QuickOptionButton
+              label="이미지"
+              active={type === 'screenshot'}
+              onClick={() => handleQuickOption('image')}
+              icon={<ImageIcon />}
+            />
           </div>
-        </div>
 
-        {/* 이미지 업로드 */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="image" className="text-xs font-medium text-text-sub">
-            이미지
-          </label>
+          {/* 숨겨진 파일 인풋 */}
           <input
-            id="image"
+            ref={fileInputRef}
             type="file"
             accept="image/*"
-            multiple
+            className="sr-only"
+            aria-label="이미지 파일 선택"
             onChange={handleFileChange}
-            className="text-sm text-text-sub file:mr-3 file:py-1.5 file:px-3 file:rounded-[6px] file:border file:border-border file:bg-surface file:text-text-sub file:text-sm file:cursor-pointer"
           />
-          {imageFiles.length > 0 && (
-            <div className="flex flex-col gap-1">
-              {imageFiles.map((file, index) => (
-                <span key={`${file.name}-${file.size}-${index}`} className="text-xs text-text-sub">
-                  {file.name}
-                </span>
-              ))}
+
+          {/* 에러 메시지 (textarea 위) */}
+          {error && (
+            <p role="alert" className="text-[13px] font-medium leading-[1.2] tracking-[0.02em] text-error">
+              {error}
+            </p>
+          )}
+
+          {/* 메인 textarea */}
+          <Textarea
+            placeholder="무엇을 기록할까요?"
+            value={content}
+            onChange={(e) => {
+              setContent(e.target.value);
+              setError(null);
+            }}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+            aria-label="내용"
+          />
+
+          {/* 이미지 미리보기 */}
+          {imagePreviewUrl && imageFile && (
+            <div className="relative">
+              <img
+                src={imagePreviewUrl}
+                alt="선택된 이미지 미리보기"
+                className="max-h-[200px] w-full rounded-md border border-border object-cover"
+              />
+              <button
+                type="button"
+                aria-label="이미지 제거"
+                onClick={removeImage}
+                className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-text-primary/70 text-bg transition-[background-color] duration-200 ease-out hover:bg-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-strong"
+              >
+                <CloseIcon />
+              </button>
             </div>
           )}
-        </div>
 
-        {/* 메모 입력 */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="memo" className="text-xs font-medium text-text-sub">
-            메모
-          </label>
-          <textarea
-            id="memo"
-            value={memo}
-            onChange={(e) => setMemo(e.target.value)}
-            placeholder="짧은 메모 (선택)"
-            rows={3}
-            className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary placeholder:text-text-sub outline-none focus:border-accent resize-none"
-          />
-        </div>
+          <Divider />
 
-        {/* 에러 메시지 */}
-        {error && (
-          <p className="text-sm text-red-500">{error}</p>
-        )}
-
-        {/* 저장 버튼 */}
-        <button
-          type="submit"
-          disabled={isLoading || !title.trim()}
-          className="w-full py-2.5 rounded-[8px] bg-accent text-white text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isUploading ? '업로드 중...' : isPending ? '저장 중...' : '저장'}
-        </button>
-      </form>
+          {/* 액션 바: type chip(읽기 전용) + 저장 버튼 */}
+          <div className="flex items-center justify-between">
+            <Chip variant="type">{TYPE_LABELS[type]}</Chip>
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              loading={isLoading}
+              disabled={isLoading || !canSave}
+              leftIcon={isLoading ? <SpinnerIcon /> : undefined}
+              rightIcon={isLoading ? undefined : <ArrowIcon />}
+            >
+              저장
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
