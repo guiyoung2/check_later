@@ -10,6 +10,7 @@ import argparse
 import contextlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import threading
@@ -47,9 +48,10 @@ class CodexAdapter:
     """
 
     def run(self, prompt: str, cwd: str, timeout: int = 1800) -> tuple[int, str, str]:
+        codex_bin = shutil.which("codex") or "codex"
         result = subprocess.run(
-            ["codex", "exec", prompt],
-            cwd=cwd, capture_output=True, text=True, timeout=timeout,
+            [codex_bin, "exec", "--dangerously-bypass-approvals-and-sandbox", "-"],
+            input=prompt, cwd=cwd, capture_output=True, text=True, encoding="utf-8", timeout=timeout,
         )
         return result.returncode, result.stdout, result.stderr
 
@@ -299,7 +301,7 @@ class StepExecutor:
             "stdout": stdout, "stderr": stderr,
         }
         out_path = self._phase_dir / f"step{step_num}-output.json"
-        with open(out_path, "w") as f:
+        with open(out_path, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
 
         return output

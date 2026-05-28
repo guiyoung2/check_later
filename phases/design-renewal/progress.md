@@ -1,13 +1,13 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-28T16:57:20+09:00 — Step 0/19 완료
+2026-05-28T16:58:19+0900 — Step 1/19 완료
 
 ## 완료된 작업
-- Step 0: docs/UI_GUIDE.md 전면 재작성 완료. 순수 모노톤 컬러 토큰, 타이포그래피, spacing/radius, shadow/motion, 안티패턴 가드레일을 문서화함.
+- Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
 
 ## 현재 진행 중
-- 없음
+- Step 1: design-tokens
 
 ## 다음 할 일
 - Step 1: design-tokens. docs/UI_GUIDE.md의 모노톤 토큰을 기준으로 `src/index.css`와 Tailwind v4 `@theme inline` 토큰을 갱신한다.
