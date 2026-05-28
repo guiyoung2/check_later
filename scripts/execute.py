@@ -43,13 +43,12 @@ class ClaudeAdapter:
 class CodexAdapter:
     """codex CLI로 step을 실행하는 어댑터.
 
-    NOTE: Codex CLI 비대화형 플래그는 설치 후 `codex --help`로 확인하여 수정할 것.
-    현재 `-q` 플래그를 사용하나 버전에 따라 다를 수 있다.
+    NOTE: Codex CLI 비대화형 실행은 현재 `codex exec`를 사용한다.
     """
 
     def run(self, prompt: str, cwd: str, timeout: int = 1800) -> tuple[int, str, str]:
         result = subprocess.run(
-            ["codex", "-q", prompt],
+            ["codex", "exec", prompt],
             cwd=cwd, capture_output=True, text=True, timeout=timeout,
         )
         return result.returncode, result.stdout, result.stderr

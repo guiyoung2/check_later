@@ -30,6 +30,7 @@
 ## 작업 1 — `src/index.css` 수정
 
 ### 변경 내용
+
 - 색상 변수를 `@theme`에서 제거하고 `:root`에 직접 정의
 - `@theme`에는 `--font-sans`만 남김
 - `@media prefers-color-scheme` → `.dark {}` 클래스로 변경
@@ -37,10 +38,10 @@
 ### 변경 후 전체 파일
 
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-sans: "Pretendard", -apple-system, "Noto Sans KR", sans-serif;
+  --font-sans: 'Pretendard', -apple-system, 'Noto Sans KR', sans-serif;
 }
 
 :root {
@@ -48,15 +49,15 @@
   --color-surface: oklch(99% 0.003 80);
   --color-border: oklch(87% 0.007 80);
   --color-text-primary: oklch(18% 0.008 80);
-  --color-text-sub: oklch(52% 0.010 80);
+  --color-text-sub: oklch(52% 0.01 80);
   --color-accent: oklch(62% 0.14 55);
   --color-accent-bg: oklch(93% 0.04 55);
 }
 
 .dark {
-  --color-bg: oklch(16% 0.010 80);
+  --color-bg: oklch(16% 0.01 80);
   --color-surface: oklch(21% 0.008 80);
-  --color-border: oklch(32% 0.010 80);
+  --color-border: oklch(32% 0.01 80);
   --color-text-primary: oklch(90% 0.006 80);
   --color-text-sub: oklch(65% 0.008 80);
   --color-accent: oklch(68% 0.13 55);
@@ -69,6 +70,7 @@
 ## 작업 2 — `src/main.tsx` 수정
 
 ### 변경 내용
+
 시스템 다크모드 감지 후 `<html>`에 `.dark` 클래스 자동 적용 + 변경 감지 추가.
 `createRoot` 호출 이전에 삽입.
 
@@ -78,12 +80,12 @@
 
 ```tsx
 // 시스템 다크모드 감지 → <html class="dark"> 토글
-const _mql = window.matchMedia('(prefers-color-scheme: dark)');
+const _mql = window.matchMedia('(prefers-color-scheme: dark)')
 const _applyDark = (e: MediaQueryList | MediaQueryListEvent) => {
-  document.documentElement.classList.toggle('dark', e.matches);
-};
-_applyDark(_mql);
-_mql.addEventListener('change', _applyDark);
+  document.documentElement.classList.toggle('dark', e.matches)
+}
+_applyDark(_mql)
+_mql.addEventListener('change', _applyDark)
 ```
 
 ---
@@ -91,6 +93,7 @@ _mql.addEventListener('change', _applyDark);
 ## 작업 3 — 전체 컴포넌트 CSS 클래스 일괄 수정
 
 ### 방법
+
 PowerShell로 `src/` 하위 모든 `.tsx` 파일에서 정규식 일괄 치환:
 
 ```
@@ -112,6 +115,7 @@ Get-ChildItem -Path "src" -Recurse -Filter "*.tsx" | ForEach-Object {
 ```
 
 ### 적용 대상 파일 (확인용)
+
 - `src/pages/HomePage.tsx`
 - `src/pages/LoginPage.tsx`
 - `src/pages/NewItemPage.tsx`
@@ -125,10 +129,12 @@ Get-ChildItem -Path "src" -Recurse -Filter "*.tsx" | ForEach-Object {
 ## 작업 4 — `src/pages/LandingPage.tsx` 신규 생성
 
 ### 설명
+
 비인증 사용자가 `/`에서 보는 랜딩 페이지.
 디자인 기준: `docs/UI_GUIDE.md` (warm-minimal, off-white 배경, terracotta accent).
 
 ### 레이아웃
+
 ```
 ┌─────────────────────────────────┐
 │ Check Later          [로그인]    │  ← sticky header, 로그인 버튼 → /login
@@ -150,51 +156,52 @@ Get-ChildItem -Path "src" -Recurse -Filter "*.tsx" | ForEach-Object {
 ### 컴포넌트 코드
 
 ```tsx
-import type { JSX } from 'react';
-import { useNavigate } from 'react-router-dom';
+import type { JSX } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const FEATURES = [
   'URL, 영상, 메모를 한 곳에 저장',
   '형태·상태 3축으로 분류',
   '필터로 30초 안에 다시 찾기',
-];
+]
 
 // 비인증 사용자용 랜딩 페이지
 export default function LandingPage(): JSX.Element {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
-      <header className="sticky top-0 z-10 bg-[var(--color-bg)] border-b border-[var(--color-border)] flex items-center justify-between px-4 h-14">
-        <span className="font-semibold text-[var(--color-text-primary)] text-base">
+      <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-bg)] px-4">
+        <span className="text-base font-semibold text-[var(--color-text-primary)]">
           Check Later
         </span>
         <button
           type="button"
           onClick={() => navigate('/login')}
-          className="px-3 py-1.5 rounded-[8px] border border-[var(--color-border)] text-sm text-[var(--color-text-sub)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors"
+          className="rounded-[8px] border border-[var(--color-border)] px-3 py-1.5 text-sm text-[var(--color-text-sub)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]"
         >
           로그인
         </button>
       </header>
 
-      <main className="px-6 py-16 max-w-sm mx-auto flex flex-col gap-10">
+      <main className="mx-auto flex max-w-sm flex-col gap-10 px-6 py-16">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <h1 className="text-xl font-semibold text-[var(--color-text-primary)] leading-snug">
+            <h1 className="text-xl leading-snug font-semibold text-[var(--color-text-primary)]">
               나중에 볼 것들을 빠르게 저장하고,
               <br />
               원할 때 바로 찾아보세요.
             </h1>
             <p className="text-sm text-[var(--color-text-sub)]">
-              URL, 영상, 메모를 던져두고, 필터로 30초 안에 다시 꺼내는 개인 보관함.
+              URL, 영상, 메모를 던져두고, 필터로 30초 안에 다시 꺼내는 개인
+              보관함.
             </p>
           </div>
 
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="self-start px-5 py-2.5 rounded-[8px] bg-[var(--color-accent)] text-white text-sm font-medium"
+            className="self-start rounded-[8px] bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-white"
           >
             시작하기 →
           </button>
@@ -204,15 +211,18 @@ export default function LandingPage(): JSX.Element {
 
         <ul className="flex flex-col gap-3">
           {FEATURES.map((f) => (
-            <li key={f} className="flex items-start gap-2 text-sm text-[var(--color-text-sub)]">
-              <span className="text-[var(--color-accent)] mt-px">✓</span>
+            <li
+              key={f}
+              className="flex items-start gap-2 text-sm text-[var(--color-text-sub)]"
+            >
+              <span className="mt-px text-[var(--color-accent)]">✓</span>
               {f}
             </li>
           ))}
         </ul>
       </main>
     </div>
-  );
+  )
 }
 ```
 
@@ -221,6 +231,7 @@ export default function LandingPage(): JSX.Element {
 ## 작업 5 — `src/App.tsx` 수정
 
 ### 변경 내용
+
 - `LandingPage` import 추가
 - `useAuth` import 추가
 - `RootPage` 컴포넌트 추가 (파일 내, App 함수 위)
@@ -229,21 +240,21 @@ export default function LandingPage(): JSX.Element {
 ### 변경 후 전체 파일
 
 ```tsx
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useAuth } from './lib/auth';
-import ProtectedRoute from './components/ProtectedRoute';
-import HomePage from './pages/HomePage';
-import ItemDetailPage from './pages/ItemDetailPage';
-import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
-import NewItemPage from './pages/NewItemPage';
-import SettingsPage from './pages/SettingsPage';
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { useAuth } from './lib/auth'
+import ProtectedRoute from './components/ProtectedRoute'
+import HomePage from './pages/HomePage'
+import ItemDetailPage from './pages/ItemDetailPage'
+import LandingPage from './pages/LandingPage'
+import LoginPage from './pages/LoginPage'
+import NewItemPage from './pages/NewItemPage'
+import SettingsPage from './pages/SettingsPage'
 
 // 루트 경로: 인증 여부에 따라 메인화면 또는 랜딩페이지
 function RootPage() {
-  const { session, loading } = useAuth();
-  if (loading) return null;
-  return session ? <HomePage /> : <LandingPage />;
+  const { session, loading } = useAuth()
+  if (loading) return null
+  return session ? <HomePage /> : <LandingPage />
 }
 
 function App() {
@@ -259,10 +270,10 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App
 ```
 
 ---
@@ -274,19 +285,21 @@ export default App;
 **오류 위치**: line 52–57 (`useEffect`로 편집 상태 초기화)
 
 **제거 대상**:
+
 ```tsx
 // 항목 로드 시 편집 초기값 세팅
 useEffect(() => {
   if (item) {
-    setEditTitle(item.title);
-    setEditMemo(item.memo ?? '');
+    setEditTitle(item.title)
+    setEditMemo(item.memo ?? '')
   }
-}, [item]);
+}, [item])
 ```
 
 **편집 버튼 onClick 수정** (두 곳):
 
 제목 편집 버튼:
+
 ```tsx
 // Before:
 onClick={() => setIsEditingTitle(true)}
@@ -296,6 +309,7 @@ onClick={() => { setEditTitle(item.title); setIsEditingTitle(true); }}
 ```
 
 메모 편집 버튼:
+
 ```tsx
 // Before:
 onClick={() => setIsEditingMemo(true)}
@@ -313,28 +327,31 @@ onClick={() => { setEditMemo(item.memo ?? ''); setIsEditingMemo(true); }}
 **오류 위치**: line 55–57 (`useEffect`로 type 도출)
 
 **현재 코드 (제거 대상)**:
+
 ```tsx
 const [type, setType] = useState<ItemType>(() =>
   detectType({ hasImage: false, url: initUrl })
-);
+)
 
 // URL 또는 이미지 변경 시 type 재판정
 useEffect(() => {
-  setType(detectType({ hasImage: !!imageFile, url }));
-}, [url, imageFile]);
+  setType(detectType({ hasImage: !!imageFile, url }))
+}, [url, imageFile])
 ```
 
 **수정 후**:
+
 ```tsx
-const [typeOverride, setTypeOverride] = useState<ItemType | null>(null);
+const [typeOverride, setTypeOverride] = useState<ItemType | null>(null)
 const detectedType = useMemo(
   () => detectType({ hasImage: !!imageFile, url }),
   [url, imageFile]
-);
-const type = typeOverride ?? detectedType;
+)
+const type = typeOverride ?? detectedType
 ```
 
 유형 칩 선택 onClick도 수정:
+
 ```tsx
 // Before:
 onClick={() => setType(t)}
@@ -349,6 +366,7 @@ onClick={() => setTypeOverride(t)}
 **미사용 import 제거**:
 `import type { JSX } from 'react'` 안의 `JSX`만 남기고, 나머지 미사용 named import 정리.
 `React.FormEvent` → `React` import 없이 사용하고 있다면 타입 선언 수정:
+
 ```tsx
 // Before:
 async function handleSubmit(e: React.FormEvent) {
@@ -356,7 +374,9 @@ async function handleSubmit(e: React.FormEvent) {
 // After:
 async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 ```
+
 그리고 파일 상단에 `import React from 'react'`가 없다면 타입만 사용하는 경우:
+
 ```tsx
 import type { FormEvent, JSX } from 'react';
 // ...
@@ -370,6 +390,7 @@ async function handleSubmit(e: FormEvent<HTMLFormElement>) {
 **오류 위치**: line 29 (`useEffect` 안에서 `setIsInstalled`)
 
 **현재 코드**:
+
 ```tsx
 const [isInstalled, setIsInstalled] = useState(false);
 
@@ -385,6 +406,7 @@ useEffect(() => {
 ```
 
 **수정 후**:
+
 ```tsx
 // lazy initializer로 초기값 설정 → useEffect 안에서 setState 호출 불필요
 const [isInstalled] = useState(

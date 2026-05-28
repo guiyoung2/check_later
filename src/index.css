@@ -1,25 +1,32 @@
-@import "tailwindcss" source("../src");
+@import "tailwindcss";
 
-@theme {
+@theme inline {
   --font-sans: "Pretendard", -apple-system, "Noto Sans KR", sans-serif;
+  --color-bg: var(--app-color-bg);
+  --color-surface: var(--app-color-surface);
+  --color-border: var(--app-color-border);
+  --color-text-primary: var(--app-color-text-primary);
+  --color-text-sub: var(--app-color-text-sub);
+  --color-accent: var(--app-color-accent);
+  --color-accent-bg: var(--app-color-accent-bg);
 }
 
 :root {
-  --color-bg: oklch(97% 0.006 80);
-  --color-surface: oklch(99% 0.003 80);
-  --color-border: oklch(87% 0.007 80);
-  --color-text-primary: oklch(18% 0.008 80);
-  --color-text-sub: oklch(52% 0.010 80);
-  --color-accent: oklch(62% 0.14 55);
-  --color-accent-bg: oklch(93% 0.04 55);
+  --app-color-bg: oklch(97% 0.006 80);
+  --app-color-surface: oklch(99% 0.003 80);
+  --app-color-border: oklch(87% 0.007 80);
+  --app-color-text-primary: oklch(18% 0.008 80);
+  --app-color-text-sub: oklch(52% 0.010 80);
+  --app-color-accent: oklch(62% 0.14 55);
+  --app-color-accent-bg: oklch(93% 0.04 55);
 }
 
 .dark {
-  --color-bg: oklch(16% 0.010 80);
-  --color-surface: oklch(21% 0.008 80);
-  --color-border: oklch(32% 0.010 80);
-  --color-text-primary: oklch(90% 0.006 80);
-  --color-text-sub: oklch(65% 0.008 80);
-  --color-accent: oklch(68% 0.13 55);
-  --color-accent-bg: oklch(28% 0.06 55);
+  --app-color-bg: oklch(16% 0.010 80);
+  --app-color-surface: oklch(21% 0.008 80);
+  --app-color-border: oklch(32% 0.010 80);
+  --app-color-text-primary: oklch(90% 0.006 80);
+  --app-color-text-sub: oklch(65% 0.008 80);
+  --app-color-accent: oklch(68% 0.13 55);
+  --app-color-accent-bg: oklch(28% 0.06 55);
 }

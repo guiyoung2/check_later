@@ -374,3 +374,77 @@ npm run test -- src/pages/HomePage.test.tsx
 npm run test
 npm run build
 ```
+
+---
+
+## 후속 수정 — 2차 UX 안정화 잔여 이슈
+
+사용자가 2차 수정 후 확인한 문제:
+
+1. 설정 페이지에서 로그아웃하면 메인 랜딩(`/`)이 아니라 `/login`으로 바로 이동했다.
+2. 작성한 항목의 상세 페이지에서 제목/URL/메모를 명시적으로 수정하는 기능이 부족했다.
+3. 모바일 화면에서 `영상`, `글`, `캡처`, `메모`, `안 봤음`, `봤음`, `보관` 필터가 데스크톱과 거의 같아 보여 반응형 UI 변화가 부족했다.
+4. 목록 썸네일이 회색 빈 박스로만 표시됐다.
+5. 상세 페이지 첨부 이미지가 `object-cover`로 잘려 보였다.
+
+수정:
+
+- `src/pages/SettingsPage.tsx`
+  - 로그아웃 클릭 시 먼저 `navigate('/', { replace: true })`를 실행하고 이후 `supabase.auth.signOut()`을 호출하도록 순서를 바꿨다.
+  - 이유: `signOut()`으로 인증 상태가 먼저 비면 보호 라우트가 `/settings`를 `/login`으로 리다이렉트할 수 있다.
+- `src/pages/SettingsPage.test.tsx`
+  - `signOut()`이 아직 resolve되지 않은 상태에서도 로그아웃 클릭 직후 `/` 랜딩으로 이동하는 테스트를 추가했다.
+- `src/pages/ItemDetailPage.tsx`
+  - 상단에 `수정` 버튼을 추가했다.
+  - 수정 모드에서 `제목`, `URL`, `메모`를 한 번에 편집하고 저장하도록 했다.
+  - 상세 이미지는 `object-cover max-h-64` 대신 `object-contain max-h-[70vh]`로 표시해 이미지가 잘리지 않게 했다.
+- `src/pages/ItemDetailPage.test.tsx`
+  - `수정` 버튼으로 제목/URL/메모 저장 mutation이 호출되는지 검증했다.
+  - 상세 이미지가 `object-contain`으로 렌더링되는지 검증했다.
+- `src/components/FilterBar.tsx`
+  - 모바일 기본 레이아웃을 두 줄 구조로 바꿨다.
+  - `유형` 그룹은 4칸 그리드, `상태` 그룹은 3칸 그리드로 표시한다.
+  - `sm` 이상에서는 기존처럼 가로 칩 바 형태로 돌아간다.
+- `src/components/FilterBar.test.tsx`
+  - 모바일 기본 레이아웃에서 `유형 필터`, `상태 필터` 그룹이 분리되어 렌더링되는지 검증했다.
+- `src/components/ItemCard.tsx`
+  - `image_path`가 있는 항목은 `storageService.getSignedUrl(image_path)`로 signed URL을 받아 실제 썸네일 이미지를 표시한다.
+- `src/components/ItemCard.test.tsx`
+  - signed URL 썸네일 표시를 검증했다.
+
+추가로 발견된 콘솔 경고:
+
+```text
+storageService.ts:21 POST https://elxliaakfyjpsqdwkdzc.supabase.co/storage/v1/object/sign/item-images/{user_id}/{item_id}.webp 400 (Bad Request)
+```
+
+원인 추정:
+
+- 목록 썸네일 표시를 위해 `ItemCard`에서도 `createSignedUrl()`을 호출하게 되면서, `items.image_path`에는 값이 있지만 실제 `item-images` Storage 객체가 없거나 접근할 수 없는 항목이 드러났다.
+- Supabase Storage의 `createSignedUrl()`은 존재하지 않는 객체 또는 접근 불가 객체에 대해 400을 반환한다.
+- 컴포넌트에서 `.catch(() => null)`로 UI는 깨지지 않지만, 브라우저 네트워크/콘솔에는 실패한 POST 요청이 보일 수 있다.
+
+수정:
+
+- `src/services/storageService.ts`
+  - `getSignedUrl(path)`가 바로 `createSignedUrl()`을 호출하지 않도록 바꿨다.
+  - 먼저 `path`를 `folder`와 `fileName`으로 나눈 뒤 `supabase.storage.from('item-images').list(folder, { search: fileName, limit: 1 })`로 객체 존재 여부를 확인한다.
+  - 파일이 없거나 목록 조회가 실패하면 `createSignedUrl()`을 호출하지 않고 `null`을 반환한다.
+  - 파일이 실제로 있을 때만 `createSignedUrl(path, 3600)`을 호출한다.
+- `src/services/storageService.test.ts`
+  - 파일이 없으면 signed URL 요청을 보내지 않고 `null`을 반환하는 테스트를 추가했다.
+
+주의:
+
+- 이 수정은 깨진 `image_path`가 있는 기존 DB 레코드를 자동 복구하지 않는다.
+- 실제 Storage에 파일이 없는 항목은 썸네일/상세 이미지가 숨겨진다.
+- 기존 데이터를 정리하려면 Supabase에서 `items.image_path`와 `storage.objects.name`을 비교해 없는 파일 경로를 `null`로 정리하는 별도 데이터 마이그레이션이 필요하다.
+
+검증:
+
+```bash
+npm run test -- src/services/storageService.test.ts src/components/ItemCard.test.tsx src/pages/ItemDetailPage.test.tsx
+npm run test
+npm run lint
+npm run build
+```
