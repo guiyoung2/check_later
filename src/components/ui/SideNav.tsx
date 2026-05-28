@@ -41,10 +41,10 @@ function SettingsIcon() {
 }
 
 const items: NavItem[] = [
-  { label: 'Home', to: '/', icon: <HomeIcon /> },
-  { label: 'New', to: '/new', icon: <AddIcon /> },
-  { label: 'Folders', to: '/folders', icon: <FolderIcon /> },
-  { label: 'Settings', to: '/settings', icon: <SettingsIcon /> },
+  { label: '홈', to: '/', icon: <HomeIcon /> },
+  { label: '새 항목', to: '/new', icon: <AddIcon /> },
+  { label: '폴더', to: '/folders', icon: <FolderIcon /> },
+  { label: '설정', to: '/settings', icon: <SettingsIcon /> },
 ];
 
 function isActive(pathname: string, to: string) {
@@ -56,49 +56,31 @@ function joinClasses(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(' ');
 }
 
-export function BottomNav() {
+export function SideNav() {
   const { pathname } = useLocation();
 
   return (
-    <nav className="fixed right-0 bottom-0 left-0 z-40 h-16 border-t border-border bg-surface md:hidden" aria-label="Primary">
-      <div className="grid h-full grid-cols-4">
+    <nav className="fixed top-0 bottom-0 left-0 z-30 hidden w-60 border-r border-border bg-surface px-4 py-6 md:flex md:flex-col" aria-label="Desktop primary">
+      <Link to="/" className="mb-8 px-3 font-body text-[20px] leading-[1.4] font-semibold text-text-primary focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none">
+        Check Later
+      </Link>
+      <div className="flex flex-col gap-1">
         {items.map((item) => {
           const active = isActive(pathname, item.to);
-          const isNew = item.to === '/new';
-          const linkClassName = joinClasses(
-            'flex min-h-[44px] flex-col items-center justify-center gap-1 px-1 font-body text-[12px] leading-[1.2] transition-[background-color,color] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none',
-            active ? 'font-medium text-text-primary' : 'font-normal text-text-muted hover:text-text-primary',
-          );
-          const content = (
-            <>
-              <span
-                className={joinClasses(
-                  'relative flex h-7 w-7 items-center justify-center rounded-sm',
-                  isNew && active ? 'bg-text-primary text-bg' : false,
-                  isNew && !active ? 'border border-border bg-surface-sub text-text-muted' : false,
-                )}
-              >
-                {active && !isNew ? (
-                  <span className="absolute -top-1 h-1 w-1 rounded-full bg-text-primary" />
-                ) : null}
-                {item.icon}
-              </span>
-              <span>{item.label}</span>
-            </>
+          const className = joinClasses(
+            'flex min-h-[44px] items-center gap-3 rounded-sm px-3 font-body text-[14px] leading-[1.5] transition-[background-color,color,box-shadow] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none',
+            active ? 'bg-surface-sub font-medium text-text-primary' : 'text-text-muted hover:bg-surface-sub hover:text-text-primary',
           );
 
           return active ? (
-            <Link
-              key={item.to}
-              to={item.to}
-              aria-current="page"
-              className={linkClassName}
-            >
-              {content}
+            <Link key={item.to} to={item.to} aria-current="page" className={className}>
+              {item.icon}
+              <span>{item.label}</span>
             </Link>
           ) : (
-            <Link key={item.to} to={item.to} className={linkClassName}>
-              {content}
+            <Link key={item.to} to={item.to} className={className}>
+              {item.icon}
+              <span>{item.label}</span>
             </Link>
           );
         })}
