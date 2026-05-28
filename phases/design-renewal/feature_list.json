@@ -22,9 +22,9 @@
       "id": "feat-3",
       "name": "폰트 로딩 (Pretendard + Geist + JetBrains Mono)",
       "description": "@font-face 또는 self-host로 세 폰트 로딩, LCP 회귀 없음",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T17:16:55+09:00",
+      "verified_by_step": 4
     },
     {
       "id": "feat-4",
