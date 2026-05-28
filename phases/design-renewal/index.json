@@ -63,7 +63,7 @@
       "name": "new-item-page-renewal",
       "status": "completed",
       "started_at": "2026-05-28T23:21:39+0900",
-      "completed_at": "2026-05-28T23:40:00+0900",
+      "completed_at": "2026-05-28T23:46:50+0900",
       "summary": "NewItemPage 리뉴얼 — BottomSheet 스타일, 3-grid chip, URL 자동 감지, Web Share Target 회귀 테스트 통과"
     },
     {
