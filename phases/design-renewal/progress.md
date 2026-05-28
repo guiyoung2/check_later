@@ -1,12 +1,12 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-28T17:04:29+09:00 - Step 2/19 완료
+2026-05-28T17:06:30+0900 — Step 3/19 완료
 
 ## 완료된 작업
-- Step 0: ui-guide-rewrite - docs/UI_GUIDE.md 전면 재작성 완료, 모노톤 토큰과 안티패턴 가드레일 포함
-- Step 1: design-tokens - src/index.css 모노톤 CSS 변수와 Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거
-- Step 2: atomic-ui-components - src/components/ui/ 아래 Button, IconButton, Chip, Card, Input, Textarea, Divider, Skeleton 구현 완료
+- Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
+- Step 1: design-tokens — src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거
+- Step 2: atomic-ui-components — src/components/ui/ 신설 — Button/IconButton/Chip/Card/Input/Textarea/Divider/Skeleton 8개 구현 완료
 
 ## 현재 진행 중
 - Step 3: layout-components
