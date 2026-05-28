@@ -59,7 +59,8 @@ export default function NewItemPage(): JSX.Element {
   // 이미지 파일 선택/해제 핸들러
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
-    setImageFiles(files);
+    setImageFiles((prev) => [...prev, ...files]);
+    e.target.value = '';
     setError(null);
   }
 
@@ -199,8 +200,8 @@ export default function NewItemPage(): JSX.Element {
           />
           {imageFiles.length > 0 && (
             <div className="flex flex-col gap-1">
-              {imageFiles.map((file) => (
-                <span key={`${file.name}-${file.size}`} className="text-xs text-text-sub">
+              {imageFiles.map((file, index) => (
+                <span key={`${file.name}-${file.size}-${index}`} className="text-xs text-text-sub">
                   {file.name}
                 </span>
               ))}

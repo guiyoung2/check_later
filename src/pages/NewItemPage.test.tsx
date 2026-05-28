@@ -58,7 +58,8 @@ describe('NewItemPage', () => {
       new File(['a'], 'a.png', { type: 'image/png' }),
       new File(['b'], 'b.png', { type: 'image/png' }),
     ];
-    await user.upload(screen.getByLabelText('이미지'), files);
+    await user.upload(screen.getByLabelText('이미지'), [files[0]]);
+    await user.upload(screen.getByLabelText('이미지'), [files[1]]);
     await user.click(screen.getByRole('button', { name: '저장' }));
 
     expect(createItem).toHaveBeenCalledWith({

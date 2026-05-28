@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -14,8 +14,8 @@ const item: Item = {
   user_id: 'user-1',
   type: 'screenshot',
   status: 'pending',
-  title: '기존 제목',
-  memo: '기존 메모',
+  title: 'Original title',
+  memo: 'Original memo',
   url: 'https://example.com',
   image_path: 'user-1/item-1.png',
   created_at: new Date().toISOString(),
@@ -48,43 +48,57 @@ vi.mock('../services/itemAttachmentsService', () => ({
   },
 }));
 
+function renderPage() {
+  render(
+    <MemoryRouter initialEntries={['/items/item-1']}>
+      <Routes>
+        <Route path="/items/:id" element={<ItemDetailPage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+}
+
+async function startEdit(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getAllByRole('button')[1]);
+}
+
+async function submitEdit(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(document.querySelector('button[type="submit"]') as HTMLButtonElement);
+}
+
 describe('ItemDetailPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(itemAttachmentsService.listByItemId).mockResolvedValue([]);
   });
 
-  it('수정 버튼으로 제목, URL, 메모를 한 번에 저장할 수 있다', async () => {
+  it('saves title, URL, and memo edits together', async () => {
     const user = userEvent.setup();
     vi.mocked(storageService.getSignedUrl).mockResolvedValue('https://signed.example/image.png');
 
-    render(
-      <MemoryRouter initialEntries={['/items/item-1']}>
-        <Routes>
-          <Route path="/items/:id" element={<ItemDetailPage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderPage();
 
-    await user.click(screen.getByRole('button', { name: '수정' }));
-    await user.clear(screen.getByLabelText('제목'));
-    await user.type(screen.getByLabelText('제목'), '수정된 제목');
+    await startEdit(user);
+    await user.clear(document.querySelector('#edit-title') as HTMLInputElement);
+    await user.type(document.querySelector('#edit-title') as HTMLInputElement, 'Changed title');
     await user.clear(screen.getByLabelText('URL 1'));
     await user.type(screen.getByLabelText('URL 1'), 'https://changed.example');
-    await user.clear(screen.getByLabelText('메모'));
-    await user.type(screen.getByLabelText('메모'), '수정된 메모');
-    await user.click(screen.getByRole('button', { name: '저장' }));
+    await user.clear(document.querySelector('#edit-memo') as HTMLTextAreaElement);
+    await user.type(document.querySelector('#edit-memo') as HTMLTextAreaElement, 'Changed memo');
+    await submitEdit(user);
 
     expect(patchItem).toHaveBeenCalledWith({
       id: 'item-1',
       input: {
-        title: '수정된 제목',
+        title: 'Changed title',
         url: 'https://changed.example',
-        memo: '수정된 메모',
+        memo: 'Changed memo',
+        image_path: 'user-1/item-1.png',
       },
     });
   });
 
-  it('상세 이미지를 자르지 않는 표시 방식으로 렌더링한다', async () => {
+  it('renders detail images with contain layout', async () => {
     vi.mocked(itemAttachmentsService.listByItemId).mockResolvedValue([
       {
         id: 'attachment-1',
@@ -98,21 +112,15 @@ describe('ItemDetailPage', () => {
     ]);
     vi.mocked(storageService.getSignedUrl).mockResolvedValue('https://signed.example/image.png');
 
-    render(
-      <MemoryRouter initialEntries={['/items/item-1']}>
-        <Routes>
-          <Route path="/items/:id" element={<ItemDetailPage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderPage();
 
-    const image = await screen.findByAltText('첨부 이미지');
-
-    expect(image).toHaveClass('object-contain');
-    expect(image).not.toHaveClass('object-cover');
+    await waitFor(() => {
+      expect(document.querySelector('img')).toHaveClass('object-contain');
+    });
+    expect(document.querySelector('img')).not.toHaveClass('object-cover');
   });
 
-  it('첨부 URL 목록을 링크로 보여주고 수정에서 교체할 수 있다', async () => {
+  it('shows attachment URLs and replaces them while editing', async () => {
     const user = userEvent.setup();
     vi.mocked(itemAttachmentsService.listByItemId).mockResolvedValue([
       {
@@ -135,13 +143,7 @@ describe('ItemDetailPage', () => {
       },
     ]);
 
-    render(
-      <MemoryRouter initialEntries={['/items/item-1']}>
-        <Routes>
-          <Route path="/items/:id" element={<ItemDetailPage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderPage();
 
     expect(await screen.findByRole('link', { name: 'https://a.example' })).toHaveAttribute(
       'href',
@@ -152,10 +154,10 @@ describe('ItemDetailPage', () => {
       'https://b.example',
     );
 
-    await user.click(screen.getByRole('button', { name: '수정' }));
+    await startEdit(user);
     await user.clear(screen.getByLabelText('URL 1'));
     await user.type(screen.getByLabelText('URL 1'), 'https://changed.example');
-    await user.click(screen.getByRole('button', { name: '저장' }));
+    await submitEdit(user);
 
     expect(itemAttachmentsService.replaceForItem).toHaveBeenLastCalledWith(
       'item-1',
@@ -163,6 +165,49 @@ describe('ItemDetailPage', () => {
       [
         { kind: 'url', value: 'https://changed.example' },
         { kind: 'url', value: 'https://b.example' },
+      ],
+    );
+  });
+
+  it('deletes an existing image, adds multiple new images, and updates the list thumbnail', async () => {
+    const user = userEvent.setup();
+    vi.mocked(itemAttachmentsService.listByItemId).mockResolvedValue([
+      {
+        id: 'attachment-1',
+        item_id: 'item-1',
+        user_id: 'user-1',
+        kind: 'image',
+        value: 'user-1/item-1/old.png',
+        sort_order: 0,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+    vi.mocked(storageService.getSignedUrl).mockResolvedValue('https://signed.example/old.png');
+    vi.mocked(storageService.upload)
+      .mockResolvedValueOnce('user-1/item-1/new-a.png')
+      .mockResolvedValueOnce('user-1/item-1/new-b.png');
+
+    renderPage();
+
+    await startEdit(user);
+    await user.click(await screen.findByRole('button', { name: '기존 이미지 삭제' }));
+    const editImagesInput = document.querySelector('#edit-images') as HTMLInputElement;
+    await user.upload(editImagesInput, [new File(['a'], 'a.png', { type: 'image/png' })]);
+    await user.upload(editImagesInput, [new File(['b'], 'b.png', { type: 'image/png' })]);
+    await submitEdit(user);
+
+    expect(patchItem).toHaveBeenCalledWith({
+      id: 'item-1',
+      input: expect.objectContaining({
+        image_path: 'user-1/item-1/new-a.png',
+      }),
+    });
+    expect(itemAttachmentsService.replaceForItem).toHaveBeenCalledWith(
+      'item-1',
+      'user-1',
+      [
+        { kind: 'image', value: 'user-1/item-1/new-a.png' },
+        { kind: 'image', value: 'user-1/item-1/new-b.png' },
       ],
     );
   });

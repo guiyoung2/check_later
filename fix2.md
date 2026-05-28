@@ -377,6 +377,41 @@ npm run build
 
 ---
 
+## 이미지 파일 다중 추가 수정
+
+증상:
+
+- 글 작성 화면에서 이미지 파일을 선택한 뒤 다시 파일 선택을 열어 이미지를 추가하면, 이전에 선택한 이미지가 사라지고 마지막 선택분만 저장됐다.
+- 글 수정 화면에서도 새 이미지를 여러 번에 나눠 선택하면 마지막 선택분만 업로드되어 첨부 목록과 대표 썸네일이 기대와 다르게 저장될 수 있었다.
+
+원인:
+
+- `src/pages/NewItemPage.tsx`의 `handleFileChange`가 새 파일 배열로 `imageFiles`를 교체했다.
+- `src/pages/ItemDetailPage.tsx`의 수정 이미지 input도 `setEditImageFiles(Array.from(...))`로 기존 선택 파일을 교체했다.
+
+수정:
+
+- `src/pages/NewItemPage.tsx`
+  - 파일 선택 시 기존 `imageFiles` 뒤에 새 선택 파일을 누적하도록 변경했다.
+  - 같은 파일을 다시 선택해도 change 이벤트가 동작하도록 파일 input 값을 비웠다.
+  - 파일명 목록 렌더링 key에 index를 포함해 같은 이름/크기의 파일도 안정적으로 표시되게 했다.
+- `src/pages/ItemDetailPage.tsx`
+  - 수정 화면용 `handleEditFileChange`를 추가해 새 이미지 선택분을 `editImageFiles`에 누적하도록 변경했다.
+  - 수정 이미지 input 값도 선택 직후 비워 같은 파일 재선택이 가능하게 했다.
+  - 파일명 목록 key에 index를 포함했다.
+- `src/pages/NewItemPage.test.tsx`
+  - 작성 화면에서 이미지를 두 번에 나눠 선택해도 두 이미지가 모두 첨부로 저장되는지 검증하도록 변경했다.
+- `src/pages/ItemDetailPage.test.tsx`
+  - 수정 화면에서 기존 이미지를 삭제한 뒤 새 이미지를 두 번에 나눠 선택해도 두 이미지가 모두 저장되고 첫 새 이미지가 `image_path` 대표 썸네일이 되는지 검증하도록 변경했다.
+
+검증:
+
+```bash
+npm run test -- --run src/pages/NewItemPage.test.tsx src/pages/ItemDetailPage.test.tsx
+```
+
+---
+
 ## 후속 수정 — 2차 UX 안정화 잔여 이슈
 
 사용자가 2차 수정 후 확인한 문제:

@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { ChangeEvent, JSX } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useItem } from '../hooks/useItem';
@@ -47,6 +47,7 @@ export default function ItemDetailPage(): JSX.Element {
   const [editUrls, setEditUrls] = useState<string[]>(['']);
   const [editMemo, setEditMemo] = useState('');
   const [editImageFiles, setEditImageFiles] = useState<File[]>([]);
+  const [removedImagePaths, setRemovedImagePaths] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<ItemAttachment[] | null>(null);
   const [signedImages, setSignedImages] = useState<Record<string, string>>({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -108,6 +109,10 @@ export default function ItemDetailPage(): JSX.Element {
     () => currentAttachments.filter((attachment) => attachment.kind === 'image'),
     [currentAttachments],
   );
+  const editableImageAttachments = useMemo(
+    () => imageAttachments.filter((attachment) => !removedImagePaths.includes(attachment.value)),
+    [imageAttachments, removedImagePaths],
+  );
 
   // 이미지 signed URL 로드 (실패 시 조용히 숨김)
   useEffect(() => {
@@ -155,20 +160,21 @@ export default function ItemDetailPage(): JSX.Element {
     setEditUrls(urlAttachments.length ? urlAttachments.map((attachment) => attachment.value) : ['']);
     setEditMemo(currentItem.memo ?? '');
     setEditImageFiles([]);
+    setRemovedImagePaths([]);
     setIsEditing(true);
   }
 
   async function handleSaveEdit() {
     if (!editTitle.trim()) return;
     const trimmedUrls = editUrls.map((url) => url.trim()).filter(Boolean);
-    const existingImages = imageAttachments.map((attachment) => attachment.value);
+    const existingImages = editableImageAttachments.map((attachment) => attachment.value);
     const uploadedImages: string[] = [];
 
     for (const file of editImageFiles) {
       uploadedImages.push(await storageService.upload(file, currentItem.user_id, currentItem.id));
     }
 
-    const nextImages = uploadedImages.length > 0 ? uploadedImages : existingImages;
+    const nextImages = [...existingImages, ...uploadedImages];
     const nextAttachments: ItemAttachmentInput[] = [
       ...trimmedUrls.map((value) => ({ kind: 'url' as const, value })),
       ...nextImages.map((value) => ({ kind: 'image' as const, value })),
@@ -180,6 +186,7 @@ export default function ItemDetailPage(): JSX.Element {
         title: editTitle.trim(),
         url: trimmedUrls[0] ?? null,
         memo: editMemo.trim() || null,
+        image_path: nextImages[0] ?? null,
       },
     });
     await itemAttachmentsService.replaceForItem(currentItem.id, currentItem.user_id, nextAttachments);
@@ -192,6 +199,7 @@ export default function ItemDetailPage(): JSX.Element {
       sort_order: index,
       created_at: new Date().toISOString(),
     })));
+    setRemovedImagePaths([]);
     setIsEditing(false);
   }
 
@@ -201,6 +209,16 @@ export default function ItemDetailPage(): JSX.Element {
 
   function addEditUrl() {
     setEditUrls((prev) => [...prev, '']);
+  }
+
+  function removeExistingImage(path: string) {
+    setRemovedImagePaths((prev) => (prev.includes(path) ? prev : [...prev, path]));
+  }
+
+  function handleEditFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    setEditImageFiles((prev) => [...prev, ...files]);
+    e.target.value = '';
   }
 
   // 삭제 확인 후 실행
@@ -241,7 +259,7 @@ export default function ItemDetailPage(): JSX.Element {
 
       <div className="px-4 py-5 max-w-lg mx-auto flex flex-col gap-5">
         {/* 이미지 */}
-        {imageAttachments.length > 0 && (
+        {!isEditing && imageAttachments.length > 0 && (
           <div className="flex flex-col gap-2">
             {imageAttachments.map((attachment) => (
               signedImages[attachment.value] && (
@@ -301,18 +319,41 @@ export default function ItemDetailPage(): JSX.Element {
               <label htmlFor="edit-images" className="text-xs font-medium text-text-sub">
                 이미지
               </label>
+              {editableImageAttachments.length > 0 && (
+                <div className="grid grid-cols-3 gap-2">
+                  {editableImageAttachments.map((attachment) => (
+                    <div key={attachment.value} className="relative overflow-hidden rounded-[6px] bg-border">
+                      {signedImages[attachment.value] && (
+                        <img
+                          src={signedImages[attachment.value]}
+                          alt=""
+                          className="aspect-square w-full object-cover"
+                        />
+                      )}
+                      <button
+                        type="button"
+                        aria-label="기존 이미지 삭제"
+                        onClick={() => removeExistingImage(attachment.value)}
+                        className="absolute right-1 top-1 min-h-7 rounded-[999px] bg-surface/90 px-2 text-xs font-medium text-text-sub shadow-[0_1px_3px_oklch(20%_0.01_80_/_0.08)]"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <input
                 id="edit-images"
                 type="file"
                 accept="image/*"
                 multiple
-                onChange={(e) => setEditImageFiles(Array.from(e.target.files ?? []))}
+                onChange={handleEditFileChange}
                 className="text-sm text-text-sub file:mr-3 file:py-1.5 file:px-3 file:rounded-[6px] file:border file:border-border file:bg-surface file:text-text-sub file:text-sm file:cursor-pointer"
               />
               {editImageFiles.length > 0 && (
                 <div className="flex flex-col gap-1">
-                  {editImageFiles.map((file) => (
-                    <span key={`${file.name}-${file.size}`} className="text-xs text-text-sub">
+                  {editImageFiles.map((file, index) => (
+                    <span key={`${file.name}-${file.size}-${index}`} className="text-xs text-text-sub">
                       {file.name}
                     </span>
                   ))}
