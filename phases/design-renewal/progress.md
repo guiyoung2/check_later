@@ -1,14 +1,14 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-28T17:16:55+0900 기준 Step 4/19 완료
+2026-05-28T17:18:28+0900 — Step 5/19 완료
 
 ## 완료된 작업
-- Step 0: ui-guide-rewrite - docs/UI_GUIDE.md 전면 재작성 완료, 모노톤 토큰 + 안티패턴 가드레일 포함
-- Step 1: design-tokens - src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거
-- Step 2: atomic-ui-components - src/components/ui/ 신설, Button/IconButton/Chip/Card/Input/Textarea/Divider/Skeleton 8개 구현 완료
-- Step 3: layout-components - EmptyState/Toast/BottomSheet/TopAppBar/BottomNav 구현 완료, useToast hook 포함
-- Step 4: font-loading - Pretendard/Geist/JetBrains Mono self-host 로딩 설정 완료, font-display: swap 적용
+- Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
+- Step 1: design-tokens — src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거
+- Step 2: atomic-ui-components — src/components/ui/ 신설 — Button/IconButton/Chip/Card/Input/Textarea/Divider/Skeleton 8개 구현 완료
+- Step 3: layout-components — EmptyState/Toast/BottomSheet/TopAppBar/BottomNav 구현 완료, useToast hook 포함
+- Step 4: font-loading — Pretendard/Geist/JetBrains Mono ?? ?? ??, font-display:swap ??
 
 ## 현재 진행 중
 - Step 5: home-page-renewal
