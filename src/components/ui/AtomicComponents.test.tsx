@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { Button } from './Button';
 import { Card } from './Card';
 import { Chip } from './Chip';
@@ -54,6 +54,21 @@ describe('atomic UI components', () => {
     expect(screen.getByRole('link', { name: 'Item' })).toHaveAttribute('href', '/items/1');
   });
 
+  it('makes clickable non-link cards keyboard operable', () => {
+    const onClick = vi.fn();
+
+    render(
+      <Card as="article" hoverable onClick={onClick}>
+        Item
+      </Card>,
+    );
+
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Item' }), { key: 'Enter' });
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Item' }), { key: ' ' });
+
+    expect(onClick).toHaveBeenCalledTimes(2);
+  });
+
   it('renders field errors for input and textarea', () => {
     render(
       <>
@@ -78,5 +93,6 @@ describe('atomic UI components', () => {
 
     expect(screen.getByRole('separator')).toHaveClass('border-border');
     expect(screen.getByTestId('skeleton')).toHaveStyle({ width: '120px', height: '2rem' });
+    expect(screen.getByTestId('skeleton')).toHaveAttribute('aria-busy', 'true');
   });
 });

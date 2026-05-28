@@ -76,7 +76,7 @@
 
 :root {
   --bg: #F7F7F4;
-  --surface: #FFFFFF;
+  --surface: #FBFBF8;
   --surface-sub: #EEEEEB;
   --border: #E3E3DE;
   --border-strong: #CBC6BC;
@@ -102,7 +102,7 @@
 
 :root.light {
   --bg: oklch(97% 0.004 80);
-  --surface: oklch(100% 0 0);
+  --surface: oklch(99% 0.002 80);
   --surface-sub: oklch(94% 0.004 80);
   --border: oklch(90% 0.005 80);
   --border-strong: oklch(81% 0.015 80);

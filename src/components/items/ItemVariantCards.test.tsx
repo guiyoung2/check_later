@@ -33,7 +33,7 @@ describe('card variant components', () => {
         <MemoCard item={baseItem} />
       </MemoryRouter>,
     );
-    expect(screen.getByRole('article')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /테스트 제목/ })).toBeInTheDocument();
     expect(screen.getByText('테스트 제목')).toBeInTheDocument();
     expect(screen.getByText('테스트 메모')).toBeInTheDocument();
     expect(screen.getByText('메모')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('card variant components', () => {
         <VideoCard item={item} />
       </MemoryRouter>,
     );
-    expect(screen.getByRole('article')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /테스트 제목/ })).toBeInTheDocument();
     expect(screen.getByText('테스트 제목')).toBeInTheDocument();
     expect(screen.getByText('영상')).toBeInTheDocument();
     expect(screen.getByText('youtube.com ↗')).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe('card variant components', () => {
         <ImageCard item={item} />
       </MemoryRouter>,
     );
-    expect(screen.getByRole('article')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /테스트 제목/ })).toBeInTheDocument();
     expect(screen.getByText('테스트 제목')).toBeInTheDocument();
     expect(screen.getByText('캡처')).toBeInTheDocument();
   });
@@ -79,7 +79,7 @@ describe('card variant components', () => {
         <ArticleCard item={item} />
       </MemoryRouter>,
     );
-    expect(screen.getByRole('article')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /테스트 제목/ })).toBeInTheDocument();
     expect(screen.getByText('테스트 제목')).toBeInTheDocument();
     expect(screen.getByText('글')).toBeInTheDocument();
     expect(screen.getByText('example.com')).toBeInTheDocument();

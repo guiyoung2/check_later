@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { KeyboardEvent, ReactNode } from 'react';
 
 export interface CardProps {
   hoverable?: boolean;
@@ -29,16 +29,22 @@ export function Card({ hoverable = false, as = 'div', href, onClick, children, c
     );
   }
 
+  function handleKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (!onClick || (event.key !== 'Enter' && event.key !== ' ')) return;
+    event.preventDefault();
+    onClick();
+  }
+
   if (as === 'article') {
     return (
-      <article className={classes} onClick={onClick}>
+      <article className={classes} onClick={onClick} onKeyDown={handleKeyDown} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined}>
         {children}
       </article>
     );
   }
 
   return (
-    <div className={classes} onClick={onClick}>
+    <div className={classes} onClick={onClick} onKeyDown={handleKeyDown} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined}>
       {children}
     </div>
   );

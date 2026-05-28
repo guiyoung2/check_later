@@ -25,7 +25,8 @@ export function Skeleton({ className, width, height }: SkeletonProps) {
       data-testid="skeleton"
       className={joinClasses('animate-pulse rounded-md bg-surface-sub', className)}
       style={style}
-      aria-hidden="true"
+      aria-busy="true"
+      aria-label="로딩 중"
     />
   );
 }

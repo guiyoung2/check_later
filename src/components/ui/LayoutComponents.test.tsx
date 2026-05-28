@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BottomNav } from './BottomNav';
 import { BottomSheet } from './BottomSheet';
 import { EmptyState } from './EmptyState';
+import { SideNav } from './SideNav';
 import { ToastProvider, useToast } from './Toast';
 import { TopAppBar } from './TopAppBar';
 
@@ -75,11 +76,15 @@ describe('layout UI components', () => {
     );
 
     expect(screen.getByRole('dialog')).toHaveClass('translate-y-0', 'rounded-t-lg');
+    expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby');
     expect(screen.getByTestId('bottom-sheet-drag-handle')).toHaveClass('h-1', 'w-3');
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalledTimes(1);
 
     fireEvent.click(screen.getByTestId('bottom-sheet-overlay'));
 
-    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenCalledTimes(2);
   });
 
   it('renders top app bar slots and centered title', () => {
@@ -134,5 +139,19 @@ describe('layout UI components', () => {
 
     fireEvent.click(screen.getByRole('link', { name: /New/ }));
     expect(screen.getByText('/new')).toBeInTheDocument();
+  });
+
+  it('renders desktop side nav with four routes and active state', () => {
+    render(
+      <MemoryRouter initialEntries={['/folders']}>
+        <SideNav />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('navigation', { name: 'Desktop primary' })).toHaveClass('w-60', 'md:flex');
+    expect(screen.getByRole('link', { name: '홈' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: '새 항목' })).toHaveAttribute('href', '/new');
+    expect(screen.getByRole('link', { name: '폴더' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('link', { name: '설정' })).toHaveAttribute('href', '/settings');
   });
 });
