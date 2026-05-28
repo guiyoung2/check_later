@@ -1,0 +1,302 @@
+{
+  "task": "design-renewal",
+  "created_at": "2026-05-28T00:00:00+0900",
+  "features": [
+    {
+      "id": "feat-1",
+      "name": "UI_GUIDE.md 전면 재작성",
+      "description": "디자인 토큰(컬러/타이포/간격/반경/그림자/모션) 및 안티패턴 가드레일이 fix3_design.md §2 기준으로 업데이트됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-2",
+      "name": "디자인 토큰 CSS 적용",
+      "description": "src/index.css에 순수 모노톤 CSS 변수 및 Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-3",
+      "name": "폰트 로딩 (Pretendard + Geist + JetBrains Mono)",
+      "description": "@font-face 또는 self-host로 세 폰트 로딩, LCP 회귀 없음",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-4",
+      "name": "Button 원자 컴포넌트",
+      "description": "variant(primary/secondary/ghost/danger), size(sm/md), leftIcon/rightIcon 지원, 모든 상태(hover/active/focus/disabled) 정의됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-5",
+      "name": "IconButton 원자 컴포넌트",
+      "description": "아이콘 전용 버튼, 44×44 터치 타깃 보장",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-6",
+      "name": "Chip 원자 컴포넌트",
+      "description": "variant(type/status/count), leftIcon 지원, type 칩은 surface-sub 배경 + label-mono 폰트",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-7",
+      "name": "Card 원자 컴포넌트",
+      "description": "hoverable 옵션, as(article/a) 지원, 6px radius, border, 그림자 없음 기본",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-8",
+      "name": "Input/Textarea 원자 컴포넌트",
+      "description": "포커스 시 border-strong 링, 모든 상태 정의됨",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-9",
+      "name": "Divider/Skeleton 원자 컴포넌트",
+      "description": "Divider: 단순 구분선, Skeleton: 카드 로딩용 애니메이션 플레이스홀더",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-10",
+      "name": "EmptyState 컴포넌트",
+      "description": "title/description/action props, 따뜻한 비어있음 원칙 적용",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-11",
+      "name": "Toast 컴포넌트",
+      "description": "4초 자동 닫힘, undo 액션 지원",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-12",
+      "name": "BottomSheet 컴포넌트",
+      "description": "모바일 전용, open/onClose/dragHandle props, 드래그 핸들 12×4, 8px radius",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-13",
+      "name": "TopAppBar 컴포넌트",
+      "description": "h-16 고정, 좌측 메뉴 / 가운데 워드마크 / 우측 계정 아이콘 구조",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-14",
+      "name": "BottomNav 컴포넌트 (모바일 전용)",
+      "description": "h-16 fixed, Home/New/Folders/Settings 4탭, Search 탭 없음, 현재 라우트 기준 active 탭 강조, 모바일에서만 표시",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-15",
+      "name": "HomePage 리뉴얼",
+      "description": "TopAppBar + FilterBar(sticky) + 타입별 변형 카드 피드(gap-24) + BottomNav 조합, max-w-800 레이아웃",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-16",
+      "name": "MemoCard 변형 카드",
+      "description": "type chip + 시각 / headline / body 3-line clamp 구조, 6px radius, border",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-17",
+      "name": "VideoCard 변형 카드",
+      "description": "aspect-video 섬네일 + play overlay + dim 20% + type chip + headline + mono URL",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-18",
+      "name": "ImageCard 변형 카드",
+      "description": "h-64 object-cover 이미지 + type chip + headline + memo 1줄",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-19",
+      "name": "ArticleCard 변형 카드",
+      "description": "type chip + headline + memo + 64×64 OG 섬네일 + url 표시 구조",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-20",
+      "name": "ItemCard type dispatch",
+      "description": "ItemCard가 item.type 기준으로 MemoCard/VideoCard/ImageCard/ArticleCard를 dispatch",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-21",
+      "name": "NewItemPage 리뉴얼",
+      "description": "BottomSheet 스타일(모바일)/중앙 카드(데스크탑), 3-grid quick option chip, textarea autofocus, URL 자동 감지, 태그/폴더 버튼 없음",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-22",
+      "name": "Web Share Target 진입 유지",
+      "description": "?title=&text=&url= 파라미터 자동 채움 + 확인 화면 유지(자동 저장 아님) 회귀 없음",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-23",
+      "name": "ItemDetailPage 리뉴얼",
+      "description": "sticky 헤더(back/share/edit/delete), type별 헤드 영역, status 3-segment toggle, blockquote 제거, 메모 섹션 카드 형태",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-24",
+      "name": "삭제 ConfirmDialog",
+      "description": "delete 아이콘 → ConfirmDialog → 삭제 + Home + Toast 되돌리기(undo 4s)",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-25",
+      "name": "스와이프 status 토글 (모바일)",
+      "description": "카드 좌→우 스와이프 → status 토글(pending→reviewed→archived), undo toast 4s",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-26",
+      "name": "길게 누르기 BottomSheet (모바일)",
+      "description": "카드 길게 누르기 → BottomSheet(수정/삭제/공유/status 직접 선택)",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-27",
+      "name": "데스크탑 호버 메뉴",
+      "description": "카드 우상단 hover 시 ⋯ 메뉴 표시",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-28",
+      "name": "/folders 새 페이지",
+      "description": "type×status 카운트 그리드(2칼럼 모바일/3칼럼 데스크탑), 클릭 시 /?type=X로 이동, 라우트 등록",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-29",
+      "name": "SettingsPage 리뉴얼",
+      "description": "4섹션(계정/PWA/테마/데이터), 테마 3-segment toggle(시스템/라이트/다크), label-mono 섹션 헤더",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-30",
+      "name": "LoginPage 리뉴얼",
+      "description": "중앙 카드(max-w-400), 워드마크, Google OAuth 버튼(secondary 스타일), PWA 안내",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-31",
+      "name": "Landing 리뉴얼",
+      "description": "1 viewport 짜리 소개, display 문구 + 3 그리드 설명 + 시작하기 CTA, 기존 LandingPage 폐기 또는 단순화",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-32",
+      "name": "안티패턴 가드레일 자동화",
+      "description": "scripts/check-antipatterns.mjs — border-left 3px+/background-clip:text/backdrop-filter/border-radius≥10px(card)/chromatic accent/#000/#fff 위반 0건 검사",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-33",
+      "name": "Empty/Loading/Error 상태 전수",
+      "description": "모든 페이지(Home/New/Detail/Folders/Settings/Login)에서 3종 상태 manual 시연 가능",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-34",
+      "name": "다크 모드 시스템 연동",
+      "description": "prefers-color-scheme 자동 매칭, 모든 페이지 라이트/다크 양쪽 시각 회귀 없음, 다크에서 그림자 없음",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-35",
+      "name": "a11y 기준 충족",
+      "description": "키보드 네비, focus ring, ARIA, 색 대비 WCAG AA, 모바일 터치 타깃 ≥44×44",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-36",
+      "name": "PWA + Web Share Target 회귀 없음",
+      "description": "manifest 변경 없음 확인, 빌드된 앱 모바일 install 후 공유 메뉴 동작 확인",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    },
+    {
+      "id": "feat-37",
+      "name": "SideNav 컴포넌트 (데스크탑 전용)",
+      "description": "w-240 고정 사이드바, Home/New/Folders/Settings 4메뉴, 현재 라우트 기준 active 항목 강조, 데스크탑(md+)에서만 표시 — BottomNav와 반응형 전환",
+      "passes": false,
+      "verified_at": null,
+      "verified_by_step": null
+    }
+  ]
+}
