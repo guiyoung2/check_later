@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -9,6 +9,7 @@ import type { Item } from '../types';
 
 const patchItem = vi.fn();
 const deleteItemMutate = vi.fn();
+const showToast = vi.fn();
 
 const item: Item = {
   id: 'item-1',
@@ -35,6 +36,10 @@ vi.mock('../hooks/useDeleteItem', () => ({
   useDeleteItem: () => ({ mutate: deleteItemMutate, isPending: false }),
 }));
 
+vi.mock('../components/ui/Toast', () => ({
+  useToast: () => ({ showToast }),
+}));
+
 vi.mock('../services/storageService', () => ({
   storageService: {
     getSignedUrl: vi.fn(),
@@ -54,13 +59,14 @@ function renderPage() {
     <MemoryRouter initialEntries={['/items/item-1']}>
       <Routes>
         <Route path="/items/:id" element={<ItemDetailPage />} />
+        <Route path="/" element={<div>홈</div>} />
       </Routes>
     </MemoryRouter>,
   );
 }
 
 async function startEdit(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getAllByRole('button')[1]);
+  await user.click(screen.getByRole('button', { name: '수정' }));
 }
 
 async function submitEdit(user: ReturnType<typeof userEvent.setup>) {
@@ -170,12 +176,11 @@ describe('ItemDetailPage', () => {
     );
   });
 
-  it('shows ConfirmDialog on delete and calls deleteItem on confirm', async () => {
+  it('shows ConfirmDialog on delete, deletes on confirm, then navigates home with undo toast', async () => {
     const user = userEvent.setup();
     renderPage();
 
-    // 삭제 아이콘 버튼 클릭 (header: 뒤로가기[0], 수정[1], 삭제[2])
-    await user.click(screen.getAllByRole('button')[2]);
+    await user.click(screen.getByRole('button', { name: '항목 삭제' }));
 
     expect(screen.getByText('정말 삭제할까요?')).toBeInTheDocument();
 
@@ -183,13 +188,29 @@ describe('ItemDetailPage', () => {
     await user.click(screen.getByRole('button', { name: '삭제' }));
 
     expect(deleteItemMutate).toHaveBeenCalledWith('item-1', expect.any(Object));
+    const [, options] = deleteItemMutate.mock.calls[0];
+    act(() => {
+      options.onSuccess();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('홈')).toBeInTheDocument();
+    });
+    expect(showToast).toHaveBeenCalledWith({
+      message: '삭제됨',
+      undo: {
+        label: '되돌리기',
+        onClick: expect.any(Function),
+      },
+      duration: 4000,
+    });
   });
 
   it('cancels ConfirmDialog without deleting', async () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.click(screen.getAllByRole('button')[2]);
+    await user.click(screen.getByRole('button', { name: '항목 삭제' }));
     expect(screen.getByText('정말 삭제할까요?')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '취소' }));

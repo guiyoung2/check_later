@@ -182,17 +182,17 @@
       "id": "feat-23",
       "name": "ItemDetailPage renewal",
       "description": "Renew detail page header, type head area, status toggle, and memo section.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:05:02+09:00",
+      "verified_by_step": 8
     },
     {
       "id": "feat-24",
       "name": "Delete ConfirmDialog",
       "description": "Add destructive delete confirmation with navigation and undo toast.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:05:02+09:00",
+      "verified_by_step": 8
     },
     {
       "id": "feat-25",

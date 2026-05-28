@@ -1,7 +1,7 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-28T23:46:50+0900 — Step 8/19 완료
+2026-05-29T00:05:02+0900 — Step 8/19 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
@@ -12,23 +12,22 @@
 - Step 5: home-page-renewal — HomePage 리뉴얼 — TopAppBar/FilterBar/BottomNav 적용, 3가지 상태(로딩/빈/에러) 처리 완료
 - Step 6: type-variant-cards — MemoCard/VideoCard/ImageCard/ArticleCard 4변형 구현, ItemCard type dispatch 완료
 - Step 7: new-item-page-renewal — NewItemPage 리뉴얼 — BottomSheet 스타일, 3-grid chip, URL 자동 감지, Web Share Target 회귀 테스트 통과
+- Step 8: item-detail-page-renewal — ItemDetailPage 리뉴얼: sticky 헤더, share/edit/delete, type별 헤드, status 3-segment, ConfirmDialog + undo toast 테스트 완료
 
 ## 현재 진행 중
-- Step 8: item-detail-page-renewal
+- Step 9: mobile-gestures
 
 ## 다음 할 일
-- Step 8: `/items/:id` 페이지 리뉴얼
-  - sticky 헤더: 뒤로가기 / share·edit·delete 아이콘
-  - type별 헤드 영역 (Video: aspect-video + play overlay, Image: full-width, Article/Memo: 없음)
-  - 메타 라인: type chip + 저장 날짜 + status
-  - title (display 32)
-  - URL 링크 (있으면 mono font)
-  - divider
-  - 메모 섹션 (bg-surface 카드, blockquote 없이 단순 p/ul)
-  - status 3-segment toggle (안봤음/봤음/보관)
-  - 삭제: ConfirmDialog → Toast "삭제됨 · 되돌리기" + Home 이동
+- Step 9: 카드 인터랙션 구현
+  - `fix3_design.md` §4.1과 `phases/design-renewal/step9.md`를 먼저 읽는다.
+  - 카드 좌→우 스와이프 threshold 80px 이상에서 status 순환 + undo toast를 구현한다.
+  - 모바일 500ms long press BottomSheet와 데스크탑 hover 메뉴를 구현한다.
+  - 삭제 액션은 Step 8의 ConfirmDialog 흐름을 재사용한다.
 
 ## 주의사항
+- **ItemDetailPage 삭제 토스트**: `showToast({ message: '삭제됨', undo: { label: '되돌리기', ... }, duration: 4000 })` 형태를 테스트로 고정함. 실제 복구 API는 없으므로 서비스 계층을 바꾸지 않는 한 undo는 UI 액션 수준에 머문다.
+- **ItemDetailPage 테스트**: 헤더 버튼 순서가 아니라 aria label(`수정`, `항목 삭제`) 기준으로 클릭해야 함. Step 8에서 `공유` 버튼이 추가되어 순서 기반 테스트는 깨진다.
+- **video duration 데이터 없음**: items 스키마에 duration 필드가 없어 상세 video 헤드의 우하단 badge는 현재 정적 label-mono 배지로 구현됨.
 - **ToastProvider가 App.tsx에 추가됨**: Routes를 ToastProvider로 감쌌음. 이로써 라우트 이동 후에도 Toast가 표시됨. 향후 App.tsx 수정 시 이 래퍼를 유지해야 함.
 - **NewItemPage 단일 textarea 구조**: 기존의 분리된 title/URL/memo 입력 대신 단일 textarea로 통합. URL 입력 → OG title 자동 fetch, 텍스트 입력 → memo+title 모두 동일 값. 다중 URL 기능 제거됨.
 - **Web Share Target 파라미터 우선순위**: `sharedUrl || sharedText || sharedTitle` 순서로 textarea 초기값 결정. URL이 있으면 URL이 textarea를 채움.

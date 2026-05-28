@@ -69,10 +69,9 @@
     {
       "step": 8,
       "name": "item-detail-page-renewal",
-      "status": "error",
+      "status": "completed",
       "started_at": "2026-05-28T23:46:51+0900",
-      "error_message": "[3회 시도 후 실패] Step did not update status",
-      "failed_at": "2026-05-28T23:55:34+0900"
+      "summary": "ItemDetailPage 리뉴얼 — sticky 헤더, type별 헤드, status 3-segment, blockquote 제거, ConfirmDialog 추가"
     },
     {
       "step": 9,

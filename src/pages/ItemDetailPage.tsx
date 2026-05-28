@@ -71,6 +71,17 @@ function TrashIcon(): JSX.Element {
   );
 }
 
+function ShareIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <path d="M8.59 13.51 15.42 17.49M15.41 6.51 8.59 10.49" />
+    </svg>
+  );
+}
+
 function PlayIcon(): JSX.Element {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-12 w-12 text-surface" fill="currentColor">
@@ -270,10 +281,27 @@ export default function ItemDetailPage(): JSX.Element {
   function handleDelete() {
     deleteItem(currentItem.id, {
       onSuccess: () => {
-        showToast({ message: '삭제됨' });
+        showToast({
+          message: '삭제됨',
+          undo: {
+            label: '되돌리기',
+            onClick: () => navigate(`/items/${currentItem.id}`),
+          },
+          duration: 4000,
+        });
         navigate('/');
       },
     });
+  }
+
+  async function handleShare() {
+    const shareUrl = urlAttachments[0]?.value ?? window.location.href;
+    if (navigator.share) {
+      await navigator.share({ title: currentItem.title, url: shareUrl }).catch(() => undefined);
+      return;
+    }
+    await navigator.clipboard?.writeText(shareUrl).catch(() => undefined);
+    showToast({ message: '링크 복사됨', duration: 4000 });
   }
 
   // type별 헤드 영역
@@ -309,6 +337,9 @@ export default function ItemDetailPage(): JSX.Element {
           <div className="absolute inset-0 flex items-center justify-center bg-[oklch(10%_0.006_80)]/20">
             <PlayIcon />
           </div>
+          <span className="absolute right-3 bottom-3 rounded-xs bg-text-primary px-2 py-1 font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-bg">
+            VIDEO
+          </span>
         </div>
       );
     }
@@ -320,14 +351,22 @@ export default function ItemDetailPage(): JSX.Element {
       {/* sticky 헤더 */}
       <header className="sticky top-0 z-10 border-b border-border bg-bg">
         <div className="mx-auto flex h-14 max-w-[800px] items-center justify-between px-4">
-          <IconButton
-            aria-label="뒤로가기"
-            size="sm"
+          <button
+            type="button"
             onClick={() => navigate(-1)}
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-sm px-2 text-[14px] leading-[1.5] font-medium text-text-primary transition-[background-color,box-shadow,transform] duration-200 ease-out hover:bg-surface-sub active:translate-y-px focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none"
           >
             <ArrowLeftIcon />
-          </IconButton>
+            <span>Back</span>
+          </button>
           <div className="flex items-center gap-1">
+            <IconButton
+              aria-label="공유"
+              size="sm"
+              onClick={handleShare}
+            >
+              <ShareIcon />
+            </IconButton>
             <IconButton
               aria-label="수정"
               size="sm"
