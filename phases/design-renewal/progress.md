@@ -1,7 +1,7 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T00:06:54+0900 — Step 9/19 완료
+2026-05-29T00:13:15+09:00 — Step 10/19 준비 중
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
@@ -13,18 +13,24 @@
 - Step 6: type-variant-cards — MemoCard/VideoCard/ImageCard/ArticleCard 4변형 구현, ItemCard type dispatch 완료
 - Step 7: new-item-page-renewal — NewItemPage 리뉴얼 — BottomSheet 스타일, 3-grid chip, URL 자동 감지, Web Share Target 회귀 테스트 통과
 - Step 8: item-detail-page-renewal — ItemDetailPage 리뉴얼 — sticky 헤더, type별 헤드, status 3-segment, blockquote 제거, ConfirmDialog 추가
+- Step 9: mobile-gestures — 스와이프 status 토글, 길게 누르기 BottomSheet, 데스크탑 hover 메뉴 구현 완료
 
 ## 현재 진행 중
-- Step 9: mobile-gestures
+- Step 10: folders-page
 
 ## 다음 할 일
-- Step 9: 카드 인터랙션 구현
-  - `fix3_design.md` §4.1과 `phases/design-renewal/step9.md`를 먼저 읽는다.
-  - 카드 좌→우 스와이프 threshold 80px 이상에서 status 순환 + undo toast를 구현한다.
-  - 모바일 500ms long press BottomSheet와 데스크탑 hover 메뉴를 구현한다.
-  - 삭제 액션은 Step 8의 ConfirmDialog 흐름을 재사용한다.
+- Step 10: Folders 페이지 구현
+  - `phases/design-renewal/step10.md`, `fix3_design.md` §4.4, `docs/PRD.md`를 먼저 읽는다.
+  - `src/pages/FoldersPage.tsx`를 신설하고 `/folders` 라우트를 `ProtectedRoute`로 등록한다.
+  - 기존 `useItems` 데이터를 집계해 type/status 카운트 카드를 만들고, 클릭 시 `/?type=...` 또는 `/?status=...`로 이동시킨다.
+  - Step 10 금지사항에 따라 새 폴더 생성, Search, 태그 UI는 추가하지 않는다.
 
 ## 주의사항
+- **ItemCard 제스처 wrapper**: `src/components/ItemCard.tsx`에서 모든 type 카드 변형을 감싸며 `usePatchItem`, `useDeleteItem`, `useToast`를 사용한다. ItemCard를 단독 렌더하는 테스트는 QueryClientProvider를 쓰거나 이 훅들을 mock해야 한다.
+- **스와이프 threshold**: 좌→우 touch delta 80px 이상에서만 status가 `pending → reviewed → archived → pending` 순환한다. 시각 피드백은 wrapper `transform: translateX(...)`만 사용한다.
+- **길게 누르기**: pointerdown 후 500ms에 BottomSheet가 열린다. 버튼/링크에서 시작한 pointerdown은 long press 대상에서 제외한다.
+- **수정 메뉴 진입**: 카드 메뉴/BottomSheet의 수정은 `/items/:id?edit=1`로 이동한다. `ItemDetailPage`는 `edit=1` 쿼리 진입 시 편집 폼을 연다.
+- **닫힌 카드 BottomSheet**: 접근성/테스트 중복을 피하기 위해 ItemCard의 BottomSheet는 `sheetOpen`일 때만 렌더한다. 공용 `BottomSheet` 컴포넌트 자체의 mounted 동작은 변경하지 않았다.
 - **ItemDetailPage 삭제 토스트**: `showToast({ message: '삭제됨', undo: { label: '되돌리기', ... }, duration: 4000 })` 형태를 테스트로 고정함. 실제 복구 API는 없으므로 서비스 계층을 바꾸지 않는 한 undo는 UI 액션 수준에 머문다.
 - **ItemDetailPage 테스트**: 헤더 버튼 순서가 아니라 aria label(`수정`, `항목 삭제`) 기준으로 클릭해야 함. Step 8에서 `공유` 버튼이 추가되어 순서 기반 테스트는 깨진다.
 - **video duration 데이터 없음**: items 스키마에 duration 필드가 없어 상세 video 헤드의 우하단 badge는 현재 정적 label-mono 배지로 구현됨.

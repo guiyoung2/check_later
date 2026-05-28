@@ -77,7 +77,9 @@
     {
       "step": 9,
       "name": "mobile-gestures",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-29T00:06:54+0900",
+      "summary": "스와이프 status 토글, 길게 누르기 BottomSheet, 데스크탑 hover 메뉴 구현 완료"
     },
     {
       "step": 10,

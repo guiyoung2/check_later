@@ -14,6 +14,18 @@ vi.mock('../hooks/useItems', () => ({
   useItems: () => useItemsState.value,
 }));
 
+vi.mock('../hooks/usePatchItem', () => ({
+  usePatchItem: () => ({ mutate: vi.fn() }),
+}));
+
+vi.mock('../hooks/useDeleteItem', () => ({
+  useDeleteItem: () => ({ mutate: vi.fn(), isPending: false }),
+}));
+
+vi.mock('../components/ui/Toast', () => ({
+  useToast: () => ({ showToast: vi.fn() }),
+}));
+
 const item: Item = {
   id: 'item-1',
   user_id: 'user-1',

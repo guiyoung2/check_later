@@ -1,6 +1,6 @@
 import type { ChangeEvent, JSX } from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useItem } from '../hooks/useItem';
 import { usePatchItem } from '../hooks/usePatchItem';
 import { useDeleteItem } from '../hooks/useDeleteItem';
@@ -94,6 +94,7 @@ function PlayIcon(): JSX.Element {
 export default function ItemDetailPage(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { data: item, isLoading } = useItem(id);
   const { mutate: patchItem, isPending: isPatching } = usePatchItem();
   const { mutate: deleteItem, isPending: isDeleting } = useDeleteItem();
@@ -171,6 +172,16 @@ export default function ItemDetailPage(): JSX.Element {
     () => imageAttachments.filter((attachment) => !removedImagePaths.includes(attachment.value)),
     [imageAttachments, removedImagePaths],
   );
+
+  useEffect(() => {
+    if (!item || searchParams.get('edit') !== '1' || isEditing) return;
+    setEditTitle(item.title);
+    setEditUrls(urlAttachments.length ? urlAttachments.map((attachment) => attachment.value) : ['']);
+    setEditMemo(item.memo ?? '');
+    setEditImageFiles([]);
+    setRemovedImagePaths([]);
+    setIsEditing(true);
+  }, [isEditing, item, searchParams, urlAttachments]);
 
   // 이미지 signed URL 로드 (실패 시 조용히 숨김)
   useEffect(() => {

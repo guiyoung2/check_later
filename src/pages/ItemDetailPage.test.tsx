@@ -65,6 +65,17 @@ function renderPage() {
   );
 }
 
+function renderPageAt(path: string) {
+  render(
+    <MemoryRouter initialEntries={[path]}>
+      <Routes>
+        <Route path="/items/:id" element={<ItemDetailPage />} />
+        <Route path="/" element={<div>홈</div>} />
+      </Routes>
+    </MemoryRouter>,
+  );
+}
+
 async function startEdit(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: '수정' }));
 }
@@ -103,6 +114,12 @@ describe('ItemDetailPage', () => {
         image_path: 'user-1/item-1.png',
       },
     });
+  });
+
+  it('edit=1 쿼리로 진입하면 편집 폼을 연다', async () => {
+    renderPageAt('/items/item-1?edit=1');
+
+    expect(await screen.findByLabelText('제목')).toHaveValue('Original title');
   });
 
   it('renders detail images with contain layout', async () => {

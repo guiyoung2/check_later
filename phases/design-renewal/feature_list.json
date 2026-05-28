@@ -198,25 +198,25 @@
       "id": "feat-25",
       "name": "Swipe status toggle",
       "description": "Add mobile card swipe status toggle with undo toast.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:13:15+09:00",
+      "verified_by_step": 9
     },
     {
       "id": "feat-26",
       "name": "Long press BottomSheet",
       "description": "Add mobile long press bottom sheet for edit, delete, share, and status selection.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:13:15+09:00",
+      "verified_by_step": 9
     },
     {
       "id": "feat-27",
       "name": "Desktop hover menu",
       "description": "Show card overflow menu on desktop hover.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:13:15+09:00",
+      "verified_by_step": 9
     },
     {
       "id": "feat-28",
