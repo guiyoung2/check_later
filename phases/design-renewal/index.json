@@ -87,7 +87,7 @@
       "name": "folders-page",
       "status": "completed",
       "started_at": "2026-05-29T00:15:16+0900",
-      "completed_at": "2026-05-29T00:19:16+09:00",
+      "completed_at": "2026-05-29T00:21:43+0900",
       "summary": "/folders 페이지 신설 — type×status 카운트 그리드, 클릭 시 Home 필터 이동, 라우트 등록 완료"
     },
     {
