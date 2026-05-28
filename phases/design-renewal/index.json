@@ -21,7 +21,10 @@
     {
       "step": 2,
       "name": "atomic-ui-components",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-28T17:01:22+0900",
+      "completed_at": "2026-05-28T17:04:29+09:00",
+      "summary": "src/components/ui/ 신설 — Button/IconButton/Chip/Card/Input/Textarea/Divider/Skeleton 8개 구현 완료"
     },
     {
       "step": 3,

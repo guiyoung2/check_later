@@ -30,49 +30,49 @@
       "id": "feat-4",
       "name": "Button 원자 컴포넌트",
       "description": "variant(primary/secondary/ghost/danger), size(sm/md), leftIcon/rightIcon 지원, 모든 상태(hover/active/focus/disabled) 정의됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T17:04:29+09:00",
+      "verified_by_step": 2
     },
     {
       "id": "feat-5",
       "name": "IconButton 원자 컴포넌트",
       "description": "아이콘 전용 버튼, 44×44 터치 타깃 보장",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T17:04:29+09:00",
+      "verified_by_step": 2
     },
     {
       "id": "feat-6",
       "name": "Chip 원자 컴포넌트",
       "description": "variant(type/status/count), leftIcon 지원, type 칩은 surface-sub 배경 + label-mono 폰트",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T17:04:29+09:00",
+      "verified_by_step": 2
     },
     {
       "id": "feat-7",
       "name": "Card 원자 컴포넌트",
       "description": "hoverable 옵션, as(article/a) 지원, 6px radius, border, 그림자 없음 기본",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T17:04:29+09:00",
+      "verified_by_step": 2
     },
     {
       "id": "feat-8",
       "name": "Input/Textarea 원자 컴포넌트",
       "description": "포커스 시 border-strong 링, 모든 상태 정의됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T17:04:29+09:00",
+      "verified_by_step": 2
     },
     {
       "id": "feat-9",
       "name": "Divider/Skeleton 원자 컴포넌트",
       "description": "Divider: 단순 구분선, Skeleton: 카드 로딩용 애니메이션 플레이스홀더",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T17:04:29+09:00",
+      "verified_by_step": 2
     },
     {
       "id": "feat-10",
