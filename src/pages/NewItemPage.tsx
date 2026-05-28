@@ -5,6 +5,7 @@ import { detectType } from '../lib/form-type-detect';
 import { fetchOgTitle } from '../lib/og-parser';
 import { useCreateItem } from '../hooks/useCreateItem';
 import { storageService } from '../services/storageService';
+import { itemAttachmentsService } from '../services/itemAttachmentsService';
 import { useAuth } from '../lib/auth';
 import type { ItemType } from '../types';
 
@@ -28,13 +29,14 @@ export default function NewItemPage(): JSX.Element {
   const [preAssignedId] = useState(() => crypto.randomUUID());
 
   const [title, setTitle] = useState(searchParams.get('title') ?? '');
-  const [url, setUrl] = useState(initUrl);
+  const [urls, setUrls] = useState<string[]>([initUrl]);
   const [memo, setMemo] = useState(searchParams.get('text') ?? '');
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [typeOverride, setTypeOverride] = useState<ItemType | null>(null);
+  const primaryUrl = urls.find((item) => item.trim() !== '') ?? '';
   const detectedType = useMemo(
-    () => detectType({ hasImage: !!imageFile, url }),
-    [url, imageFile]
+    () => detectType({ hasImage: imageFiles.length > 0, url: primaryUrl }),
+    [primaryUrl, imageFiles.length]
   );
   const type = typeOverride ?? detectedType;
   const [isUploading, setIsUploading] = useState(false);
@@ -42,7 +44,7 @@ export default function NewItemPage(): JSX.Element {
 
   // URL 변경 시 og:title 자동 채움
   useEffect(() => {
-    const trimmed = url.trim();
+    const trimmed = primaryUrl.trim();
     if (!trimmed) return;
 
     fetchOgTitle(trimmed).then((ogTitle) => {
@@ -52,13 +54,21 @@ export default function NewItemPage(): JSX.Element {
         setTitle((prev) => (prev.trim() === '' ? trimmed : prev));
       }
     });
-  }, [url]);
+  }, [primaryUrl]);
 
   // 이미지 파일 선택/해제 핸들러
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0] ?? null;
-    setImageFile(file);
+    const files = Array.from(e.target.files ?? []);
+    setImageFiles(files);
     setError(null);
+  }
+
+  function updateUrl(index: number, value: string) {
+    setUrls((prev) => prev.map((url, currentIndex) => (currentIndex === index ? value : url)));
+  }
+
+  function addUrl() {
+    setUrls((prev) => [...prev, '']);
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -67,26 +77,30 @@ export default function NewItemPage(): JSX.Element {
     setError(null);
 
     try {
-      if (imageFile) {
+      const trimmedUrls = urls.map((item) => item.trim()).filter(Boolean);
+      let imagePaths: string[] = [];
+
+      if (imageFiles.length > 0) {
         setIsUploading(true);
-        const imagePath = await storageService.upload(imageFile, user.id, preAssignedId);
+        imagePaths = [];
+        for (const file of imageFiles) {
+          imagePaths.push(await storageService.upload(file, user.id, preAssignedId));
+        }
         setIsUploading(false);
-        await createItem({
-          id: preAssignedId,
-          title: title.trim(),
-          type,
-          url: url.trim() || undefined,
-          memo: memo.trim() || undefined,
-          image_path: imagePath,
-        });
-      } else {
-        await createItem({
-          title: title.trim(),
-          type,
-          url: url.trim() || undefined,
-          memo: memo.trim() || undefined,
-        });
       }
+
+      await createItem({
+        id: preAssignedId,
+        title: title.trim(),
+        type,
+        url: trimmedUrls[0],
+        memo: memo.trim() || undefined,
+        image_path: imagePaths[0],
+      });
+      await itemAttachmentsService.createMany(preAssignedId, user.id, [
+        ...trimmedUrls.map((value) => ({ kind: 'url' as const, value })),
+        ...imagePaths.map((value) => ({ kind: 'image' as const, value })),
+      ]);
       navigate('/');
     } catch (err) {
       setIsUploading(false);
@@ -112,18 +126,26 @@ export default function NewItemPage(): JSX.Element {
 
       <form onSubmit={handleSubmit} className="px-4 py-4 flex flex-col gap-5 max-w-lg mx-auto">
         {/* URL 입력 */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="url" className="text-xs font-medium text-text-sub">
-            URL
-          </label>
-          <input
-            id="url"
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://"
-            className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary placeholder:text-text-sub outline-none focus:border-accent"
-          />
+        <div className="flex flex-col gap-2">
+          <span className="text-xs font-medium text-text-sub">URL</span>
+          {urls.map((url, index) => (
+            <input
+              key={index}
+              aria-label={`URL ${index + 1}`}
+              type="text"
+              value={url}
+              onChange={(e) => updateUrl(index, e.target.value)}
+              placeholder="https://"
+              className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary placeholder:text-text-sub outline-none focus:border-accent"
+            />
+          ))}
+          <button
+            type="button"
+            onClick={addUrl}
+            className="self-start min-h-9 rounded-[8px] border border-border px-3 text-sm font-medium text-text-sub hover:bg-surface"
+          >
+            URL 추가
+          </button>
         </div>
 
         {/* 제목 입력 */}
@@ -171,11 +193,18 @@ export default function NewItemPage(): JSX.Element {
             id="image"
             type="file"
             accept="image/*"
+            multiple
             onChange={handleFileChange}
             className="text-sm text-text-sub file:mr-3 file:py-1.5 file:px-3 file:rounded-[6px] file:border file:border-border file:bg-surface file:text-text-sub file:text-sm file:cursor-pointer"
           />
-          {imageFile && (
-            <span className="text-xs text-text-sub">{imageFile.name}</span>
+          {imageFiles.length > 0 && (
+            <div className="flex flex-col gap-1">
+              {imageFiles.map((file) => (
+                <span key={`${file.name}-${file.size}`} className="text-xs text-text-sub">
+                  {file.name}
+                </span>
+              ))}
+            </div>
           )}
         </div>
 

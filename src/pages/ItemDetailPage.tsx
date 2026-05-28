@@ -1,11 +1,12 @@
 import type { JSX } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useItem } from '../hooks/useItem';
 import { usePatchItem } from '../hooks/usePatchItem';
 import { useDeleteItem } from '../hooks/useDeleteItem';
 import { storageService } from '../services/storageService';
-import type { ItemType, ItemStatus } from '../types';
+import { itemAttachmentsService } from '../services/itemAttachmentsService';
+import type { ItemType, ItemStatus, ItemAttachment, ItemAttachmentInput } from '../types';
 
 const TYPE_LABELS: Record<ItemType, string> = {
   video: '영상',
@@ -43,32 +44,90 @@ export default function ItemDetailPage(): JSX.Element {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState('');
-  const [editUrl, setEditUrl] = useState('');
+  const [editUrls, setEditUrls] = useState<string[]>(['']);
   const [editMemo, setEditMemo] = useState('');
-  const [signedImage, setSignedImage] = useState<{ path: string; url: string } | null>(null);
+  const [editImageFiles, setEditImageFiles] = useState<File[]>([]);
+  const [attachments, setAttachments] = useState<ItemAttachment[] | null>(null);
+  const [signedImages, setSignedImages] = useState<Record<string, string>>({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const itemId = item?.id;
+
+  useEffect(() => {
+    if (!itemId) return;
+    const currentItemId = itemId;
+    let ignore = false;
+
+    async function loadAttachments() {
+      try {
+        const rows = await itemAttachmentsService.listByItemId(currentItemId);
+        if (!ignore) setAttachments(Array.isArray(rows) ? rows : []);
+      } catch {
+        if (!ignore) setAttachments([]);
+      }
+    }
+
+    loadAttachments();
+    return () => {
+      ignore = true;
+    };
+  }, [itemId]);
+
+  const fallbackAttachments: ItemAttachment[] = useMemo(() => [
+    ...(item?.url
+      ? [{
+          id: 'legacy-url',
+          item_id: item.id,
+          user_id: item.user_id,
+          kind: 'url' as const,
+          value: item.url,
+          sort_order: 0,
+          created_at: item.created_at,
+        }]
+      : []),
+    ...(item?.image_path
+      ? [{
+          id: 'legacy-image',
+          item_id: item.id,
+          user_id: item.user_id,
+          kind: 'image' as const,
+          value: item.image_path,
+          sort_order: 1,
+          created_at: item.created_at,
+        }]
+      : []),
+  ], [item]);
+  const currentAttachments = useMemo(
+    () => (attachments?.length ? attachments : fallbackAttachments),
+    [attachments, fallbackAttachments],
+  );
+  const urlAttachments = useMemo(
+    () => currentAttachments.filter((attachment) => attachment.kind === 'url'),
+    [currentAttachments],
+  );
+  const imageAttachments = useMemo(
+    () => currentAttachments.filter((attachment) => attachment.kind === 'image'),
+    [currentAttachments],
+  );
 
   // 이미지 signed URL 로드 (실패 시 조용히 숨김)
   useEffect(() => {
     let ignore = false;
 
-    const imagePath = item?.image_path;
-    if (!imagePath) return;
+    async function loadSignedImages() {
+      const entries: Record<string, string> = {};
+      for (const attachment of imageAttachments) {
+        const url = await storageService.getSignedUrl(attachment.value).catch(() => null);
+        if (url) entries[attachment.value] = url;
+      }
+      if (!ignore) setSignedImages(entries);
+    }
 
-    storageService
-      .getSignedUrl(imagePath)
-      .then((url) => {
-        if (!ignore && url) setSignedImage({ path: imagePath, url });
-      })
-      .catch(() => null);
+    loadSignedImages();
 
     return () => {
       ignore = true;
     };
-  }, [item?.image_path]);
-
-  const signedImageUrl =
-    signedImage && signedImage.path === item?.image_path ? signedImage.url : null;
+  }, [imageAttachments]);
 
   if (isLoading) {
     return (
@@ -93,22 +152,55 @@ export default function ItemDetailPage(): JSX.Element {
 
   function handleStartEdit() {
     setEditTitle(currentItem.title);
-    setEditUrl(currentItem.url ?? '');
+    setEditUrls(urlAttachments.length ? urlAttachments.map((attachment) => attachment.value) : ['']);
     setEditMemo(currentItem.memo ?? '');
+    setEditImageFiles([]);
     setIsEditing(true);
   }
 
-  function handleSaveEdit() {
+  async function handleSaveEdit() {
     if (!editTitle.trim()) return;
+    const trimmedUrls = editUrls.map((url) => url.trim()).filter(Boolean);
+    const existingImages = imageAttachments.map((attachment) => attachment.value);
+    const uploadedImages: string[] = [];
+
+    for (const file of editImageFiles) {
+      uploadedImages.push(await storageService.upload(file, currentItem.user_id, currentItem.id));
+    }
+
+    const nextImages = uploadedImages.length > 0 ? uploadedImages : existingImages;
+    const nextAttachments: ItemAttachmentInput[] = [
+      ...trimmedUrls.map((value) => ({ kind: 'url' as const, value })),
+      ...nextImages.map((value) => ({ kind: 'image' as const, value })),
+    ];
+
     patchItem({
       id: currentItem.id,
       input: {
         title: editTitle.trim(),
-        url: editUrl.trim() || null,
+        url: trimmedUrls[0] ?? null,
         memo: editMemo.trim() || null,
       },
     });
+    await itemAttachmentsService.replaceForItem(currentItem.id, currentItem.user_id, nextAttachments);
+    setAttachments(nextAttachments.map((attachment, index) => ({
+      id: `local-${index}`,
+      item_id: currentItem.id,
+      user_id: currentItem.user_id,
+      kind: attachment.kind,
+      value: attachment.value,
+      sort_order: index,
+      created_at: new Date().toISOString(),
+    })));
     setIsEditing(false);
+  }
+
+  function updateEditUrl(index: number, value: string) {
+    setEditUrls((prev) => prev.map((url, currentIndex) => (currentIndex === index ? value : url)));
+  }
+
+  function addEditUrl() {
+    setEditUrls((prev) => [...prev, '']);
   }
 
   // 삭제 확인 후 실행
@@ -149,12 +241,19 @@ export default function ItemDetailPage(): JSX.Element {
 
       <div className="px-4 py-5 max-w-lg mx-auto flex flex-col gap-5">
         {/* 이미지 */}
-        {signedImageUrl && (
-          <img
-            src={signedImageUrl}
-            alt="첨부 이미지"
-            className="max-h-[70vh] w-full rounded-[6px] bg-surface object-contain"
-          />
+        {imageAttachments.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {imageAttachments.map((attachment) => (
+              signedImages[attachment.value] && (
+                <img
+                  key={attachment.value}
+                  src={signedImages[attachment.value]}
+                  alt="첨부 이미지"
+                  className="max-h-[70vh] w-full rounded-[6px] bg-surface object-contain"
+                />
+              )
+            ))}
+          </div>
         )}
 
         {isEditing ? (
@@ -178,17 +277,47 @@ export default function ItemDetailPage(): JSX.Element {
                 className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary outline-none focus:border-accent"
               />
             </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-medium text-text-sub">URL</span>
+              {editUrls.map((url, index) => (
+                <input
+                  key={index}
+                  aria-label={`URL ${index + 1}`}
+                  type="text"
+                  value={url}
+                  onChange={(e) => updateEditUrl(index, e.target.value)}
+                  className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary outline-none focus:border-accent"
+                />
+              ))}
+              <button
+                type="button"
+                onClick={addEditUrl}
+                className="self-start min-h-9 rounded-[8px] border border-border px-3 text-sm font-medium text-text-sub hover:bg-surface"
+              >
+                URL 추가
+              </button>
+            </div>
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="edit-url" className="text-xs font-medium text-text-sub">
-                URL
+              <label htmlFor="edit-images" className="text-xs font-medium text-text-sub">
+                이미지
               </label>
               <input
-                id="edit-url"
-                type="text"
-                value={editUrl}
-                onChange={(e) => setEditUrl(e.target.value)}
-                className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary outline-none focus:border-accent"
+                id="edit-images"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => setEditImageFiles(Array.from(e.target.files ?? []))}
+                className="text-sm text-text-sub file:mr-3 file:py-1.5 file:px-3 file:rounded-[6px] file:border file:border-border file:bg-surface file:text-text-sub file:text-sm file:cursor-pointer"
               />
+              {editImageFiles.length > 0 && (
+                <div className="flex flex-col gap-1">
+                  {editImageFiles.map((file) => (
+                    <span key={`${file.name}-${file.size}`} className="text-xs text-text-sub">
+                      {file.name}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="edit-memo" className="text-xs font-medium text-text-sub">
@@ -262,17 +391,22 @@ export default function ItemDetailPage(): JSX.Element {
             </div>
 
             {/* URL */}
-            {currentItem.url && (
+            {urlAttachments.length > 0 && (
               <div className="flex flex-col gap-1">
                 <span className="text-xs font-medium text-text-sub">URL</span>
-                <a
-                  href={currentItem.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-accent underline break-all"
-                >
-                  {currentItem.url}
-                </a>
+                <div className="flex flex-col gap-1.5">
+                  {urlAttachments.map((attachment) => (
+                    <a
+                      key={attachment.id}
+                      href={attachment.value}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-accent underline break-all"
+                    >
+                      {attachment.value}
+                    </a>
+                  ))}
+                </div>
               </div>
             )}
 

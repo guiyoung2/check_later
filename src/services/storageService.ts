@@ -6,7 +6,7 @@ export const storageService = {
   // 파일 업로드. 경로: {userId}/{itemId}.{ext}
   async upload(file: File, userId: string, itemId: string): Promise<string> {
     const ext = file.name.split('.').pop();
-    const path = `${userId}/${itemId}.${ext}`;
+    const path = `${userId}/${itemId}/${crypto.randomUUID()}.${ext}`;
 
     const { error } = await supabase.storage.from(BUCKET).upload(path, file);
     if (error) throw error;
