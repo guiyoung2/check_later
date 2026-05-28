@@ -47,7 +47,7 @@
       "name": "home-page-renewal",
       "status": "completed",
       "started_at": "2026-05-28T17:18:28+0900",
-      "completed_at": "2026-05-28T17:24:52+09:00",
+      "completed_at": "2026-05-28T17:30:02+0900",
       "summary": "HomePage 리뉴얼 — TopAppBar/FilterBar/BottomNav 적용, 3가지 상태(로딩/빈/에러) 처리 완료"
     },
     {
