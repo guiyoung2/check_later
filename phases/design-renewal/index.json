@@ -55,7 +55,7 @@
       "name": "type-variant-cards",
       "status": "completed",
       "started_at": "2026-05-28T21:38:59+0900",
-      "completed_at": "2026-05-28T21:47:00+0900",
+      "completed_at": "2026-05-28T21:47:46+0900",
       "summary": "MemoCard/VideoCard/ImageCard/ArticleCard 4변형 구현, ItemCard type dispatch 완료"
     },
     {
