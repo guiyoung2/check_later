@@ -1,14 +1,14 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-28T17:00:00+09:00 — Step 2/19 준비
+2026-05-28T17:01:21+0900 — Step 2/19 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
-- Step 1: design-tokens — src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료
+- Step 1: design-tokens — src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거
 
 ## 현재 진행 중
-- 없음
+- Step 2: atomic-ui-components
 
 ## 다음 할 일
 - Step 2: atomic-ui-components. `src/components/ui/` 하위 원자 컴포넌트를 설계하고, 새 Tailwind 토큰(`bg`, `surface`, `surface-sub`, `border`, `text-*`, `radius-*`, `shadow-*`)만 사용한다.
