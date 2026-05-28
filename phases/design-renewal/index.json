@@ -95,7 +95,7 @@
       "name": "settings-page-renewal",
       "status": "completed",
       "started_at": "2026-05-29T00:21:43+0900",
-      "completed_at": "2026-05-29T00:25:02+09:00",
+      "completed_at": "2026-05-29T00:26:21+0900",
       "summary": "SettingsPage 리뉴얼 — 4섹션 구조, 테마 3-segment toggle(dark class 토글), PWA 설치 감지 완료"
     },
     {
