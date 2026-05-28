@@ -8,6 +8,7 @@ import { itemAttachmentsService } from '../services/itemAttachmentsService';
 import type { Item } from '../types';
 
 const patchItem = vi.fn();
+const deleteItemMutate = vi.fn();
 
 const item: Item = {
   id: 'item-1',
@@ -31,7 +32,7 @@ vi.mock('../hooks/usePatchItem', () => ({
 }));
 
 vi.mock('../hooks/useDeleteItem', () => ({
-  useDeleteItem: () => ({ mutate: vi.fn(), isPending: false }),
+  useDeleteItem: () => ({ mutate: deleteItemMutate, isPending: false }),
 }));
 
 vi.mock('../services/storageService', () => ({
@@ -167,6 +168,33 @@ describe('ItemDetailPage', () => {
         { kind: 'url', value: 'https://b.example' },
       ],
     );
+  });
+
+  it('shows ConfirmDialog on delete and calls deleteItem on confirm', async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    // 삭제 아이콘 버튼 클릭 (header: 뒤로가기[0], 수정[1], 삭제[2])
+    await user.click(screen.getAllByRole('button')[2]);
+
+    expect(screen.getByText('정말 삭제할까요?')).toBeInTheDocument();
+
+    // 확인 삭제 버튼 클릭
+    await user.click(screen.getByRole('button', { name: '삭제' }));
+
+    expect(deleteItemMutate).toHaveBeenCalledWith('item-1', expect.any(Object));
+  });
+
+  it('cancels ConfirmDialog without deleting', async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getAllByRole('button')[2]);
+    expect(screen.getByText('정말 삭제할까요?')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: '취소' }));
+    expect(screen.queryByText('정말 삭제할까요?')).not.toBeInTheDocument();
+    expect(deleteItemMutate).not.toHaveBeenCalled();
   });
 
   it('deletes an existing image, adds multiple new images, and updates the list thumbnail', async () => {
