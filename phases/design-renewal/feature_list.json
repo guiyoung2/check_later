@@ -78,41 +78,41 @@
       "id": "feat-10",
       "name": "EmptyState 컴포넌트",
       "description": "title/description/action props, 따뜻한 비어있음 원칙 적용",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T08:10:13.025Z",
+      "verified_by_step": 3
     },
     {
       "id": "feat-11",
       "name": "Toast 컴포넌트",
       "description": "4초 자동 닫힘, undo 액션 지원",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T08:10:13.025Z",
+      "verified_by_step": 3
     },
     {
       "id": "feat-12",
       "name": "BottomSheet 컴포넌트",
       "description": "모바일 전용, open/onClose/dragHandle props, 드래그 핸들 12×4, 8px radius",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T08:10:13.025Z",
+      "verified_by_step": 3
     },
     {
       "id": "feat-13",
       "name": "TopAppBar 컴포넌트",
       "description": "h-16 고정, 좌측 메뉴 / 가운데 워드마크 / 우측 계정 아이콘 구조",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T08:10:13.025Z",
+      "verified_by_step": 3
     },
     {
       "id": "feat-14",
       "name": "BottomNav 컴포넌트 (모바일 전용)",
       "description": "h-16 fixed, Home/New/Folders/Settings 4탭, Search 탭 없음, 현재 라우트 기준 active 탭 강조, 모바일에서만 표시",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T08:10:13.025Z",
+      "verified_by_step": 3
     },
     {
       "id": "feat-15",

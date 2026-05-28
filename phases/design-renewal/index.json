@@ -29,7 +29,10 @@
     {
       "step": 3,
       "name": "layout-components",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-28T17:06:31+0900",
+      "completed_at": "2026-05-28T08:10:39.055Z",
+      "summary": "EmptyState/Toast/BottomSheet/TopAppBar/BottomNav 구현 완료, useToast hook 포함"
     },
     {
       "step": 4,
