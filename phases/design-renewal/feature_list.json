@@ -222,9 +222,9 @@
       "id": "feat-28",
       "name": "Folders page",
       "description": "Add folders page with type and status count grid and Home query navigation.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:19:16+09:00",
+      "verified_by_step": 10
     },
     {
       "id": "feat-29",
