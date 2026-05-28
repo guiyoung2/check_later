@@ -238,17 +238,17 @@
       "id": "feat-30",
       "name": "LoginPage renewal",
       "description": "Renew login page with centered card, wordmark, Google OAuth button, and PWA note.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:30:01+09:00",
+      "verified_by_step": 12
     },
     {
       "id": "feat-31",
       "name": "Landing renewal",
       "description": "Renew landing page with first viewport intro, explanatory grid, and CTA.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:30:01+09:00",
+      "verified_by_step": 12
     },
     {
       "id": "feat-32",

@@ -1,7 +1,7 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T00:26:21+0900 — Step 12/19 완료
+2026-05-29T00:30:01+0900 — Step 12/19 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
@@ -16,15 +16,16 @@
 - Step 9: mobile-gestures — 스와이프 status 토글, 길게 누르기 BottomSheet, 데스크탑 hover 메뉴 구현 완료
 - Step 10: folders-page — /folders 페이지 신설 — type×status 카운트 그리드, 클릭 시 Home 필터 이동, 라우트 등록 완료
 - Step 11: settings-page-renewal — SettingsPage 리뉴얼 — 4섹션 구조, 테마 3-segment toggle(dark class 토글), PWA 설치 감지 완료
+- Step 12: login-landing-renewal — LoginPage 중앙 카드 스타일, LandingPage 1-viewport 단순화 완료, 비로그인 분기 정상
 
 ## 현재 진행 중
-- Step 12: login-landing-renewal
+- Step 13: bottomnav-routing
 
 ## 다음 할 일
-- Step 12: LoginPage + Landing 리뉴얼
-  - `phases/design-renewal/step12.md`, `fix3_design.md` §4.6, `docs/UI_GUIDE.md`를 먼저 읽는다.
-  - 비로그인 `/` 랜딩과 `/login` 화면의 기존 인증 흐름을 보존한 상태에서 UI만 리뉴얼한다.
-  - Step 11에서 추가한 `.light`/`.dark` 클래스 기반 테마 토큰이 로그인/랜딩에서도 깨지지 않는지 확인한다.
+- Step 13: BottomNav 라우트 활성 상태 동기화
+  - `phases/design-renewal/step13.md`, `fix3_design.md` §4.1, `src/components/ui/BottomNav.tsx`, `src/App.tsx`를 먼저 읽는다.
+  - `/`, `/new`, `/folders`, `/settings`, `/items/:id`에서 active 탭 판정이 step13 규칙과 일치하는지 확인한다.
+  - `/items/:id`는 Home 탭 active로 취급한다.
 
 ## 주의사항
 - **ItemCard 제스처 wrapper**: `src/components/ItemCard.tsx`에서 모든 type 카드 변형을 감싸며 `usePatchItem`, `useDeleteItem`, `useToast`를 사용한다. ItemCard를 단독 렌더하는 테스트는 QueryClientProvider를 쓰거나 이 훅들을 mock해야 한다.
@@ -48,4 +49,7 @@
 - **Settings CSS 오버라이드**: `src/index.css`에 `:root.light`와 `:root.dark` 토큰 오버라이드를 추가했다. 향후 다크 모드 점검 step에서 미디어쿼리와 클래스 토글 양쪽을 함께 확인해야 한다.
 - **Settings 데이터 카운트**: `src/hooks/*`와 `src/services/*`는 수정하지 않고 `SettingsPage` 안의 `useQuery(['items', 'settings-count'])`에서 `itemsService.list()`로 개수만 집계한다.
 - **Settings 테스트 래퍼**: `SettingsPage.test.tsx`는 이제 QueryClientProvider가 필요하며, `itemsService.list`와 `window.matchMedia`를 mock한다. 테스트 종료 후 `document.documentElement`의 `light`/`dark` 클래스를 정리해야 한다.
+- **LoginPage OAuth 유지**: `src/pages/LoginPage.tsx`는 기존 `supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: origin + '/', queryParams: { prompt: 'select_account' }}})` 호출을 그대로 유지한다. 이메일 로그인 UI는 추가하지 않는다.
+- **LandingPage 단순화**: 비로그인 `/`은 `src/App.tsx`의 `RootPage` 분기로 `LandingPage`를 렌더한다. LandingPage에서 헤더와 테마 토글은 제거했고, 1-viewport 소개와 `/login` CTA만 남겼다.
+- **Browser 플러그인 확인 제한**: in-app browser 목록이 비어 있어 브라우저 플러그인 기반 시각 확인은 진행하지 못했다. dev 서버는 `http://127.0.0.1:5173/`에서 정상 기동했고, 라우팅/화면 텍스트는 Vitest로 검증했다.
 - dev 서버: 5173 포트 사용 중이면 5174 포트로 자동 이동.

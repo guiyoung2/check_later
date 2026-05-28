@@ -1,111 +1,51 @@
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ThemeToggleButton } from '../components/ThemeToggleButton';
+import { Button } from '../components/ui/Button';
 
-const SAVE_TARGETS = [
-  { label: 'URL', description: '읽을 글과 참고 링크를 그대로 둡니다.' },
-  { label: '영상', description: 'YouTube 링크는 영상으로 먼저 분류합니다.' },
-  { label: '메모', description: '짧은 생각만 있어도 저장할 수 있습니다.' },
+const INTRO_STEPS = [
+  { title: '저장', line1: '공유 메뉴', line2: '한 번으로' },
+  { title: '분류', line1: '유형·상태', line2: '자동분류' },
+  { title: '조회', line1: '필터+정렬', line2: '30초 내' },
 ];
 
-const FLOW_STEPS = [
-  '공유 메뉴에서 /new로 열기',
-  '제목과 메모를 확인하기',
-  '형태와 상태 필터로 다시 찾기',
-];
-
-// 비인증 사용자용 랜딩 페이지
+// 비인증 사용자용 1-viewport 랜딩 페이지
 export default function LandingPage(): JSX.Element {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-bg text-text-primary">
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-3 border-b border-border bg-bg px-4">
-        <span className="min-w-0 truncate text-base font-semibold text-text-primary">
-          Check Later
-        </span>
-        <div className="flex shrink-0 items-center gap-1">
-          <ThemeToggleButton />
-          <button
-            type="button"
-            onClick={() => navigate('/login')}
-            className="flex min-h-11 items-center rounded-[8px] border border-border bg-surface px-4 text-sm font-medium text-text-sub transition-colors hover:text-text-primary"
-          >
-            로그인
-          </button>
+    <main className="flex min-h-screen items-center justify-center bg-bg px-4 py-10 text-text-primary">
+      <section className="flex w-full max-w-[800px] flex-col items-center gap-10 text-center">
+        <h1 className="max-w-[12ch] text-[26px] leading-[1.3] font-semibold text-text-primary sm:max-w-[16ch] sm:text-[32px] sm:leading-[1.2]">
+          공유 한 번이면 끝, 30초 안에 찾는다
+        </h1>
+
+        <div className="grid w-full gap-3 sm:grid-cols-3">
+          {INTRO_STEPS.map((step) => (
+            <article
+              key={step.title}
+              className="flex min-h-[136px] flex-col justify-between rounded-md border border-border bg-surface px-4 py-5 text-left shadow-card"
+            >
+              <h2 className="text-[18px] leading-[1.5] font-medium text-text-primary">
+                {step.title}
+              </h2>
+              <p className="text-[14px] leading-[1.5] text-text-muted">
+                {step.line1}
+                <br />
+                {step.line2}
+              </p>
+            </article>
+          ))}
         </div>
-      </header>
 
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-5 py-10 sm:px-6 sm:py-14">
-        <section className="flex flex-col gap-6">
-          <p className="text-xs font-medium text-accent">
-            저장은 빠르게, 다시 찾기는 차분하게
-          </p>
-          <h1 className="max-w-xl text-xl font-semibold leading-snug text-text-primary">
-            나중에 볼 URL, 영상, 메모를 한 곳에 두고 필요할 때 바로 꺼내세요.
-          </h1>
-          <p className="max-w-xl text-sm leading-6 text-text-sub">
-            공유로 들어온 링크와 짧은 메모를 확인하고, 앱에서는 형태와 상태만 고르면 됩니다.
-            태그나 폴더를 정리하지 않아도 최근순 목록에서 흐름을 잃지 않습니다.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => navigate('/login')}
-            className="flex min-h-11 self-start items-center rounded-[8px] bg-accent px-5 text-sm font-medium text-white"
-          >
-            시작하기
-          </button>
-        </section>
-
-        <div className="border-t border-border" />
-
-        <section className="grid gap-8 sm:grid-cols-[1fr_1.1fr]">
-          <div className="flex flex-col gap-3">
-            <h2 className="text-sm font-semibold text-text-primary">
-              저장할 수 있는 것
-            </h2>
-            <ul className="flex flex-col divide-y divide-border border-y border-border">
-              {SAVE_TARGETS.map((target) => (
-                <li key={target.label} className="flex gap-3 py-3">
-                  <span className="flex h-7 min-w-12 items-center justify-center rounded-full bg-accent-bg px-3 text-xs font-medium text-accent">
-                    {target.label}
-                  </span>
-                  <span className="text-sm leading-6 text-text-sub">
-                    {target.description}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <h2 className="text-sm font-semibold text-text-primary">
-              다시 찾는 흐름
-            </h2>
-            <ol className="flex flex-col gap-2">
-              {FLOW_STEPS.map((step, index) => (
-                <li
-                  key={step}
-                  className="flex items-center gap-3 rounded-[6px] border border-border bg-surface px-3 py-3 text-sm text-text-sub"
-                >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-bg text-xs font-medium text-accent">
-                    {index + 1}
-                  </span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <section className="rounded-[6px] border border-border bg-surface px-4 py-4">
-          <p className="text-sm leading-6 text-text-sub">
-            PWA로 홈 화면에 두면 앱처럼 열 수 있고, 모바일 공유 메뉴에서 바로 저장 화면으로
-            들어갈 수 있습니다.
-          </p>
-        </section>
-      </main>
-    </div>
+        <Button
+          type="button"
+          aria-label="시작하기 →"
+          onClick={() => navigate('/login')}
+          rightIcon={<span aria-hidden="true">→</span>}
+        >
+          시작하기
+        </Button>
+      </section>
+    </main>
   );
 }
