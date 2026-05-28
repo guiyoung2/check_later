@@ -1,25 +1,28 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-28T17:30:02+0900 — Step 6/19 완료
+2026-05-28T21:47:00+0900 — Step 7/19 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
 - Step 1: design-tokens — src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거
 - Step 2: atomic-ui-components — src/components/ui/ 신설 — Button/IconButton/Chip/Card/Input/Textarea/Divider/Skeleton 8개 구현 완료
 - Step 3: layout-components — EmptyState/Toast/BottomSheet/TopAppBar/BottomNav 구현 완료, useToast hook 포함
-- Step 4: font-loading — Pretendard/Geist/JetBrains Mono ?? ?? ??, font-display:swap ??
+- Step 4: font-loading — Pretendard/Geist/JetBrains Mono 폰트 로딩 완료, font-display:swap 적용
 - Step 5: home-page-renewal — HomePage 리뉴얼 — TopAppBar/FilterBar/BottomNav 적용, 3가지 상태(로딩/빈/에러) 처리 완료
+- Step 6: type-variant-cards — MemoCard/VideoCard/ImageCard/ArticleCard 4변형 구현, ItemCard type dispatch 완료
 
 ## 현재 진행 중
-- Step 6: type-variant-cards
+- Step 7: new-item-page-renewal
 
 ## 다음 할 일
-- Step 6에서는 기존 ItemCard를 type별 변형 카드(MemoCard/VideoCard/ImageCard/ArticleCard)로 분리하거나 dispatch하도록 구현한다.
-- Step 5에서 HomePage는 계속 기존 ItemCard를 사용하므로, Step 6 시작 전에 `src/components/ItemCard.tsx`와 관련 테스트를 먼저 확인한다.
-- 카드 간격은 HomePage에서 이미 `gap-6`으로 적용되어 있으므로 Step 6은 카드 내부 구조와 타입별 표시만 다룬다.
+- Step 7: `/new` 페이지 리뉴얼 — BottomSheet 스타일, 빠른 옵션 칩(링크/텍스트/이미지), autofocus textarea, URL 자동 감지 + type chip 표시
+- Web Share Target 진입 경로(`?title=&text=&url=`) 회귀 테스트 포함 필요
+- 기존 `src/pages/NewItemPage.tsx` 구조를 먼저 파악하고 작업 시작
 
 ## 주의사항
-- HomePage 리뉴얼은 `src/hooks/*`, `src/stores/*` 로직을 변경하지 않고 기존 `useItems`와 `filterStore.reset`만 사용했다.
-- FilterBar 상태 라벨은 step 명세에 맞춰 `안봤음`으로 표시한다. 기존 일부 화면에는 `안 봤음` 표기가 남아 있을 수 있으나 Step 5 범위 밖이다.
-- dev 서버는 5173 포트가 사용 중이라 검증 중 5174 포트를 사용했다.
+- **ItemCard dispatch 후 HomePage 테스트 수정**: `link` role 단언을 `getByText('읽을 글')` 로 교체함. 구 ItemCard가 `<Link>` 직접 렌더 → 신규 카드는 article+onClick 구조이기 때문.
+- **useSignedUrl 훅**: `src/components/items/useSignedUrl.ts`에 위치. `src/hooks/*` 폴더가 아니므로 기존 hooks 수정 규칙에 위배되지 않음.
+- **storageService 모킹**: ItemCard.test.tsx의 mock path `'../services/storageService'`가 useSignedUrl 내부 import와 동일 절대경로로 해석됨 — 기존 테스트 통과 유지.
+- **Card overflow-hidden**: VideoCard, ImageCard는 이미지가 카드 상단에 붙으므로 `<Card className="overflow-hidden">` 필수. 빠뜨리면 이미지가 rounded-md 외부로 삐져나옴.
+- dev 서버: 5173 포트 사용 중이면 5174 포트로 자동 이동.

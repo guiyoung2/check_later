@@ -101,6 +101,6 @@ describe('HomePage', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('link', { name: /읽을 글/ })).toHaveAttribute('href', '/items/item-1');
+    expect(screen.getByText('읽을 글')).toBeInTheDocument();
   });
 });

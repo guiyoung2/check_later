@@ -126,41 +126,41 @@
       "id": "feat-16",
       "name": "MemoCard variant",
       "description": "Implement memo card variant with type chip, time, headline, and clamped body.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T21:47:00+0900",
+      "verified_by_step": 6
     },
     {
       "id": "feat-17",
       "name": "VideoCard variant",
       "description": "Implement video card variant with thumbnail, play overlay, type chip, headline, and URL.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T21:47:00+0900",
+      "verified_by_step": 6
     },
     {
       "id": "feat-18",
       "name": "ImageCard variant",
       "description": "Implement image card variant with image, type chip, headline, and one-line memo.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T21:47:00+0900",
+      "verified_by_step": 6
     },
     {
       "id": "feat-19",
       "name": "ArticleCard variant",
       "description": "Implement article card variant with type chip, headline, memo, thumbnail, and URL.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T21:47:00+0900",
+      "verified_by_step": 6
     },
     {
       "id": "feat-20",
       "name": "ItemCard type dispatch",
       "description": "Dispatch from ItemCard to type-specific card components.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T21:47:00+0900",
+      "verified_by_step": 6
     },
     {
       "id": "feat-21",
