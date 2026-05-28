@@ -1,7 +1,7 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T00:05:02+0900 — Step 8/19 완료
+2026-05-29T00:06:54+0900 — Step 9/19 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
@@ -12,7 +12,7 @@
 - Step 5: home-page-renewal — HomePage 리뉴얼 — TopAppBar/FilterBar/BottomNav 적용, 3가지 상태(로딩/빈/에러) 처리 완료
 - Step 6: type-variant-cards — MemoCard/VideoCard/ImageCard/ArticleCard 4변형 구현, ItemCard type dispatch 완료
 - Step 7: new-item-page-renewal — NewItemPage 리뉴얼 — BottomSheet 스타일, 3-grid chip, URL 자동 감지, Web Share Target 회귀 테스트 통과
-- Step 8: item-detail-page-renewal — ItemDetailPage 리뉴얼: sticky 헤더, share/edit/delete, type별 헤드, status 3-segment, ConfirmDialog + undo toast 테스트 완료
+- Step 8: item-detail-page-renewal — ItemDetailPage 리뉴얼 — sticky 헤더, type별 헤드, status 3-segment, blockquote 제거, ConfirmDialog 추가
 
 ## 현재 진행 중
 - Step 9: mobile-gestures
