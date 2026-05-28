@@ -1,25 +1,25 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-28T17:18:28+0900 — Step 5/19 완료
+2026-05-28T17:24:52+09:00 기준 Step 5/19 완료
 
 ## 완료된 작업
-- Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
+- Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료, 모노톤 토큰 + 안티패턴 가드레일 포함
 - Step 1: design-tokens — src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거
-- Step 2: atomic-ui-components — src/components/ui/ 신설 — Button/IconButton/Chip/Card/Input/Textarea/Divider/Skeleton 8개 구현 완료
+- Step 2: atomic-ui-components — src/components/ui/ 신설, Button/IconButton/Chip/Card/Input/Textarea/Divider/Skeleton 8개 구현 완료
 - Step 3: layout-components — EmptyState/Toast/BottomSheet/TopAppBar/BottomNav 구현 완료, useToast hook 포함
-- Step 4: font-loading — Pretendard/Geist/JetBrains Mono ?? ?? ??, font-display:swap ??
+- Step 4: font-loading — Pretendard/Geist/JetBrains Mono self-host 로딩 및 font-display: swap 적용 완료
+- Step 5: home-page-renewal — HomePage에 TopAppBar, sticky FilterBar, BottomNav를 적용하고 로딩/빈/에러 상태 처리를 리뉴얼
 
 ## 현재 진행 중
-- Step 5: home-page-renewal
+- Step 6: type-variant-cards
 
 ## 다음 할 일
-- Step 5에서는 HomePage에 TopAppBar, sticky FilterBar, 타입별 카드 피드 레이아웃, BottomNav 조합을 적용한다.
-- 시작 전에 기존 페이지/라우팅 구조와 Step 2~4에서 만든 ui 컴포넌트 및 폰트 토큰을 확인한다.
-- 이 step에서 만든 폰트 경로(`/fonts/pretendard/*`, `/fonts/geist/*`, `/fonts/jetbrains-mono/*`)와 `--font-body`/`--font-mono` fallback 순서를 유지한다.
+- Step 6에서는 기존 ItemCard를 type별 변형 카드(MemoCard/VideoCard/ImageCard/ArticleCard)로 분리하거나 dispatch하도록 구현한다.
+- Step 5에서 HomePage는 계속 기존 ItemCard를 사용하므로, Step 6 시작 전에 `src/components/ItemCard.tsx`와 관련 테스트를 먼저 확인한다.
+- 카드 간격은 HomePage에서 이미 `gap-6`으로 적용되어 있으므로 Step 6은 카드 내부 구조와 타입별 표시만 다룬다.
 
 ## 주의사항
-- `public/`에는 기존 Pretendard 파일이 없었으므로 `public/fonts/` 아래에 세 폰트를 self-host asset으로 추가했다.
-- `index.html`은 Pretendard 400, Geist 400만 preload한다. JetBrains Mono는 label-mono 소량 사용이라 preload하지 않는다.
-- 모든 `@font-face`에는 `font-display: swap`이 필요하다. FOIT 방지를 위해 제거하지 않는다.
-- Google Fonts CDN은 사용하지 않는다. 이유: step 4 금지사항 및 privacy/GDPR 우려.
+- HomePage 리뉴얼은 `src/hooks/*`, `src/stores/*` 로직을 변경하지 않고 기존 `useItems`와 `filterStore.reset`만 사용했다.
+- FilterBar 상태 라벨은 step 명세에 맞춰 `안봤음`으로 표시한다. 기존 일부 화면에는 `안 봤음` 표기가 남아 있을 수 있으나 Step 5 범위 밖이다.
+- dev 서버는 5173 포트가 사용 중이라 검증 중 5174 포트를 사용했다.
