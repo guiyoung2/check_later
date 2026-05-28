@@ -13,7 +13,8 @@
     },
     {
       "dir": "design-renewal",
-      "status": "pending"
+      "status": "error",
+      "failed_at": "2026-05-28T17:30:31+0900"
     }
   ]
 }
