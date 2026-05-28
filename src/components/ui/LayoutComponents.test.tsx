@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BottomNav } from './BottomNav';
 import { BottomSheet } from './BottomSheet';
@@ -103,5 +103,36 @@ describe('layout UI components', () => {
     expect(screen.getByRole('link', { name: /New/ })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('link', { name: /Folders/ })).toHaveAttribute('href', '/folders');
     expect(screen.queryByRole('link', { name: /Search/ })).not.toBeInTheDocument();
+  });
+
+  it('marks item detail routes as Home active', () => {
+    render(
+      <MemoryRouter initialEntries={['/items/item-1']}>
+        <BottomNav />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('link', { name: /Home/ })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('link', { name: /Folders/ })).not.toHaveAttribute('aria-current');
+  });
+
+  it('navigates to Folders and New tabs from bottom nav', () => {
+    function LocationText() {
+      const { pathname } = useLocation();
+      return <p>{pathname}</p>;
+    }
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <BottomNav />
+        <LocationText />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole('link', { name: /Folders/ }));
+    expect(screen.getByText('/folders')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('link', { name: /New/ }));
+    expect(screen.getByText('/new')).toBeInTheDocument();
   });
 });

@@ -48,7 +48,8 @@ const items: NavItem[] = [
 ];
 
 function isActive(pathname: string, to: string) {
-  return to === '/' ? pathname === '/' : pathname.startsWith(to);
+  if (to === '/') return pathname === '/' || pathname.startsWith('/items');
+  return pathname.startsWith(to);
 }
 
 function joinClasses(...classes: Array<string | false | undefined>) {
@@ -72,16 +73,19 @@ export function BottomNav() {
               aria-current={active ? 'page' : undefined}
               className={joinClasses(
                 'flex min-h-[44px] flex-col items-center justify-center gap-1 px-1 font-body text-[12px] leading-[1.2] transition-[background-color,color] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none',
-                active ? 'text-text-primary' : 'text-text-muted hover:text-text-primary',
+                active ? 'font-medium text-text-primary' : 'font-normal text-text-muted hover:text-text-primary',
               )}
             >
               <span
                 className={joinClasses(
-                  'flex h-7 w-7 items-center justify-center rounded-sm',
-                  isNew ? 'bg-text-primary text-bg' : false,
-                  isNew && active ? 'opacity-100' : false,
+                  'relative flex h-7 w-7 items-center justify-center rounded-sm',
+                  isNew && active ? 'bg-text-primary text-bg' : false,
+                  isNew && !active ? 'border border-border bg-surface-sub text-text-muted' : false,
                 )}
               >
+                {active && !isNew ? (
+                  <span className="absolute -top-1 h-1 w-1 rounded-full bg-text-primary" />
+                ) : null}
                 {item.icon}
               </span>
               <span>{item.label}</span>

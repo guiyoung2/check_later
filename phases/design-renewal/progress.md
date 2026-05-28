@@ -1,7 +1,7 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T00:31:31+0900 — Step 13/19 완료
+2026-05-29T00:34:59+09:00 — Step 13/19 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
@@ -17,15 +17,16 @@
 - Step 10: folders-page — /folders 페이지 신설 — type×status 카운트 그리드, 클릭 시 Home 필터 이동, 라우트 등록 완료
 - Step 11: settings-page-renewal — SettingsPage 리뉴얼 — 4섹션 구조, 테마 3-segment toggle(dark class 토글), PWA 설치 감지 완료
 - Step 12: login-landing-renewal — LoginPage 중앙 카드 스타일, LandingPage 1-viewport 단순화 완료, 비로그인 분기 정상
+- Step 13: bottomnav-routing — BottomNav 라우트 활성 상태 동기화 완료 — 4탭 경로 매칭 정확, /folders 탭 정상 동작
 
 ## 현재 진행 중
-- Step 13: bottomnav-routing
+- Step 14: empty-loading-error-states
 
 ## 다음 할 일
-- Step 13: BottomNav 라우트 활성 상태 동기화
-  - `phases/design-renewal/step13.md`, `fix3_design.md` §4.1, `src/components/ui/BottomNav.tsx`, `src/App.tsx`를 먼저 읽는다.
-  - `/`, `/new`, `/folders`, `/settings`, `/items/:id`에서 active 탭 판정이 step13 규칙과 일치하는지 확인한다.
-  - `/items/:id`는 Home 탭 active로 취급한다.
+- Step 14: Empty/Loading/Error 상태 전수 점검
+  - `phases/design-renewal/step14.md`, `docs/UI_GUIDE.md`, `fix3_design.md` §4.1, 각 page 파일과 `EmptyState`/`Skeleton` 컴포넌트를 먼저 읽는다.
+  - Home, ItemDetail, New, Folders, Settings의 상태별 UI를 step14 체크리스트 기준으로 보완한다.
+  - AC는 `npm run build && npm run test -- --run`이며, 가능하면 상태별 수동 시연 근거도 남긴다.
 
 ## 주의사항
 - **ItemCard 제스처 wrapper**: `src/components/ItemCard.tsx`에서 모든 type 카드 변형을 감싸며 `usePatchItem`, `useDeleteItem`, `useToast`를 사용한다. ItemCard를 단독 렌더하는 테스트는 QueryClientProvider를 쓰거나 이 훅들을 mock해야 한다.
@@ -53,3 +54,6 @@
 - **LandingPage 단순화**: 비로그인 `/`은 `src/App.tsx`의 `RootPage` 분기로 `LandingPage`를 렌더한다. LandingPage에서 헤더와 테마 토글은 제거했고, 1-viewport 소개와 `/login` CTA만 남겼다.
 - **Browser 플러그인 확인 제한**: in-app browser 목록이 비어 있어 브라우저 플러그인 기반 시각 확인은 진행하지 못했다. dev 서버는 `http://127.0.0.1:5173/`에서 정상 기동했고, 라우팅/화면 텍스트는 Vitest로 검증했다.
 - dev 서버: 5173 포트 사용 중이면 5174 포트로 자동 이동.
+- **BottomNav active 판정**: `src/components/ui/BottomNav.tsx`에서 `/items/*`는 Home active로 취급한다. `/`는 정확히 `/` 또는 `/items` 시작일 때만 active이고, 나머지는 `pathname.startsWith(tabPath)` 규칙이다.
+- **BottomNav 노출 범위**: Home, New, Folders, Settings, ItemDetail 모두 BottomNav를 렌더한다. New/Detail은 fixed nav와 겹치지 않도록 루트에 `pb-16`을 둔다.
+- **Browser 플러그인 상태**: 이번 step에서 in-app Browser `iab`가 unavailable이라 실제 브라우저 클릭 확인은 못 했다. 대신 `LayoutComponents.test.tsx`에서 `/folders`, `/new` Link 클릭 후 pathname 변경을 검증한다.

@@ -122,6 +122,11 @@ describe('ItemDetailPage', () => {
     expect(await screen.findByLabelText('제목')).toHaveValue('Original title');
   });
 
+  it('shows BottomNav with Home active on detail route', () => {
+    renderPage();
+    expect(screen.getByRole('link', { name: /Home/ })).toHaveAttribute('aria-current', 'page');
+  });
+
   it('renders detail images with contain layout', async () => {
     vi.mocked(itemAttachmentsService.listByItemId).mockResolvedValue([
       {

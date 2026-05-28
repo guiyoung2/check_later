@@ -9,6 +9,7 @@ import { itemAttachmentsService } from '../services/itemAttachmentsService';
 import { useAuth } from '../lib/auth';
 import { useToast } from '../components/ui/Toast';
 import { Button } from '../components/ui/Button';
+import { BottomNav } from '../components/ui/BottomNav';
 import { Chip } from '../components/ui/Chip';
 import { Textarea } from '../components/ui/Textarea';
 import { Divider } from '../components/ui/Divider';
@@ -228,7 +229,7 @@ export default function NewItemPage(): JSX.Element {
   const canSave = !!(content.trim() || imageFile);
 
   return (
-    <div className="flex min-h-screen flex-col justify-end bg-bg md:items-start md:justify-center md:px-4 md:pt-16">
+    <div className="flex min-h-screen flex-col justify-end bg-bg pb-16 md:items-start md:justify-center md:px-4 md:pt-16 md:pb-0">
       {/* 카드: 모바일=하단 시트, 데스크탑=중앙 카드 */}
       <div className="w-full rounded-t-lg border-t border-border bg-surface px-4 pb-8 pt-3 md:mx-auto md:max-w-[480px] md:rounded-lg md:border md:px-8 md:py-8">
         {/* 드래그 핸들 (모바일 전용) */}
@@ -338,6 +339,7 @@ export default function NewItemPage(): JSX.Element {
           </div>
         </form>
       </div>
+      <BottomNav />
     </div>
   );
 }

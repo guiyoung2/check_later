@@ -9,6 +9,7 @@ import { itemAttachmentsService } from '../services/itemAttachmentsService';
 import type { ItemType, ItemStatus, ItemAttachment, ItemAttachmentInput } from '../types';
 import { IconButton } from '../components/ui/IconButton';
 import { Button } from '../components/ui/Button';
+import { BottomNav } from '../components/ui/BottomNav';
 import { Chip } from '../components/ui/Chip';
 import { Divider } from '../components/ui/Divider';
 import { useToast } from '../components/ui/Toast';
@@ -358,7 +359,7 @@ export default function ItemDetailPage(): JSX.Element {
   })();
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-bg pb-16">
       {/* sticky 헤더 */}
       <header className="sticky top-0 z-10 border-b border-border bg-bg">
         <div className="mx-auto flex h-14 max-w-[800px] items-center justify-between px-4">
@@ -626,6 +627,7 @@ export default function ItemDetailPage(): JSX.Element {
           </div>
         </div>
       )}
+      <BottomNav />
     </div>
   );
 }

@@ -63,6 +63,11 @@ describe('NewItemPage', () => {
     expect(screen.getByText('영상')).toBeInTheDocument();
   });
 
+  it('shows BottomNav with New active', () => {
+    renderPage();
+    expect(screen.getByRole('link', { name: /New/ })).toHaveAttribute('aria-current', 'page');
+  });
+
   it('Web Share Target ?text= 파라미터 진입 시 textarea 채움 및 메모 타입 감지', () => {
     renderPage('/new?text=메모내용');
     expect(screen.getByDisplayValue('메모내용')).toBeInTheDocument();

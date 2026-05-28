@@ -297,6 +297,14 @@
       "passes": false,
       "verified_at": null,
       "verified_by_step": null
+    },
+    {
+      "id": "feat-38",
+      "name": "BottomNav routing",
+      "description": "Sync BottomNav active tabs with /, /new, /folders, /settings, and /items routes.",
+      "passes": true,
+      "verified_at": "2026-05-29T00:34:59+09:00",
+      "verified_by_step": 13
     }
   ]
 }
