@@ -111,7 +111,7 @@
       "name": "bottomnav-routing",
       "status": "completed",
       "started_at": "2026-05-29T00:31:31+0900",
-      "completed_at": "2026-05-29T00:34:59+09:00",
+      "completed_at": "2026-05-29T00:36:28+0900",
       "summary": "BottomNav 라우트 활성 상태 동기화 완료 — 4탭 경로 매칭 정확, /folders 탭 정상 동작"
     },
     {
