@@ -103,7 +103,7 @@
       "name": "login-landing-renewal",
       "status": "completed",
       "started_at": "2026-05-29T00:26:21+0900",
-      "completed_at": "2026-05-29T00:30:01+0900",
+      "completed_at": "2026-05-29T00:31:31+0900",
       "summary": "LoginPage 중앙 카드 스타일, LandingPage 1-viewport 단순화 완료, 비로그인 분기 정상"
     },
     {
