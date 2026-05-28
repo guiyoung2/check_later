@@ -6,9 +6,9 @@
       "id": "feat-1",
       "name": "UI_GUIDE.md 전면 재작성",
       "description": "디자인 토큰(컬러/타이포/간격/반경/그림자/모션) 및 안티패턴 가드레일이 fix3_design.md §2 기준으로 업데이트됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T16:57:20+09:00",
+      "verified_by_step": 0
     },
     {
       "id": "feat-2",
