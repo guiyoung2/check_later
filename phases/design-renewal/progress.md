@@ -1,7 +1,7 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T00:21:43+0900 — Step 11/19 완료
+2026-05-29T00:25:02+09:00 — Step 11/19 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
@@ -15,15 +15,16 @@
 - Step 8: item-detail-page-renewal — ItemDetailPage 리뉴얼 — sticky 헤더, type별 헤드, status 3-segment, blockquote 제거, ConfirmDialog 추가
 - Step 9: mobile-gestures — 스와이프 status 토글, 길게 누르기 BottomSheet, 데스크탑 hover 메뉴 구현 완료
 - Step 10: folders-page — /folders 페이지 신설 — type×status 카운트 그리드, 클릭 시 Home 필터 이동, 라우트 등록 완료
+- Step 11: settings-page-renewal — SettingsPage 리뉴얼 — 4섹션 구조, 테마 3-segment toggle(dark class 토글), PWA 설치 감지 완료
 
 ## 현재 진행 중
-- Step 11: settings-page-renewal
+- Step 12: login-landing-renewal
 
 ## 다음 할 일
-- Step 11: Settings 페이지 리뉴얼
-  - `phases/design-renewal/step11.md`, `fix3_design.md` §4.5, `docs/UI_GUIDE.md`를 먼저 읽는다.
-  - 기존 `src/pages/SettingsPage.tsx`의 로그아웃 동작과 테스트를 보존한 상태에서 계정, PWA, 테마, 데이터 섹션을 정리한다.
-  - Step 10에서 추가된 `/folders` 라우트와 `BottomNav` 탭 구조를 유지한다.
+- Step 12: LoginPage + Landing 리뉴얼
+  - `phases/design-renewal/step12.md`, `fix3_design.md` §4.6, `docs/UI_GUIDE.md`를 먼저 읽는다.
+  - 비로그인 `/` 랜딩과 `/login` 화면의 기존 인증 흐름을 보존한 상태에서 UI만 리뉴얼한다.
+  - Step 11에서 추가한 `.light`/`.dark` 클래스 기반 테마 토큰이 로그인/랜딩에서도 깨지지 않는지 확인한다.
 
 ## 주의사항
 - **ItemCard 제스처 wrapper**: `src/components/ItemCard.tsx`에서 모든 type 카드 변형을 감싸며 `usePatchItem`, `useDeleteItem`, `useToast`를 사용한다. ItemCard를 단독 렌더하는 테스트는 QueryClientProvider를 쓰거나 이 훅들을 mock해야 한다.
@@ -43,4 +44,8 @@
 - **Folders 카운트 조회**: `FoldersPage`는 `src/hooks/*`를 수정하지 않고 `useQuery(['items', 'counts'])`에서 `itemsService.list()`를 한 번 호출해 클라이언트 집계한다.
 - **Folders 필터 이동**: Home은 URL query를 직접 파싱하지 않으므로 Folders 카드 클릭 시 `useFilterStore`도 함께 갱신한다. type 이동은 status를 비우고, status 이동은 type을 비운다.
 - **Folders 테스트**: `src/pages/FoldersPage.test.tsx`는 `itemsService.list`를 mock하고 QueryClientProvider로 감싼다. type 카드 클릭 후 `/?type=video` 이동과 filterStore type 값을 함께 검증한다.
+- **Settings 테마 저장소**: 테마 선택값은 Zustand가 아니라 `localStorage` 키 `check-later-theme`에 저장한다. `system`은 `prefers-color-scheme: dark`를 읽어 `document.documentElement`에 `dark` 클래스를 붙이고, `light` 선택 시 `light` 클래스로 시스템 다크 미디어쿼리를 덮어쓴다.
+- **Settings CSS 오버라이드**: `src/index.css`에 `:root.light`와 `:root.dark` 토큰 오버라이드를 추가했다. 향후 다크 모드 점검 step에서 미디어쿼리와 클래스 토글 양쪽을 함께 확인해야 한다.
+- **Settings 데이터 카운트**: `src/hooks/*`와 `src/services/*`는 수정하지 않고 `SettingsPage` 안의 `useQuery(['items', 'settings-count'])`에서 `itemsService.list()`로 개수만 집계한다.
+- **Settings 테스트 래퍼**: `SettingsPage.test.tsx`는 이제 QueryClientProvider가 필요하며, `itemsService.list`와 `window.matchMedia`를 mock한다. 테스트 종료 후 `document.documentElement`의 `light`/`dark` 클래스를 정리해야 한다.
 - dev 서버: 5173 포트 사용 중이면 5174 포트로 자동 이동.

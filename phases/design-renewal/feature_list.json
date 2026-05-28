@@ -230,9 +230,9 @@
       "id": "feat-29",
       "name": "SettingsPage renewal",
       "description": "Renew settings page with account, PWA, theme, and data sections.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:25:02+09:00",
+      "verified_by_step": 11
     },
     {
       "id": "feat-30",
