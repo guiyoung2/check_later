@@ -1,7 +1,7 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T00:36:28+0900 — Step 14/19 완료
+2026-05-29T00:51:06+0900 — design-renewal 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
@@ -18,15 +18,17 @@
 - Step 11: settings-page-renewal — SettingsPage 리뉴얼 — 4섹션 구조, 테마 3-segment toggle(dark class 토글), PWA 설치 감지 완료
 - Step 12: login-landing-renewal — LoginPage 중앙 카드 스타일, LandingPage 1-viewport 단순화 완료, 비로그인 분기 정상
 - Step 13: bottomnav-routing — BottomNav 라우트 활성 상태 동기화 완료 — 4탭 경로 매칭 정확, /folders 탭 정상 동작
+- Step 14: empty-loading-error-states — 전체 페이지 Empty/Loading/Error 3종 상태 전수 보완 완료
+- Step 15: antipattern-guard — scripts/check-antipatterns.mjs 신설, 현재 src/ 위반 0건 확인, npm run check:antipatterns 등록
+- Step 16: dark-mode-check — 다크 모드 전수 점검 — 하드코딩 색상 제거, 시스템/.dark 두 경로 모두 동작, 그림자 없음 확인
+- Step 17: a11y-check — a11y 전수 점검 — focus ring, ARIA 레이블, 키보드 네비, 색 대비 WCAG AA, 터치 타깃 ≥44px 보완 완료
+- Step 18: pwa-regression — PWA + Web Share Target 회귀 점검 완료 — manifest 무결, SW 생성 확인, URL 파라미터 자동 채움 테스트 통과
 
 ## 현재 진행 중
-- Step 14: empty-loading-error-states
+- 없음
 
 ## 다음 할 일
-- Step 14: Empty/Loading/Error 상태 전수 점검
-  - `phases/design-renewal/step14.md`, `docs/UI_GUIDE.md`, `fix3_design.md` §4.1, 각 page 파일과 `EmptyState`/`Skeleton` 컴포넌트를 먼저 읽는다.
-  - Home, ItemDetail, New, Folders, Settings의 상태별 UI를 step14 체크리스트 기준으로 보완한다.
-  - AC는 `npm run build && npm run test -- --run`이며, 가능하면 상태별 수동 시연 근거도 남긴다.
+- 없음
 
 ## 주의사항
 - **ItemCard 제스처 wrapper**: `src/components/ItemCard.tsx`에서 모든 type 카드 변형을 감싸며 `usePatchItem`, `useDeleteItem`, `useToast`를 사용한다. ItemCard를 단독 렌더하는 테스트는 QueryClientProvider를 쓰거나 이 훅들을 mock해야 한다.
@@ -57,3 +59,10 @@
 - **BottomNav active 판정**: `src/components/ui/BottomNav.tsx`에서 `/items/*`는 Home active로 취급한다. `/`는 정확히 `/` 또는 `/items` 시작일 때만 active이고, 나머지는 `pathname.startsWith(tabPath)` 규칙이다.
 - **BottomNav 노출 범위**: Home, New, Folders, Settings, ItemDetail 모두 BottomNav를 렌더한다. New/Detail은 fixed nav와 겹치지 않도록 루트에 `pb-16`을 둔다.
 - **Browser 플러그인 상태**: 이번 step에서 in-app Browser `iab`가 unavailable이라 실제 브라우저 클릭 확인은 못 했다. 대신 `LayoutComponents.test.tsx`에서 `/folders`, `/new` Link 클릭 후 pathname 변경을 검증한다.
+- **Step 14 상태 처리 보완**: Home skeleton 높이를 실제 카드 변형에 맞췄고, Home/ItemDetail/Folders error banner를 `border-error/30 text-error` inline 패턴으로 통일했다. ItemDetail은 skeleton, Not Found EmptyState, error banner를 갖췄고, Folders는 7개 skeleton grid를 표시한다. Settings는 항목 수 로딩/실패 시 `—`를 유지한다.
+- **Step 14 검증**: `npm run build && npm run test -- --run` 통과. Vitest 기준 15개 파일, 65개 테스트 통과.
+- **Step 15 안티패턴 검사**: `scripts/check-antipatterns.mjs`는 `src/**/*.{tsx,ts,css}`만 검사한다. 첫 실행에서 `src/index.css`의 `--surface: #FFFFFF`가 위반으로 잡혀 `#FBFBF8` 및 `:root.light`의 surface를 `oklch(99% 0.002 80)`으로 조정했다. `node scripts/check-antipatterns.mjs && npm run build && npm run test -- --run` 통과.
+- **Step 16 다크 모드 점검**: `grep -r "bg-white\|bg-gray-[0-9]\|text-black\|text-white" src/` 0건. `shadow-[...]`, blur/backdrop 하드코딩도 0건. ItemDetail 삭제 확인 모달의 임의 shadow를 `shadow-modal`로 교체해 다크 모드 `--shadow-modal: none`을 따른다. `npm run build && npm run test -- --run && node scripts/check-antipatterns.mjs` 통과.
+- **Step 17 접근성 점검**: `Card`의 clickable non-link 렌더에 `role="button"`, `tabIndex=0`, Enter/Space 키 동작을 추가했다. `BottomSheet`는 `aria-labelledby`, Escape close, 초기 focus, Tab 순환을 갖춘다. `Skeleton`은 `aria-busy="true"`와 `aria-label="로딩 중"`을 노출한다. `BottomNav` active tab은 정적 grep에도 잡히도록 `aria-current="page"` branch로 렌더한다. `npm run build && npm run test -- --run` 및 ARIA grep 3종 통과.
+- **Step 18 PWA 회귀 점검**: PWA manifest는 `public/manifest.json`가 아니라 `vite.config.ts`의 `VitePWA({ manifest })`로 관리된다. `share_target` 1건, `display: 'standalone'`, `dist/sw.js` 생성을 확인했다. `NewItemPage.test.tsx`에 title/text/url 동시 진입 시 URL 우선 채움 및 자동 저장 없음 회귀 테스트를 추가했다. `npm run build && npm run test -- --run` 통과, 15개 파일 67개 테스트 통과.
+- **Feature gate SideNav 보완**: `feat-37`은 별도 step 파일이 없었지만 feature_list에 false로 남아 있어 `src/components/ui/SideNav.tsx`를 추가했다. desktop 전용 `w-60` fixed nav, 4개 route, active `aria-current="page"`를 제공하며 Home/New/Folders/Settings/ItemDetail 루트에 `md:pl-60`과 함께 연결했다. BottomNav와 접근성 이름 충돌을 피하려고 SideNav 링크는 한국어 라벨, nav label은 `Desktop primary`를 사용한다. `npm run build && npm run test -- --run && node scripts/check-antipatterns.mjs` 통과, 15개 파일 68개 테스트 통과.

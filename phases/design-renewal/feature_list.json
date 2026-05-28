@@ -254,49 +254,49 @@
       "id": "feat-32",
       "name": "Antipattern guard automation",
       "description": "Add script to detect banned CSS patterns.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:43:10+09:00",
+      "verified_by_step": 15
     },
     {
       "id": "feat-33",
       "name": "Empty Loading Error states",
       "description": "Ensure major pages provide empty, loading, and error states.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:41:15+09:00",
+      "verified_by_step": 14
     },
     {
       "id": "feat-34",
       "name": "Dark mode system sync",
       "description": "Verify prefers-color-scheme sync and light/dark visual regressions.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:44:07+09:00",
+      "verified_by_step": 16
     },
     {
       "id": "feat-35",
       "name": "Accessibility baseline",
       "description": "Meet keyboard navigation, focus ring, ARIA, WCAG AA, and touch target requirements.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:46:58+09:00",
+      "verified_by_step": 17
     },
     {
       "id": "feat-36",
       "name": "PWA and Web Share Target regression",
       "description": "Verify manifest, build output, mobile install, and share menu behavior.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:48:01+09:00",
+      "verified_by_step": 18
     },
     {
       "id": "feat-37",
       "name": "SideNav component",
       "description": "Add desktop SideNav with four menu items, active state, and responsive switch with BottomNav.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T00:51:06+09:00",
+      "verified_by_step": 18
     },
     {
       "id": "feat-38",

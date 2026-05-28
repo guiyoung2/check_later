@@ -117,30 +117,42 @@
     {
       "step": 14,
       "name": "empty-loading-error-states",
-      "status": "error",
+      "status": "completed",
       "started_at": "2026-05-29T00:36:28+0900",
-      "error_message": "[3회 시도 후 실패] Step did not update status",
-      "failed_at": "2026-05-29T00:36:54+0900"
+      "completed_at": "2026-05-29T00:41:15+0900",
+      "summary": "전체 페이지 Empty/Loading/Error 3종 상태 전수 보완 완료"
     },
     {
       "step": 15,
       "name": "antipattern-guard",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-29T00:41:15+0900",
+      "completed_at": "2026-05-29T00:43:10+0900",
+      "summary": "scripts/check-antipatterns.mjs 신설, 현재 src/ 위반 0건 확인, npm run check:antipatterns 등록"
     },
     {
       "step": 16,
       "name": "dark-mode-check",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-29T00:43:10+0900",
+      "completed_at": "2026-05-29T00:44:07+0900",
+      "summary": "다크 모드 전수 점검 — 하드코딩 색상 제거, 시스템/.dark 두 경로 모두 동작, 그림자 없음 확인"
     },
     {
       "step": 17,
       "name": "a11y-check",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-29T00:44:07+0900",
+      "completed_at": "2026-05-29T00:46:58+0900",
+      "summary": "a11y 전수 점검 — focus ring, ARIA 레이블, 키보드 네비, 색 대비 WCAG AA, 터치 타깃 ≥44px 보완 완료"
     },
     {
       "step": 18,
       "name": "pwa-regression",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-29T00:46:58+0900",
+      "completed_at": "2026-05-29T00:48:01+0900",
+      "summary": "PWA + Web Share Target 회귀 점검 완료 — manifest 무결, SW 생성 확인, URL 파라미터 자동 채움 테스트 통과"
     }
   ],
   "created_at": "2026-05-28T16:49:37+0900"
