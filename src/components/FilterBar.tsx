@@ -27,36 +27,46 @@ export function FilterBar(): JSX.Element {
 
   return (
     <div
-      className="flex items-center gap-2 overflow-x-auto px-4 py-2"
+      className="sticky top-14 z-10 flex flex-col gap-2 border-b border-border bg-bg px-4 py-3 sm:flex-row sm:items-center sm:overflow-x-auto sm:border-b-0 sm:py-2"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
     >
-      {TYPE_VALUES.map((t) => (
-        <button
-          key={t}
-          onClick={() => setType(type === t ? null : t)}
-          className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-            type === t
-              ? 'bg-[var(--color-accent-bg)] text-[var(--color-accent)]'
-              : 'bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-sub)]'
-          }`}
-        >
-          {TYPE_LABELS[t]}
-        </button>
-      ))}
-      <div className="w-px shrink-0 self-stretch bg-[var(--color-border)] mx-1" />
-      {STATUS_VALUES.map((s) => (
-        <button
-          key={s}
-          onClick={() => setStatus(status === s ? null : s)}
-          className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-            status === s
-              ? 'bg-[var(--color-accent-bg)] text-[var(--color-accent)]'
-              : 'bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-sub)]'
-          }`}
-        >
-          {STATUS_LABELS[s]}
-        </button>
-      ))}
+      <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
+        <span className="text-xs font-medium text-text-sub sm:hidden">유형</span>
+        <div role="group" aria-label="유형 필터" className="grid grid-cols-4 gap-1.5 sm:flex sm:gap-2">
+          {TYPE_VALUES.map((t) => (
+            <button
+              key={t}
+              onClick={() => setType(type === t ? null : t)}
+              className={`min-h-11 shrink-0 rounded-full px-2.5 text-sm font-medium transition-colors sm:min-h-0 sm:px-3 sm:py-1 ${
+                type === t
+                  ? 'bg-accent-bg text-accent'
+                  : 'bg-surface border border-border text-text-sub'
+              }`}
+            >
+              {TYPE_LABELS[t]}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="hidden w-px shrink-0 self-stretch bg-border mx-1 sm:block" />
+      <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
+        <span className="text-xs font-medium text-text-sub sm:hidden">상태</span>
+        <div role="group" aria-label="상태 필터" className="grid grid-cols-3 gap-1.5 sm:flex sm:gap-2">
+          {STATUS_VALUES.map((s) => (
+            <button
+              key={s}
+              onClick={() => setStatus(status === s ? null : s)}
+              className={`min-h-11 shrink-0 rounded-full px-2.5 text-sm font-medium transition-colors sm:min-h-0 sm:px-3 sm:py-1 ${
+                status === s
+                  ? 'bg-accent-bg text-accent'
+                  : 'bg-surface border border-border text-text-sub'
+              }`}
+            >
+              {STATUS_LABELS[s]}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

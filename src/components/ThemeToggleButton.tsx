@@ -9,7 +9,7 @@ export function ThemeToggleButton({ className = '' }: ThemeToggleButtonProps): J
   const { isDark, toggleTheme } = useTheme();
   const label = isDark ? '라이트 모드로 전환' : '다크 모드로 전환';
   const baseClassName =
-    'flex h-11 w-11 items-center justify-center rounded-[8px] text-[var(--color-text-sub)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)] transition-colors';
+    'flex h-11 w-11 items-center justify-center rounded-[8px] text-text-sub hover:bg-surface hover:text-text-primary transition-colors';
 
   return (
     <button

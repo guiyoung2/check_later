@@ -99,3 +99,10 @@ Lane 이름: **Warm-Minimal Personal Tool**
 | FAB에 그라디언트 | AI 앱 클리셰 | accent 단색 |
 | 상태 변경 전용 모달 | 모달 남용 | 좌스와이프(즉시) or 길게 누르기(바텀 시트) |
 | border-radius 10px 이상 카드 | 앱스토어 카드 느낌 | 6px 이하 유지 |
+
+## Tailwind CSS v4 token usage
+
+- 색상 값은 `src/index.css`의 `@theme inline`에서 Tailwind theme token으로 노출한다.
+- 컴포넌트에서는 `bg-[var(--color-bg)]`, `text-[var(--color-text-sub)]` 같은 arbitrary value 대신 `bg-bg`, `bg-surface`, `border-border`, `text-text-primary`, `text-text-sub`, `bg-accent`, `text-accent`, `bg-accent-bg`를 사용한다.
+- 라이트/다크 모드 값은 `:root`와 `.dark`의 `--app-color-*` 런타임 변수에서만 바꾼다. 컴포넌트에서 직접 CSS 변수 이름을 참조하지 않는다.
+- 이 앱은 Vite 프로젝트 루트에서 빌드하므로 `@import "tailwindcss";`를 사용한다. `source("../src")`는 Tailwind v4 공식 문법이지만 일부 에디터 CSS 파서가 오진할 수 있어 monorepo처럼 base path 지정이 필요한 경우에만 쓴다.

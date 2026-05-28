@@ -97,23 +97,23 @@ export default function NewItemPage(): JSX.Element {
   const isLoading = isUploading || isPending;
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
-      <header className="sticky top-0 z-10 bg-[var(--color-bg)] border-b border-[var(--color-border)] flex items-center gap-3 px-4 h-14">
+    <div className="min-h-screen bg-bg">
+      <header className="sticky top-0 z-10 bg-bg border-b border-border flex items-center gap-3 px-4 h-14">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="뒤로가기"
-          className="flex items-center justify-center w-9 h-9 rounded-[8px] text-[var(--color-text-sub)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)]"
+          className="flex items-center justify-center w-9 h-9 rounded-[8px] text-text-sub hover:text-text-primary hover:bg-surface"
         >
           ←
         </button>
-        <span className="font-semibold text-[var(--color-text-primary)] text-base">새 항목</span>
+        <span className="font-semibold text-text-primary text-base">새 항목</span>
       </header>
 
       <form onSubmit={handleSubmit} className="px-4 py-4 flex flex-col gap-5 max-w-lg mx-auto">
         {/* URL 입력 */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="url" className="text-xs font-medium text-[var(--color-text-sub)]">
+          <label htmlFor="url" className="text-xs font-medium text-text-sub">
             URL
           </label>
           <input
@@ -122,14 +122,14 @@ export default function NewItemPage(): JSX.Element {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://"
-            className="px-3 py-2 text-sm rounded-[6px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-sub)] outline-none focus:border-[var(--color-accent)]"
+            className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary placeholder:text-text-sub outline-none focus:border-accent"
           />
         </div>
 
         {/* 제목 입력 */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="title" className="text-xs font-medium text-[var(--color-text-sub)]">
-            제목 <span className="text-[var(--color-accent)]">*</span>
+          <label htmlFor="title" className="text-xs font-medium text-text-sub">
+            제목 <span className="text-accent">*</span>
           </label>
           <input
             id="title"
@@ -137,13 +137,13 @@ export default function NewItemPage(): JSX.Element {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="제목을 입력하세요"
-            className="px-3 py-2 text-sm rounded-[6px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-sub)] outline-none focus:border-[var(--color-accent)]"
+            className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary placeholder:text-text-sub outline-none focus:border-accent"
           />
         </div>
 
         {/* 유형 칩 선택 */}
         <div className="flex flex-col gap-1.5">
-          <span className="text-xs font-medium text-[var(--color-text-sub)]">유형</span>
+          <span className="text-xs font-medium text-text-sub">유형</span>
           <div className="flex gap-2 flex-wrap">
             {TYPE_LIST.map((t) => (
               <button
@@ -152,8 +152,8 @@ export default function NewItemPage(): JSX.Element {
                 onClick={() => setTypeOverride(t)}
                 className={`px-3 py-1.5 rounded-[999px] text-sm font-medium transition-colors ${
                   type === t
-                    ? 'bg-[var(--color-accent-bg)] text-[var(--color-accent)]'
-                    : 'bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-sub)]'
+                    ? 'bg-accent-bg text-accent'
+                    : 'bg-surface border border-border text-text-sub'
                 }`}
               >
                 {TYPE_LABELS[t]}
@@ -164,7 +164,7 @@ export default function NewItemPage(): JSX.Element {
 
         {/* 이미지 업로드 */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="image" className="text-xs font-medium text-[var(--color-text-sub)]">
+          <label htmlFor="image" className="text-xs font-medium text-text-sub">
             이미지
           </label>
           <input
@@ -172,16 +172,16 @@ export default function NewItemPage(): JSX.Element {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="text-sm text-[var(--color-text-sub)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[6px] file:border file:border-[var(--color-border)] file:bg-[var(--color-surface)] file:text-[var(--color-text-sub)] file:text-sm file:cursor-pointer"
+            className="text-sm text-text-sub file:mr-3 file:py-1.5 file:px-3 file:rounded-[6px] file:border file:border-border file:bg-surface file:text-text-sub file:text-sm file:cursor-pointer"
           />
           {imageFile && (
-            <span className="text-xs text-[var(--color-text-sub)]">{imageFile.name}</span>
+            <span className="text-xs text-text-sub">{imageFile.name}</span>
           )}
         </div>
 
         {/* 메모 입력 */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="memo" className="text-xs font-medium text-[var(--color-text-sub)]">
+          <label htmlFor="memo" className="text-xs font-medium text-text-sub">
             메모
           </label>
           <textarea
@@ -190,7 +190,7 @@ export default function NewItemPage(): JSX.Element {
             onChange={(e) => setMemo(e.target.value)}
             placeholder="짧은 메모 (선택)"
             rows={3}
-            className="px-3 py-2 text-sm rounded-[6px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-sub)] outline-none focus:border-[var(--color-accent)] resize-none"
+            className="px-3 py-2 text-sm rounded-[6px] border border-border bg-surface text-text-primary placeholder:text-text-sub outline-none focus:border-accent resize-none"
           />
         </div>
 
@@ -203,7 +203,7 @@ export default function NewItemPage(): JSX.Element {
         <button
           type="submit"
           disabled={isLoading || !title.trim()}
-          className="w-full py-2.5 rounded-[8px] bg-[var(--color-accent)] text-white text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-2.5 rounded-[8px] bg-accent text-white text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isUploading ? '업로드 중...' : isPending ? '저장 중...' : '저장'}
         </button>

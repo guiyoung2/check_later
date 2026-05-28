@@ -40,4 +40,28 @@ describe('SettingsPage', () => {
     expect(supabase.auth.signOut).toHaveBeenCalledTimes(1);
     expect(screen.getByText('랜딩')).toBeInTheDocument();
   });
+
+  it('로그아웃을 누르면 signOut 완료를 기다리지 않고 루트 경로로 이동한다', async () => {
+    const user = userEvent.setup();
+    let resolveSignOut: (value: { error: null }) => void = () => {};
+    vi.mocked(supabase.auth.signOut).mockReturnValue(
+      new Promise((resolve) => {
+        resolveSignOut = resolve;
+      }),
+    );
+
+    render(
+      <MemoryRouter initialEntries={['/settings']}>
+        <Routes>
+          <Route path="/" element={<div>랜딩</div>} />
+          <Route path="/settings" element={<SettingsPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: '로그아웃' }));
+
+    expect(screen.getByText('랜딩')).toBeInTheDocument();
+    resolveSignOut({ error: null });
+  });
 });

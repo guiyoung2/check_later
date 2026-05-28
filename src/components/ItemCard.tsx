@@ -1,5 +1,7 @@
-﻿import type { JSX } from 'react';
+import type { JSX } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { storageService } from '../services/storageService';
 import type { Item, ItemType, ItemStatus } from '../types';
 
 const TYPE_LABELS: Record<ItemType, string> = {
@@ -32,16 +34,38 @@ interface ItemCardProps {
 
 // 아이템 한 행 (텍스트 우선, 썸네일 보조)
 export function ItemCard({ item }: ItemCardProps): JSX.Element {
+  const [signedImage, setSignedImage] = useState<{ path: string; url: string } | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const imagePath = item.image_path;
+    if (!imagePath) return;
+
+    storageService
+      .getSignedUrl(imagePath)
+      .then((url) => {
+        if (!ignore && url) setSignedImage({ path: imagePath, url });
+      })
+      .catch(() => null);
+
+    return () => {
+      ignore = true;
+    };
+  }, [item.image_path]);
+
+  const signedImageUrl = signedImage?.path === item.image_path ? signedImage.url : null;
+
   return (
     <Link
       to={`/items/${item.id}`}
-      className="flex items-center gap-3 rounded-[6px] bg-[var(--color-surface)] px-4 py-3 shadow-[0_1px_3px_oklch(20%_0.01_80_/_0.08)] dark:shadow-none hover:bg-[var(--color-accent-bg)] transition-colors"
+      className="flex items-center gap-3 rounded-[6px] bg-surface px-4 py-3 shadow-[0_1px_3px_oklch(20%_0.01_80_/_0.08)] dark:shadow-none hover:bg-accent-bg transition-colors"
     >
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-[var(--color-text-primary)] truncate text-sm leading-snug">
+        <p className="font-semibold text-text-primary truncate text-sm leading-snug">
           {item.title}
         </p>
-        <div className="mt-1 flex items-center gap-1.5 text-xs text-[var(--color-text-sub)]">
+        <div className="mt-1 flex items-center gap-1.5 text-xs text-text-sub">
           <span>{TYPE_LABELS[item.type]}</span>
           <span aria-hidden>·</span>
           <span>{STATUS_LABELS[item.status]}</span>
@@ -50,7 +74,15 @@ export function ItemCard({ item }: ItemCardProps): JSX.Element {
         </div>
       </div>
       {item.image_path && (
-        <div className="shrink-0 w-12 h-12 rounded-[4px] bg-[var(--color-border)]" aria-hidden />
+        <div className="shrink-0 h-12 w-12 overflow-hidden rounded-[4px] bg-border">
+          {signedImageUrl && (
+            <img
+              src={signedImageUrl}
+              alt={`${item.title} 썸네일`}
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
       )}
     </Link>
   );
