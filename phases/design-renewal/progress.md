@@ -1,7 +1,7 @@
 # design-renewal 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T00:19:16+09:00 — Step 10/19 완료
+2026-05-29T00:21:43+0900 — Step 11/19 완료
 
 ## 완료된 작업
 - Step 0: ui-guide-rewrite — docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함
@@ -14,7 +14,7 @@
 - Step 7: new-item-page-renewal — NewItemPage 리뉴얼 — BottomSheet 스타일, 3-grid chip, URL 자동 감지, Web Share Target 회귀 테스트 통과
 - Step 8: item-detail-page-renewal — ItemDetailPage 리뉴얼 — sticky 헤더, type별 헤드, status 3-segment, blockquote 제거, ConfirmDialog 추가
 - Step 9: mobile-gestures — 스와이프 status 토글, 길게 누르기 BottomSheet, 데스크탑 hover 메뉴 구현 완료
-- Step 10: folders-page — /folders 페이지 신설, type/status 카운트 그리드와 Home 필터 이동, 라우트 등록 완료
+- Step 10: folders-page — /folders 페이지 신설 — type×status 카운트 그리드, 클릭 시 Home 필터 이동, 라우트 등록 완료
 
 ## 현재 진행 중
 - Step 11: settings-page-renewal
