@@ -14,9 +14,9 @@
       "id": "feat-2",
       "name": "디자인 토큰 CSS 적용",
       "description": "src/index.css에 순수 모노톤 CSS 변수 및 Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거됨",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-28T17:00:00+09:00",
+      "verified_by_step": 1
     },
     {
       "id": "feat-3",

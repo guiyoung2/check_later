@@ -13,7 +13,10 @@
     {
       "step": 1,
       "name": "design-tokens",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-28T16:58:20+0900",
+      "completed_at": "2026-05-28T17:00:00+09:00",
+      "summary": "src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거"
     },
     {
       "step": 2,
