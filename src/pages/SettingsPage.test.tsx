@@ -146,6 +146,22 @@ describe('SettingsPage', () => {
     expect(await screen.findByText('2개')).toBeInTheDocument();
   });
 
+  it('항목 수 조회 중에는 대시를 표시한다', () => {
+    vi.mocked(itemsService.list).mockReturnValue(new Promise(() => {}));
+
+    renderSettingsPage();
+
+    expect(screen.getByText('—')).toBeInTheDocument();
+  });
+
+  it('항목 수 조회 실패 시 대시를 유지한다', async () => {
+    vi.mocked(itemsService.list).mockRejectedValue(new Error('fail'));
+
+    renderSettingsPage();
+
+    expect(await screen.findByText('—')).toBeInTheDocument();
+  });
+
   it('standalone 표시 모드에서는 설치 완료 문구만 표시한다', () => {
     window.matchMedia = createMatchMedia(true);
 

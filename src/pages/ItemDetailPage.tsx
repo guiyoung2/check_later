@@ -1,6 +1,6 @@
 import type { ChangeEvent, JSX } from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useItem } from '../hooks/useItem';
 import { usePatchItem } from '../hooks/usePatchItem';
 import { useDeleteItem } from '../hooks/useDeleteItem';
@@ -12,6 +12,9 @@ import { Button } from '../components/ui/Button';
 import { BottomNav } from '../components/ui/BottomNav';
 import { Chip } from '../components/ui/Chip';
 import { Divider } from '../components/ui/Divider';
+import { EmptyState } from '../components/ui/EmptyState';
+import { SideNav } from '../components/ui/SideNav';
+import { Skeleton } from '../components/ui/Skeleton';
 import { useToast } from '../components/ui/Toast';
 import { formatCardDate } from '../components/items/cardUtils';
 
@@ -91,12 +94,37 @@ function PlayIcon(): JSX.Element {
   );
 }
 
+function DetailLoadingSkeleton(): JSX.Element {
+  return (
+    <div className="min-h-screen bg-bg pb-16 md:pl-60">
+      <SideNav />
+      <header className="sticky top-0 z-10 border-b border-border bg-bg">
+        <div className="mx-auto flex h-14 max-w-[800px] items-center justify-between px-4">
+          <Skeleton className="h-8 w-24" />
+          <div className="flex gap-2">
+            <Skeleton className="h-9 w-9" />
+            <Skeleton className="h-9 w-9" />
+            <Skeleton className="h-9 w-9" />
+          </div>
+        </div>
+      </header>
+      <main className="mx-auto flex max-w-[800px] flex-col gap-5 px-4 py-6" aria-label="상세 로딩 중">
+        <Skeleton className="h-56 w-full" />
+        <Skeleton className="h-6 w-28" />
+        <Skeleton className="h-10 w-3/4" />
+        <Skeleton className="h-24 w-full" />
+      </main>
+      <BottomNav />
+    </div>
+  );
+}
+
 // 항목 상세 페이지: 표시, 편집, 상태 변경, 삭제
 export default function ItemDetailPage(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { data: item, isLoading } = useItem(id);
+  const { data: item, isLoading, isError } = useItem(id);
   const { mutate: patchItem, isPending: isPatching } = usePatchItem();
   const { mutate: deleteItem, isPending: isDeleting } = useDeleteItem();
   const { showToast } = useToast();
@@ -204,20 +232,35 @@ export default function ItemDetailPage(): JSX.Element {
   }, [imageAttachments]);
 
   if (isLoading) {
+    return <DetailLoadingSkeleton />;
+  }
+
+  if (isError) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
-        <p className="text-[14px] leading-[1.5] text-text-muted">불러오는 중...</p>
+      <div className="min-h-screen bg-bg pb-16 md:pl-60">
+        <SideNav />
+        <main className="mx-auto max-w-[800px] px-4 py-6">
+          <div role="alert" className="rounded-sm border border-error/30 bg-surface px-4 py-3 text-[14px] leading-[1.5] text-error">
+            불러오는 중 오류가 생겼어요. 잠시 후 다시 시도해 주세요.
+          </div>
+        </main>
+        <BottomNav />
       </div>
     );
   }
 
   if (!item) {
     return (
-      <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4">
-        <p className="text-[14px] leading-[1.5] text-text-secondary">항목을 찾을 수 없어요</p>
-        <Link to="/" className="text-[14px] leading-[1.5] text-text-primary underline">
-          목록으로 돌아가기
-        </Link>
+      <div className="min-h-screen bg-bg pb-16 md:pl-60">
+        <SideNav />
+        <main className="mx-auto max-w-[800px] px-4 py-6">
+          <EmptyState
+            title="찾을 수 없어요"
+            description="삭제되었거나 접근할 수 없는 항목입니다"
+            action={{ label: '홈으로', onClick: () => navigate('/') }}
+          />
+        </main>
+        <BottomNav />
       </div>
     );
   }
@@ -359,7 +402,8 @@ export default function ItemDetailPage(): JSX.Element {
   })();
 
   return (
-    <div className="min-h-screen bg-bg pb-16">
+    <div className="min-h-screen bg-bg pb-16 md:pl-60">
+      <SideNav />
       {/* sticky 헤더 */}
       <header className="sticky top-0 z-10 border-b border-border bg-bg">
         <div className="mx-auto flex h-14 max-w-[800px] items-center justify-between px-4">
@@ -598,7 +642,7 @@ export default function ItemDetailPage(): JSX.Element {
       {/* 삭제 확인 모달 */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-[oklch(10%_0.006_80)]/40">
-          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-[0_8px_32px_rgba(8,6,3,0.12)] flex flex-col gap-4">
+          <div className="flex w-full max-w-sm flex-col gap-4 rounded-lg bg-surface p-6 shadow-modal">
             <h2 className="text-[18px] leading-[1.5] font-medium text-text-primary">
               정말 삭제할까요?
             </h2>

@@ -3,6 +3,8 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { BottomNav } from '../components/ui/BottomNav';
+import { Skeleton } from '../components/ui/Skeleton';
+import { SideNav } from '../components/ui/SideNav';
 import { TopAppBar } from '../components/ui/TopAppBar';
 import { itemsService } from '../services/itemsService';
 import { useFilterStore } from '../stores/filterStore';
@@ -133,12 +135,25 @@ function CountCard({ name, count, icon, className, onClick }: CountCardConfig): 
   );
 }
 
+function FoldersSkeleton(): JSX.Element {
+  return (
+    <section aria-label="폴더 로딩 중" className="grid grid-cols-2 gap-6 md:grid-cols-3">
+      {Array.from({ length: 7 }).map((_, index) => (
+        <Skeleton
+          key={index}
+          className={joinClasses('h-32 w-full', index === 0 && 'col-span-2 md:col-span-1')}
+        />
+      ))}
+    </section>
+  );
+}
+
 export default function FoldersPage(): JSX.Element {
   const navigate = useNavigate();
   const setType = useFilterStore((s) => s.setType);
   const setStatus = useFilterStore((s) => s.setStatus);
   const resetFilters = useFilterStore((s) => s.reset);
-  const { data: items, isError } = useQuery({
+  const { data: items, isLoading, isError } = useQuery({
     queryKey: ['items', 'counts'],
     queryFn: () => itemsService.list(),
   });
@@ -174,7 +189,8 @@ export default function FoldersPage(): JSX.Element {
   ];
 
   return (
-    <div className="min-h-screen bg-bg pb-16">
+    <div className="min-h-screen bg-bg pb-16 md:pl-60">
+      <SideNav />
       <TopAppBar title="Folders" />
 
       <main className="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 py-6 md:px-8">
@@ -188,34 +204,38 @@ export default function FoldersPage(): JSX.Element {
         </header>
 
         {isError ? (
-          <div role="alert" className="max-w-[800px] rounded-md border border-error bg-surface px-4 py-3 text-[14px] leading-[1.5] text-text-primary">
-            카운트를 불러오지 못했습니다
+          <div role="alert" className="max-w-[800px] rounded-sm border border-error/30 bg-surface px-4 py-3 text-[14px] leading-[1.5] text-error">
+            불러오는 중 오류가 생겼어요. 잠시 후 다시 시도해 주세요.
           </div>
         ) : null}
 
-        <section aria-label="폴더 목록" className="grid grid-cols-2 gap-6 md:grid-cols-3">
-          <CountCard
-            kind="all"
-            name="전체"
-            count={counts.all}
-            icon={<TrayIcon />}
-            className="col-span-2 md:col-span-1"
-            onClick={handleAllCard}
-          />
-          {typeCards.map((card) => (
-            <CountCard key={card.kind} {...card} />
-          ))}
-          <div className="col-span-2 flex items-center gap-3 md:col-span-3">
-            <span className="h-px flex-1 bg-border" />
-            <span className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
-              상태별
-            </span>
-            <span className="h-px flex-1 bg-border" />
-          </div>
-          {statusCards.map((card) => (
-            <CountCard key={card.kind} {...card} />
-          ))}
-        </section>
+        {isLoading ? (
+          <FoldersSkeleton />
+        ) : (
+          <section aria-label="폴더 목록" className="grid grid-cols-2 gap-6 md:grid-cols-3">
+            <CountCard
+              kind="all"
+              name="전체"
+              count={counts.all}
+              icon={<TrayIcon />}
+              className="col-span-2 md:col-span-1"
+              onClick={handleAllCard}
+            />
+            {typeCards.map((card) => (
+              <CountCard key={card.kind} {...card} />
+            ))}
+            <div className="col-span-2 flex items-center gap-3 md:col-span-3">
+              <span className="h-px flex-1 bg-border" />
+              <span className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
+                상태별
+              </span>
+              <span className="h-px flex-1 bg-border" />
+            </div>
+            {statusCards.map((card) => (
+              <CountCard key={card.kind} {...card} />
+            ))}
+          </section>
+        )}
       </main>
 
       <BottomNav />

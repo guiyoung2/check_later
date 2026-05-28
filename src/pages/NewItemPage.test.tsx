@@ -63,6 +63,14 @@ describe('NewItemPage', () => {
     expect(screen.getByText('영상')).toBeInTheDocument();
   });
 
+  it('Web Share Target 파라미터 진입 시 url을 우선 채우고 자동 저장하지 않는다', () => {
+    renderPage('/new?title=%ED%85%8C%EC%8A%A4%ED%8A%B8&text=%EB%A9%94%EB%AA%A8%EB%82%B4%EC%9A%A9&url=https%3A%2F%2Fexample.com');
+
+    expect(screen.getByDisplayValue('https://example.com')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '저장' })).toBeEnabled();
+    expect(createItem).not.toHaveBeenCalled();
+  });
+
   it('shows BottomNav with New active', () => {
     renderPage();
     expect(screen.getByRole('link', { name: /New/ })).toHaveAttribute('aria-current', 'page');

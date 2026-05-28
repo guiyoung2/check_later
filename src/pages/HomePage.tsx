@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useItems } from '../hooks/useItems';
 import { useFilterStore } from '../stores/filterStore';
 import { BottomNav } from '../components/ui/BottomNav';
+import { SideNav } from '../components/ui/SideNav';
 import { EmptyState } from '../components/ui/EmptyState';
 import { Skeleton } from '../components/ui/Skeleton';
 import { TopAppBar } from '../components/ui/TopAppBar';
@@ -49,9 +50,9 @@ function AccountLink(): JSX.Element {
 function LoadingFeed(): JSX.Element {
   return (
     <div className="flex flex-col gap-6" aria-label="목록 로딩 중">
-      <Skeleton className="h-24 w-full" />
+      <Skeleton className="h-40 w-full" />
+      <Skeleton className="h-64 w-full" />
       <Skeleton className="h-32 w-full" />
-      <Skeleton className="h-20 w-full" />
     </div>
   );
 }
@@ -65,7 +66,8 @@ export default function HomePage(): JSX.Element {
   const hasFilters = type !== null || status !== null;
 
   return (
-    <div className="min-h-screen bg-bg pb-16">
+    <div className="min-h-screen bg-bg pb-16 md:pl-60">
+      <SideNav />
       <TopAppBar
         title="Check Later"
         leftAction={
@@ -81,9 +83,9 @@ export default function HomePage(): JSX.Element {
         {isError ? (
           <div
             role="alert"
-            className="rounded-md border border-error bg-surface px-4 py-3 text-[14px] leading-[1.5] text-text-primary"
+            className="rounded-sm border border-error/30 bg-surface px-4 py-3 text-[14px] leading-[1.5] text-error"
           >
-            잠시 후 다시 시도해주세요
+            불러오는 중 오류가 생겼어요. 잠시 후 다시 시도해 주세요.
           </div>
         ) : null}
 

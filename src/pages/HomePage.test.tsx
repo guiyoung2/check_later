@@ -83,7 +83,7 @@ describe('HomePage', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('alert')).toHaveTextContent('잠시 후 다시 시도해주세요');
+    expect(screen.getByRole('alert')).toHaveTextContent('불러오는 중 오류가 생겼어요. 잠시 후 다시 시도해 주세요.');
   });
 
   it('clears filters from the filtered empty state', async () => {

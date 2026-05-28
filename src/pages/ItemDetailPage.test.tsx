@@ -10,6 +10,9 @@ import type { Item } from '../types';
 const patchItem = vi.fn();
 const deleteItemMutate = vi.fn();
 const showToast = vi.fn();
+const useItemState = vi.hoisted(() => ({
+  value: { data: null as Item | null, isLoading: false, isError: false },
+}));
 
 const item: Item = {
   id: 'item-1',
@@ -25,7 +28,7 @@ const item: Item = {
 };
 
 vi.mock('../hooks/useItem', () => ({
-  useItem: () => ({ data: item, isLoading: false }),
+  useItem: () => useItemState.value,
 }));
 
 vi.mock('../hooks/usePatchItem', () => ({
@@ -87,7 +90,34 @@ async function submitEdit(user: ReturnType<typeof userEvent.setup>) {
 describe('ItemDetailPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    useItemState.value = { data: item, isLoading: false, isError: false };
     vi.mocked(itemAttachmentsService.listByItemId).mockResolvedValue([]);
+  });
+
+  it('로딩 중에는 상세 레이아웃 skeleton을 표시한다', () => {
+    useItemState.value = { data: null, isLoading: true, isError: false };
+
+    renderPage();
+
+    expect(screen.getByLabelText('상세 로딩 중')).toBeInTheDocument();
+    expect(screen.getAllByTestId('skeleton').length).toBeGreaterThanOrEqual(4);
+  });
+
+  it('항목이 없으면 EmptyState와 홈으로 버튼을 표시한다', () => {
+    useItemState.value = { data: null, isLoading: false, isError: false };
+
+    renderPageAt('/items/missing');
+
+    expect(screen.getByText('찾을 수 없어요')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '홈으로' })).toBeInTheDocument();
+  });
+
+  it('조회 실패 시 inline error banner를 표시한다', () => {
+    useItemState.value = { data: null, isLoading: false, isError: true };
+
+    renderPage();
+
+    expect(screen.getByRole('alert')).toHaveTextContent('불러오는 중 오류가 생겼어요. 잠시 후 다시 시도해 주세요.');
   });
 
   it('saves title, URL, and memo edits together', async () => {

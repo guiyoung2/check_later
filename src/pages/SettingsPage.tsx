@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { BottomNav } from '../components/ui/BottomNav';
 import { Button } from '../components/ui/Button';
 import { Divider } from '../components/ui/Divider';
+import { SideNav } from '../components/ui/SideNav';
 import { TopAppBar } from '../components/ui/TopAppBar';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
@@ -81,7 +82,7 @@ export default function SettingsPage(): JSX.Element {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(isAppInstalled);
   const [theme, setTheme] = useState<ThemePreference>(getStoredTheme);
-  const { data: items } = useQuery({
+  const { data: items, isLoading: isCountLoading, isError: isCountError } = useQuery({
     queryKey: ['items', 'settings-count'],
     queryFn: () => itemsService.list(),
   });
@@ -120,10 +121,11 @@ export default function SettingsPage(): JSX.Element {
     await supabase.auth.signOut();
   }
 
-  const itemCount = numberFormatter.format(items?.length ?? 0);
+  const itemCount = isCountLoading || isCountError ? '—' : `${numberFormatter.format(items?.length ?? 0)}개`;
 
   return (
-    <div className="min-h-screen bg-bg pb-16">
+    <div className="min-h-screen bg-bg pb-16 md:pl-60">
+      <SideNav />
       <TopAppBar title="Settings" />
 
       <main className="mx-auto flex max-w-[600px] flex-col gap-8 px-6 py-6">
@@ -191,7 +193,7 @@ export default function SettingsPage(): JSX.Element {
               저장된 항목
             </p>
             <p className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
-              {itemCount}개
+              {itemCount}
             </p>
           </div>
         </section>

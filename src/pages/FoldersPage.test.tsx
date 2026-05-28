@@ -83,4 +83,20 @@ describe('FoldersPage', () => {
     expect(useFilterStore.getState().type).toBe('video');
     expect(useFilterStore.getState().status).toBeNull();
   });
+
+  it('카운트 로딩 중에는 skeleton 카드 7개를 표시한다', () => {
+    vi.mocked(itemsService.list).mockReturnValue(new Promise(() => {}));
+
+    renderFoldersPage();
+
+    expect(screen.getAllByTestId('skeleton')).toHaveLength(7);
+  });
+
+  it('카운트 조회 실패 시 inline error banner를 표시한다', async () => {
+    vi.mocked(itemsService.list).mockRejectedValue(new Error('fail'));
+
+    renderFoldersPage();
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('불러오는 중 오류가 생겼어요. 잠시 후 다시 시도해 주세요.');
+  });
 });
