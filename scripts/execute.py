@@ -22,6 +22,15 @@ from typing import Optional
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# Python 최소 버전 체크 (3.8+)
+if sys.version_info < (3, 8):
+    print(f"ERROR: Python 3.8 이상이 필요합니다. 현재: {sys.version}")
+    sys.exit(1)
+
+# Windows cp949 콘솔에서 한글/유니코드 출력 깨짐 방지
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 
 def load_config(root: Path) -> dict:
     config_file = root / "harness.config.json"
@@ -286,6 +295,17 @@ class StepExecutor:
             f"   (두 파일이 없으면 스킵)\n\n---\n\n"
         )
 
+    @staticmethod
+    def _check_rate_limit(output: dict) -> tuple[bool, str]:
+        """output JSON에서 rate limit(429) 여부 감지. (is_rate_limit, message)"""
+        try:
+            data = json.loads(output.get("stdout", "{}"))
+            if data.get("api_error_status") == 429:
+                return True, data.get("result", "session limit reached")
+        except (json.JSONDecodeError, TypeError):
+            pass
+        return False, ""
+
     # --- 엔진 호출 ---
 
     def _invoke_engine(self, step: dict, preamble: str) -> dict:
@@ -366,8 +386,44 @@ class StepExecutor:
                 tag += f" [retry {attempt}/{self.MAX_RETRIES}]"
 
             with progress_indicator(tag) as pi:
-                self._invoke_engine(step, preamble)
+                output = self._invoke_engine(step, preamble)
                 elapsed = int(pi.elapsed)
+
+            # 비정상 종료 시 재시도 없이 즉시 error 처리 (토큰 소모, 프로세스 크래시 등)
+            if output["exitCode"] != 0:
+                index = self._read_json(self._index_file)
+                cur_status = next((s.get("status", "pending") for s in index["steps"] if s["step"] == step_num), "pending")
+                if cur_status == "pending":
+                    ts = self._stamp()
+                    for s in index["steps"]:
+                        if s["step"] == step_num:
+                            s["status"] = "error"
+                            s["error_message"] = f"엔진 비정상 종료 (code {output['exitCode']})"
+                            s["failed_at"] = ts
+                    self._write_json(self._index_file, index)
+                    self._update_progress_skeleton()
+                    self._commit_step(step_num, step_name)
+                    self._update_top_index("error")
+                    print(f"  ✗ Step {step_num}: {step_name} 비정상 종료 (code {output['exitCode']}) [{elapsed}s]")
+                    print(f"    토큰 소모 또는 오류로 중단됨. status를 'pending'으로 리셋 후 재실행하세요.")
+                    sys.exit(1)
+
+            # Rate limit 감지: LLM이 실행 자체가 안 된 경우 즉시 blocked 처리
+            is_rate_limit, rate_msg = self._check_rate_limit(output)
+            if is_rate_limit:
+                ts = self._stamp()
+                index = self._read_json(self._index_file)
+                for s in index["steps"]:
+                    if s["step"] == step_num:
+                        s["status"] = "blocked"
+                        s["blocked_reason"] = f"rate-limit (429): {rate_msg}"
+                        s["blocked_at"] = ts
+                self._write_json(self._index_file, index)
+                self._update_top_index("blocked")
+                print(f"\n  ⏸ Step {step_num}: rate limited [{elapsed}s]")
+                print(f"    {rate_msg}")
+                print(f"    세션 한도 리셋 후 status를 'pending'으로 바꾸고 재실행하세요.")
+                sys.exit(2)
 
             index = self._read_json(self._index_file)
             status = next((s.get("status", "pending") for s in index["steps"] if s["step"] == step_num), "pending")
@@ -395,9 +451,20 @@ class StepExecutor:
                 sys.exit(2)
 
             err_msg = next(
-                (s.get("error_message", "Step did not update status") for s in index["steps"] if s["step"] == step_num),
-                "Step did not update status",
+                (s.get("error_message", "") for s in index["steps"] if s["step"] == step_num),
+                "",
             )
+            if not err_msg:
+                try:
+                    out_data = self._read_json(self._phase_dir / f"step{step_num}-output.json")
+                    stdout_data = json.loads(out_data.get("stdout", "{}"))
+                    result = stdout_data.get("result", "")
+                    err_msg = (
+                        f"LLM이 status를 업데이트하지 않음. result: {result[:200]}"
+                        if result else "Step did not update status"
+                    )
+                except Exception:
+                    err_msg = "Step did not update status"
 
             if attempt < self.MAX_RETRIES:
                 for s in index["steps"]:
@@ -448,9 +515,7 @@ class StepExecutor:
             print(f"\n{'='*60}")
             print("  이전 진행 현황")
             print(f"{'='*60}")
-            sys.stdout.buffer.write(progress_path.read_bytes())
-            sys.stdout.buffer.write(b"\n")
-            sys.stdout.buffer.flush()
+            print(progress_path.read_text(encoding="utf-8"))
             print(f"{'='*60}\n")
 
     def _update_progress_skeleton(self):
