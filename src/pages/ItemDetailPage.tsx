@@ -368,14 +368,24 @@ export default function ItemDetailPage(): JSX.Element {
     showToast({ message: '링크 복사됨', duration: 4000 });
   }
 
-  // type별 헤드 영역 (video 타입 우선, 그 다음 이미지 슬라이더)
+  // type별 헤드 영역 (video + 이미지 조합은 슬라이더로 통합)
   const headArea = (() => {
     if (isEditing) return null;
+
+    const imageSrcs = imageAttachments
+      .map((a) => signedImages[a.value])
+      .filter(Boolean) as string[];
+
     if (currentItem.type === 'video') {
-      // YouTube URL 우선 탐색 → fallback 첫 번째 URL
       const videoUrl = urlAttachments.find((a) => /youtube\.com|youtu\.be/i.test(a.value))?.value
         ?? urlAttachments[0]?.value;
       const thumbnailUrl = videoUrl ? getYouTubeThumbnail(videoUrl) : null;
+
+      // 이미지 첨부도 있으면 썸네일 + 이미지 슬라이더로 합침
+      if (thumbnailUrl && imageSrcs.length > 0) {
+        return <ImageSlider srcs={[thumbnailUrl, ...imageSrcs]} />;
+      }
+
       return (
         <div className="relative aspect-video bg-surface-sub">
           {thumbnailUrl && (
@@ -394,14 +404,11 @@ export default function ItemDetailPage(): JSX.Element {
         </div>
       );
     }
-    if (imageAttachments.length > 0) {
-      const imageSrcs = imageAttachments
-        .map((a) => signedImages[a.value])
-        .filter(Boolean) as string[];
-      if (imageSrcs.length > 0) {
-        return <ImageSlider srcs={imageSrcs} />;
-      }
+
+    if (imageSrcs.length > 0) {
+      return <ImageSlider srcs={imageSrcs} />;
     }
+
     return null;
   })();
 
