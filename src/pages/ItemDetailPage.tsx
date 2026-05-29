@@ -241,16 +241,13 @@ export default function ItemDetailPage(): JSX.Element {
     () => currentAttachments.filter((attachment) => attachment.kind === 'image'),
     [currentAttachments],
   );
-  // 이미지 signed URL 로드 (실패 시 조용히 숨김)
+  // 이미지 signed URL 배치 로드
   useEffect(() => {
     let ignore = false;
 
     async function loadSignedImages() {
-      const entries: Record<string, string> = {};
-      for (const attachment of imageAttachments) {
-        const url = await storageService.getSignedUrl(attachment.value).catch(() => null);
-        if (url) entries[attachment.value] = url;
-      }
+      const paths = imageAttachments.map((a) => a.value);
+      const entries = await storageService.getSignedUrls(paths).catch(() => ({}));
       if (!ignore) setSignedImages(entries);
     }
 

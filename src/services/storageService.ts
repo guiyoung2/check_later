@@ -16,22 +16,30 @@ export const storageService = {
 
   // signed URL 발급 (유효시간: 3600초)
   async getSignedUrl(path: string): Promise<string | null> {
-    const slashIndex = path.lastIndexOf('/');
-    const folder = slashIndex >= 0 ? path.slice(0, slashIndex) : '';
-    const fileName = slashIndex >= 0 ? path.slice(slashIndex + 1) : path;
-
-    const { data: files, error: listError } = await supabase.storage
-      .from(BUCKET)
-      .list(folder, { search: fileName, limit: 1 });
-
-    if (listError) return null;
-    if (!files?.some((file) => file.name === fileName)) return null;
-
     const { data, error } = await supabase.storage
       .from(BUCKET)
       .createSignedUrl(path, 3600);
 
     if (error) return null;
     return data.signedUrl;
+  },
+
+  // 여러 경로 signed URL 배치 발급
+  async getSignedUrls(paths: string[]): Promise<Record<string, string>> {
+    if (paths.length === 0) return {};
+
+    const { data, error } = await supabase.storage
+      .from(BUCKET)
+      .createSignedUrls(paths, 3600);
+
+    if (error || !data) return {};
+
+    const result: Record<string, string> = {};
+    for (const item of data) {
+      if (item.signedUrl && item.path) {
+        result[item.path] = item.signedUrl;
+      }
+    }
+    return result;
   },
 };
