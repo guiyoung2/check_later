@@ -22,14 +22,14 @@ describe('LandingPage', () => {
     expect(screen.getByText('로그인 화면')).toBeInTheDocument();
   });
 
-  it('1 viewport 소개와 저장, 분류, 조회 그리드를 보여준다', () => {
+  it('히어로 문구와 저장, 분류, 조회 기능 블록을 보여준다', () => {
     render(
       <MemoryRouter>
         <LandingPage />
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('heading', { name: /공유 한 번이면 끝/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /나중에 볼 것들/ })).toBeInTheDocument();
     expect(screen.getByText('저장')).toBeInTheDocument();
     expect(screen.getByText('분류')).toBeInTheDocument();
     expect(screen.getByText('조회')).toBeInTheDocument();
