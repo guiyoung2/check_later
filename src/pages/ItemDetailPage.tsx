@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useItem } from '../hooks/useItem';
 import { usePatchItem } from '../hooks/usePatchItem';
@@ -18,6 +18,8 @@ import { Skeleton } from '../components/ui/Skeleton';
 import { useToast } from '../components/ui/Toast';
 import { formatCardDate } from '../components/items/cardUtils';
 import { ItemForm, type ItemFormValues } from '../components/items/ItemForm';
+import { getYouTubeThumbnail } from '../lib/youtube';
+import { normalizeUrl } from '../lib/normalizeUrl';
 
 const TYPE_LABELS: Record<ItemType, string> = {
   video: '영상',
@@ -33,22 +35,6 @@ const STATUS_LABELS: Record<ItemStatus, string> = {
 };
 
 const STATUS_ORDER: ItemStatus[] = ['pending', 'reviewed', 'archived'];
-
-// YouTube 비디오 썸네일 URL 추출
-function getYouTubeThumbnail(url: string): string | null {
-  try {
-    const parsed = new URL(url);
-    let videoId: string | null = null;
-    if (parsed.hostname.includes('youtu.be')) {
-      videoId = parsed.pathname.slice(1);
-    } else if (parsed.hostname.includes('youtube.com')) {
-      videoId = parsed.searchParams.get('v');
-    }
-    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
-  } catch {
-    return null;
-  }
-}
 
 function ArrowLeftIcon(): JSX.Element {
   return (
@@ -116,6 +102,68 @@ function DetailLoadingSkeleton(): JSX.Element {
         <Skeleton className="h-24 w-full" />
       </main>
       <BottomNav />
+    </div>
+  );
+}
+
+// 이미지 슬라이더 (swipe + 1/N 카운터 + 화살표)
+function ImageSlider({ srcs }: { srcs: string[] }): JSX.Element {
+  const [current, setCurrent] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const scrollTo = (index: number) => {
+    containerRef.current?.scrollTo({
+      left: index * (containerRef.current.clientWidth),
+      behavior: 'smooth',
+    });
+  };
+
+  const onScroll = () => {
+    const el = containerRef.current;
+    if (!el) return;
+    setCurrent(Math.round(el.scrollLeft / el.clientWidth));
+  };
+
+  return (
+    <div className="relative">
+      <div
+        ref={containerRef}
+        onScroll={onScroll}
+        className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {srcs.map((src, i) => (
+          <div key={i} className="w-full shrink-0 snap-start">
+            <img
+              src={src}
+              alt="첨부 이미지"
+              className="max-h-[70vh] w-full bg-surface-sub object-contain"
+            />
+          </div>
+        ))}
+      </div>
+      {srcs.length > 1 && (
+        <>
+          <div className="absolute right-2 top-2 rounded bg-black/50 px-1.5 py-0.5 font-mono text-[11px] text-white">
+            {current + 1} / {srcs.length}
+          </div>
+          {current > 0 && (
+            <button
+              onClick={() => scrollTo(current - 1)}
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded bg-black/50 px-2 py-1 text-white hover:bg-black/70"
+            >
+              ‹
+            </button>
+          )}
+          {current < srcs.length - 1 && (
+            <button
+              onClick={() => scrollTo(current + 1)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-black/50 px-2 py-1 text-white hover:bg-black/70"
+            >
+              ›
+            </button>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -268,7 +316,7 @@ export default function ItemDetailPage(): JSX.Element {
 
     const nextImages = [...values.existingImagePaths, ...uploadedImages];
     const nextAttachments: ItemAttachmentInput[] = [
-      ...trimmedUrls.map((value) => ({ kind: 'url' as const, value })),
+      ...trimmedUrls.map((u) => ({ kind: 'url' as const, value: normalizeUrl(u) })),
       ...nextImages.map((value) => ({ kind: 'image' as const, value })),
     ];
 
@@ -320,26 +368,13 @@ export default function ItemDetailPage(): JSX.Element {
     showToast({ message: '링크 복사됨', duration: 4000 });
   }
 
-  // type별 헤드 영역
+  // type별 헤드 영역 (video 타입 우선, 그 다음 이미지 슬라이더)
   const headArea = (() => {
-    if (!isEditing && currentItem.type === 'screenshot' && imageAttachments.length > 0) {
-      return (
-        <div className="flex flex-col gap-2">
-          {imageAttachments.map((attachment) =>
-            signedImages[attachment.value] ? (
-              <img
-                key={attachment.value}
-                src={signedImages[attachment.value]}
-                alt="첨부 이미지"
-                className="max-h-[70vh] w-full bg-surface-sub object-contain"
-              />
-            ) : null,
-          )}
-        </div>
-      );
-    }
-    if (!isEditing && currentItem.type === 'video') {
-      const videoUrl = urlAttachments[0]?.value;
+    if (isEditing) return null;
+    if (currentItem.type === 'video') {
+      // YouTube URL 우선 탐색 → fallback 첫 번째 URL
+      const videoUrl = urlAttachments.find((a) => /youtube\.com|youtu\.be/i.test(a.value))?.value
+        ?? urlAttachments[0]?.value;
       const thumbnailUrl = videoUrl ? getYouTubeThumbnail(videoUrl) : null;
       return (
         <div className="relative aspect-video bg-surface-sub">
@@ -358,6 +393,14 @@ export default function ItemDetailPage(): JSX.Element {
           </span>
         </div>
       );
+    }
+    if (imageAttachments.length > 0) {
+      const imageSrcs = imageAttachments
+        .map((a) => signedImages[a.value])
+        .filter(Boolean) as string[];
+      if (imageSrcs.length > 0) {
+        return <ImageSlider srcs={imageSrcs} />;
+      }
     }
     return null;
   })();
@@ -425,6 +468,7 @@ export default function ItemDetailPage(): JSX.Element {
             {/* 메타: type chip · 날짜 · status */}
             <div className="flex flex-wrap items-center gap-2">
               <Chip variant="type">{TYPE_LABELS[currentItem.type]}</Chip>
+              {currentItem.image_path && <Chip variant="type">캡처</Chip>}
               <span aria-hidden className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">·</span>
               <span className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
                 {formatCardDate(currentItem.created_at)}
@@ -446,10 +490,10 @@ export default function ItemDetailPage(): JSX.Element {
                 {urlAttachments.map((attachment) => (
                   <a
                     key={attachment.id}
-                    href={attachment.value}
+                    href={normalizeUrl(attachment.value)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-secondary underline break-all hover:text-text-primary"
+                    className="self-start font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-secondary underline break-all hover:text-text-primary"
                   >
                     {attachment.value}
                     <span aria-hidden="true"> ↗</span>

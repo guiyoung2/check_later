@@ -2,6 +2,7 @@ import type { JSX } from 'react';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { detectType } from '../lib/form-type-detect';
+import { normalizeUrl } from '../lib/normalizeUrl';
 import { useCreateItem } from '../hooks/useCreateItem';
 import { storageService } from '../services/storageService';
 import { itemAttachmentsService } from '../services/itemAttachmentsService';
@@ -45,8 +46,13 @@ export default function NewItemPage(): JSX.Element {
         values.newImageFiles.map((file) => storageService.upload(file, user.id, itemId)),
       );
 
-      // 제출된 값 기반 type 판정
-      const validUrl = values.urls.find((u) => /^https?:\/\//i.test(u.trim()))?.trim();
+      // 제출된 값 기반 type 판정 (YouTube URL 우선 선택)
+      const normalizedUrls = values.urls
+        .filter((u) => u.trim())
+        .map((u) => normalizeUrl(u.trim()))
+        .filter((u) => /^https?:\/\//i.test(u));
+      const validUrl =
+        normalizedUrls.find((u) => /youtube\.com|youtu\.be/i.test(u)) ?? normalizedUrls[0];
       const type = detectType({
         hasImage: uploadedPaths.length > 0,
         url: validUrl,
@@ -65,7 +71,7 @@ export default function NewItemPage(): JSX.Element {
       const attachments: Array<{ kind: 'url' | 'image'; value: string }> = [
         ...values.urls
           .filter((u) => u.trim())
-          .map((u) => ({ kind: 'url' as const, value: u.trim() })),
+          .map((u) => ({ kind: 'url' as const, value: normalizeUrl(u.trim()) })),
         ...uploadedPaths.map((p) => ({ kind: 'image' as const, value: p })),
       ];
       if (attachments.length > 0) {

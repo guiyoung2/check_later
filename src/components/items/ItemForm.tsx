@@ -5,6 +5,7 @@ import { Chip } from '../ui/Chip';
 import { Textarea } from '../ui/Textarea';
 import { Divider } from '../ui/Divider';
 import { detectType } from '../../lib/form-type-detect';
+import { normalizeUrl } from '../../lib/normalizeUrl';
 import { fetchOgTitle } from '../../lib/og-parser';
 import type { ItemType } from '../../types';
 
@@ -94,8 +95,13 @@ export function ItemForm({
   // 값 기반 type 자동 판정 (읽기 전용 표시)
   const detectedType = useMemo(() => {
     const hasImage = existingImagePaths.length > 0 || newImages.length > 0;
-    const validUrl = urls.find((u) => /^https?:\/\//i.test(u.trim()));
-    return detectType({ hasImage, url: validUrl?.trim() });
+    const normalizedUrls = urls
+      .filter((u) => u.trim())
+      .map((u) => normalizeUrl(u.trim()))
+      .filter((u) => /^https?:\/\//i.test(u));
+    const validUrl =
+      normalizedUrls.find((u) => /youtube\.com|youtu\.be/i.test(u)) ?? normalizedUrls[0];
+    return detectType({ hasImage, url: validUrl });
   }, [existingImagePaths, newImages, urls]);
 
   function handleUrlChange(index: number, value: string) {
@@ -243,7 +249,7 @@ export function ItemForm({
           accept="image/*"
           multiple
           onChange={handleFileChange}
-          className="text-[14px] text-text-secondary file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-border file:bg-surface file:px-3 file:py-1.5 file:text-[13px] file:text-text-secondary"
+          className="self-start text-[14px] text-text-secondary file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-border file:bg-surface file:px-3 file:py-1.5 file:text-[13px] file:text-text-secondary"
         />
       </div>
 
@@ -274,7 +280,12 @@ export function ItemForm({
 
       {/* type 칩(읽기 전용) + 액션 버튼 */}
       <div className="flex items-center justify-between gap-3">
-        <Chip variant="type">{TYPE_LABELS[detectedType]}</Chip>
+        <div className="flex gap-1.5">
+          <Chip variant="type">{TYPE_LABELS[detectedType]}</Chip>
+          {(existingImagePaths.length > 0 || newImages.length > 0) && (
+            <Chip variant="type">캡처</Chip>
+          )}
+        </div>
         <div className="flex gap-2">
           {onCancel && (
             <Button
