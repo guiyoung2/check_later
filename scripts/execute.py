@@ -448,7 +448,9 @@ class StepExecutor:
             print(f"\n{'='*60}")
             print("  이전 진행 현황")
             print(f"{'='*60}")
-            print(progress_path.read_text(encoding="utf-8"))
+            sys.stdout.buffer.write(progress_path.read_bytes())
+            sys.stdout.buffer.write(b"\n")
+            sys.stdout.buffer.flush()
             print(f"{'='*60}\n")
 
     def _update_progress_skeleton(self):
