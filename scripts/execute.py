@@ -36,7 +36,7 @@ class ClaudeAdapter:
     def run(self, prompt: str, cwd: str, timeout: int = 1800) -> tuple[int, str, str]:
         result = subprocess.run(
             ["claude", "-p", "--dangerously-skip-permissions", "--output-format", "json", prompt],
-            cwd=cwd, capture_output=True, text=True, timeout=timeout,
+            cwd=cwd, capture_output=True, text=True, encoding="utf-8", timeout=timeout,
         )
         return result.returncode, result.stdout, result.stderr
 
@@ -158,7 +158,7 @@ class StepExecutor:
 
     def _run_git(self, *args) -> subprocess.CompletedProcess:
         cmd = ["git"] + list(args)
-        return subprocess.run(cmd, cwd=self._root, capture_output=True, text=True)
+        return subprocess.run(cmd, cwd=self._root, capture_output=True, text=True, encoding="utf-8")
 
     def _checkout_branch(self):
         branch = f"feat-{self._phase_name}"
