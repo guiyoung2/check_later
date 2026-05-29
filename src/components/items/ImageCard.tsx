@@ -4,6 +4,7 @@ import { Card } from '../ui/Card';
 import { Chip } from '../ui/Chip';
 import type { Item } from '../../types';
 import { formatCardDate } from './cardUtils';
+import { CardStatusBadge } from './CardStatusBadge';
 import { useSignedUrl } from './useSignedUrl';
 
 interface ImageCardProps {
@@ -31,9 +32,13 @@ export function ImageCard({ item, onClick }: ImageCardProps): JSX.Element {
       <div className="p-4 md:p-5">
         <div className="mb-3 flex items-center justify-between">
           <Chip variant="type">캡처</Chip>
-          <span className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
-            {formatCardDate(item.created_at)}
-          </span>
+          <div className="flex items-center gap-1.5">
+            <CardStatusBadge status={item.status} />
+            <span aria-hidden="true" className="font-mono text-[12px] leading-[1.2] text-text-muted">·</span>
+            <span className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
+              {formatCardDate(item.created_at)}
+            </span>
+          </div>
         </div>
         <h3 className="mb-2 text-[24px] leading-[1.4] font-medium text-text-primary line-clamp-1">
           {item.title}

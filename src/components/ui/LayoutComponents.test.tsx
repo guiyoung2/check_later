@@ -104,9 +104,9 @@ describe('layout UI components', () => {
     );
 
     expect(screen.getAllByRole('link')).toHaveLength(4);
-    expect(screen.getByRole('link', { name: /Home/ })).toHaveAttribute('href', '/');
-    expect(screen.getByRole('link', { name: /New/ })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('link', { name: /Folders/ })).toHaveAttribute('href', '/folders');
+    expect(screen.getByRole('link', { name: /홈/ })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: /새 항목/ })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('link', { name: /폴더/ })).toHaveAttribute('href', '/folders');
     expect(screen.queryByRole('link', { name: /Search/ })).not.toBeInTheDocument();
   });
 
@@ -117,8 +117,8 @@ describe('layout UI components', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('link', { name: /Home/ })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('link', { name: /Folders/ })).not.toHaveAttribute('aria-current');
+    expect(screen.getByRole('link', { name: /홈/ })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('link', { name: /폴더/ })).not.toHaveAttribute('aria-current');
   });
 
   it('navigates to Folders and New tabs from bottom nav', () => {
@@ -134,10 +134,10 @@ describe('layout UI components', () => {
       </MemoryRouter>,
     );
 
-    fireEvent.click(screen.getByRole('link', { name: /Folders/ }));
+    fireEvent.click(screen.getByRole('link', { name: /폴더/ }));
     expect(screen.getByText('/folders')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('link', { name: /New/ }));
+    fireEvent.click(screen.getByRole('link', { name: /새 항목/ }));
     expect(screen.getByText('/new')).toBeInTheDocument();
   });
 

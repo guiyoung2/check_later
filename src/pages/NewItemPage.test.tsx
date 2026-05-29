@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -73,7 +73,8 @@ describe('NewItemPage', () => {
 
   it('shows BottomNav with New active', () => {
     renderPage();
-    expect(screen.getByRole('link', { name: /New/ })).toHaveAttribute('aria-current', 'page');
+    const nav = screen.getByRole('navigation', { name: 'Primary' });
+    expect(within(nav).getByRole('link', { name: /새 항목/ })).toHaveAttribute('aria-current', 'page');
   });
 
   it('Web Share Target ?text= 파라미터 진입 시 textarea 채움 및 메모 타입 감지', () => {

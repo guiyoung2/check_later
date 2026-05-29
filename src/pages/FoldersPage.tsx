@@ -69,10 +69,32 @@ function TrayIcon(): JSX.Element {
   );
 }
 
-function StatusIcon(): JSX.Element {
+// 안봤음: 미확인 표시(점)
+function PendingIcon(): JSX.Element {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M5 12h4l2 4 4-8 2 4h2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+// 봤음: 체크
+function ReviewedIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="m5 12.5 4.5 4.5L19 7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// 보관: 아카이브 박스
+function ArchivedIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M4 6h16v4H4V6Z" strokeLinejoin="round" />
+      <path d="M6 10v9h12v-9" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M10 13h4" strokeLinecap="round" />
     </svg>
   );
 }
@@ -115,7 +137,7 @@ function CountCard({ name, count, icon, className, onClick }: CountCardConfig): 
       onClick={onClick}
       aria-label={`${name} ${countLabel}`}
       className={joinClasses(
-        'flex min-h-32 flex-col items-start justify-between rounded-md border border-border bg-surface p-4 text-left transition-[background-color,border-color,box-shadow,opacity,transform] duration-200 ease-out hover:shadow-card focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none active:translate-y-px md:p-6',
+        'flex min-h-32 flex-col items-start justify-between rounded-md border border-border bg-surface p-4 text-left transition-[background-color,border-color,box-shadow,opacity,transform] duration-200 ease-out hover:border-border-strong hover:shadow-card focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none active:translate-y-px md:p-6',
         isEmpty && 'opacity-60',
         className,
       )}
@@ -183,21 +205,18 @@ export default function FoldersPage(): JSX.Element {
   ];
 
   const statusCards: CountCardConfig[] = [
-    { kind: 'pending', name: '안봤음', count: counts.status.pending, icon: <StatusIcon />, onClick: () => handleStatusCard('pending') },
-    { kind: 'reviewed', name: '봤음', count: counts.status.reviewed, icon: <StatusIcon />, onClick: () => handleStatusCard('reviewed') },
-    { kind: 'archived', name: '보관', count: counts.status.archived, icon: <StatusIcon />, onClick: () => handleStatusCard('archived') },
+    { kind: 'pending', name: '안봤음', count: counts.status.pending, icon: <PendingIcon />, onClick: () => handleStatusCard('pending') },
+    { kind: 'reviewed', name: '봤음', count: counts.status.reviewed, icon: <ReviewedIcon />, onClick: () => handleStatusCard('reviewed') },
+    { kind: 'archived', name: '보관', count: counts.status.archived, icon: <ArchivedIcon />, onClick: () => handleStatusCard('archived') },
   ];
 
   return (
     <div className="min-h-screen bg-bg pb-16 md:pl-60">
       <SideNav />
-      <TopAppBar title="Folders" />
+      <TopAppBar title="폴더" />
 
       <main className="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 py-6 md:px-8">
         <header className="flex max-w-[800px] flex-col gap-2">
-          <h2 className="font-body text-[32px] leading-[1.2] font-semibold text-text-primary max-md:text-[26px] max-md:leading-[1.3]">
-            Folders
-          </h2>
           <p className="font-body text-[14px] leading-[1.5] text-text-muted">
             유형과 상태로 정리해서 보세요
           </p>

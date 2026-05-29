@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useItems } from '../hooks/useItems';
 import { useFilterStore } from '../stores/filterStore';
@@ -10,28 +10,12 @@ import { TopAppBar } from '../components/ui/TopAppBar';
 import { FilterBar } from '../components/FilterBar';
 import { ItemCard } from '../components/ItemCard';
 
-function MenuIcon(): JSX.Element {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function AccountIcon(): JSX.Element {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
       <circle cx="12" cy="8" r="3.5" />
       <path d="M5 20a7 7 0 0 1 14 0" strokeLinecap="round" />
     </svg>
-  );
-}
-
-function HeaderIcon({ children }: { children: ReactNode }): JSX.Element {
-  return (
-    <span className="flex h-11 w-11 items-center justify-center rounded-sm text-text-primary">
-      {children}
-    </span>
   );
 }
 
@@ -68,15 +52,7 @@ export default function HomePage(): JSX.Element {
   return (
     <div className="min-h-screen bg-bg pb-16 md:pl-60">
       <SideNav />
-      <TopAppBar
-        title="Check Later"
-        leftAction={
-          <HeaderIcon>
-            <MenuIcon />
-          </HeaderIcon>
-        }
-        rightAction={<AccountLink />}
-      />
+      <TopAppBar title="Check Later" rightAction={<AccountLink />} />
       <FilterBar />
 
       <main className="mx-auto flex max-w-[800px] flex-col gap-6 px-4 py-6 md:px-6">

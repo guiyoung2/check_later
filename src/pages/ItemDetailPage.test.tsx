@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -154,7 +154,8 @@ describe('ItemDetailPage', () => {
 
   it('shows BottomNav with Home active on detail route', () => {
     renderPage();
-    expect(screen.getByRole('link', { name: /Home/ })).toHaveAttribute('aria-current', 'page');
+    const nav = screen.getByRole('navigation', { name: 'Primary' });
+    expect(within(nav).getByRole('link', { name: /홈/ })).toHaveAttribute('aria-current', 'page');
   });
 
   it('renders detail images with contain layout', async () => {

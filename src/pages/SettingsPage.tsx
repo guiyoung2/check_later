@@ -10,6 +10,12 @@ import { TopAppBar } from '../components/ui/TopAppBar';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
 import { itemsService } from '../services/itemsService';
+import {
+  applyThemePreference,
+  getStoredTheme,
+  setThemePreference,
+  type ThemePreference,
+} from '../lib/theme';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -20,38 +26,12 @@ interface NavigatorWithStandalone extends Navigator {
   standalone?: boolean;
 }
 
-type ThemePreference = 'system' | 'light' | 'dark';
-
-const themeStorageKey = 'check-later-theme';
 const themeOptions: Array<{ value: ThemePreference; label: string }> = [
   { value: 'system', label: '시스템' },
   { value: 'light', label: '라이트' },
   { value: 'dark', label: '다크' },
 ];
 const numberFormatter = new Intl.NumberFormat('ko-KR');
-
-function getStoredTheme(): ThemePreference {
-  const value = localStorage.getItem(themeStorageKey);
-  return value === 'light' || value === 'dark' || value === 'system' ? value : 'system';
-}
-
-function prefersDarkMode() {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
-
-function applyThemePreference(theme: ThemePreference) {
-  const root = document.documentElement;
-  root.classList.remove('light', 'dark');
-
-  if (theme === 'dark' || (theme === 'system' && prefersDarkMode())) {
-    root.classList.add('dark');
-    return;
-  }
-
-  if (theme === 'light') {
-    root.classList.add('light');
-  }
-}
 
 function isAppInstalled() {
   return (
@@ -97,8 +77,7 @@ export default function SettingsPage(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(themeStorageKey, theme);
-    applyThemePreference(theme);
+    setThemePreference(theme);
 
     if (theme !== 'system') return undefined;
 
@@ -126,7 +105,7 @@ export default function SettingsPage(): JSX.Element {
   return (
     <div className="min-h-screen bg-bg pb-16 md:pl-60">
       <SideNav />
-      <TopAppBar title="Settings" />
+      <TopAppBar title="설정" />
 
       <main className="mx-auto flex max-w-[600px] flex-col gap-8 px-6 py-6">
         <section className="flex flex-col gap-4" aria-labelledby="settings-account">

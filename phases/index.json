@@ -15,6 +15,10 @@
       "dir": "design-renewal",
       "status": "completed",
       "completed_at": "2026-05-29T00:51:06+0900"
+    },
+    {
+      "dir": "design-renewal-fix",
+      "status": "pending"
     }
   ]
 }

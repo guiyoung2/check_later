@@ -16,7 +16,7 @@ function joinClasses(...classes: Array<string | undefined | false>) {
 export function Card({ hoverable = false, as = 'div', href, onClick, children, className }: CardProps) {
   const classes = joinClasses(
     'block rounded-md border border-border bg-surface transition-[background-color,border-color,box-shadow,opacity,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none active:translate-y-px',
-    hoverable && 'hover:shadow-card',
+    hoverable && 'hover:border-border-strong hover:shadow-card',
     onClick && 'cursor-pointer',
     className,
   );

@@ -41,10 +41,10 @@ function SettingsIcon() {
 }
 
 const items: NavItem[] = [
-  { label: 'Home', to: '/', icon: <HomeIcon /> },
-  { label: 'New', to: '/new', icon: <AddIcon /> },
-  { label: 'Folders', to: '/folders', icon: <FolderIcon /> },
-  { label: 'Settings', to: '/settings', icon: <SettingsIcon /> },
+  { label: '홈', to: '/', icon: <HomeIcon /> },
+  { label: '새 항목', to: '/new', icon: <AddIcon /> },
+  { label: '폴더', to: '/folders', icon: <FolderIcon /> },
+  { label: '설정', to: '/settings', icon: <SettingsIcon /> },
 ];
 
 function isActive(pathname: string, to: string) {
