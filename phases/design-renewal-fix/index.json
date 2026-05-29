@@ -7,13 +7,16 @@
       "name": "landing-redesign",
       "status": "completed",
       "started_at": "2026-05-29T11:12:09+0900",
-      "completed_at": "2026-05-29T11:20:00+0900",
+      "completed_at": "2026-05-29T11:16:31+0900",
       "summary": "LandingPage: 헤더 우상단 Login 버튼 추가, 히어로 2칼럼(텍스트+MiniPreview 목업), 카피 교체, 테스트 갱신. 빌드·68 테스트 통과."
     },
     {
       "step": 1,
       "name": "login-copy",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-29T11:16:57+0900",
+      "completed_at": "2026-05-29T11:18:00+0900",
+      "summary": "LoginPage: '로그인 / 회원가입' 문단 제거(Google OAuth 단일 반영). 동작 무변경. 빌드·68 테스트 통과."
     },
     {
       "step": 2,

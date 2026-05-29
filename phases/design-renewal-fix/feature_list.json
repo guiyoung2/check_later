@@ -30,9 +30,9 @@
       "id": "feat-4",
       "name": "Login page copy fix",
       "description": "로그인 페이지에서 '회원가입' 문구 제거(Google OAuth 단일 반영).",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T11:18:00+0900",
+      "verified_by_step": 1
     },
     {
       "id": "feat-5",

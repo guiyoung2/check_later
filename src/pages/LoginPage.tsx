@@ -34,9 +34,6 @@ export default function LoginPage() {
           <h1 className="text-[24px] leading-[1.4] font-semibold text-text-primary">
             Check Later
           </h1>
-          <p className="text-[18px] leading-[1.5] font-medium text-text-primary">
-            로그인 / 회원가입
-          </p>
           <p className="text-[14px] leading-[1.5] text-text-muted">조용한 메모 도구</p>
         </div>
 
