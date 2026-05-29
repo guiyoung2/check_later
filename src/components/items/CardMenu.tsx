@@ -5,6 +5,7 @@ interface CardMenuProps {
   onEdit: () => void;
   onShare: () => void;
   onDelete: () => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
 function MoreIcon(): JSX.Element {
@@ -36,16 +37,22 @@ function MenuButton({ children, danger = false, onClick }: {
   );
 }
 
-export function CardMenu({ onEdit, onShare, onDelete }: CardMenuProps): JSX.Element {
+export function CardMenu({ onEdit, onShare, onDelete, onOpenChange }: CardMenuProps): JSX.Element {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // open 상태 변경 + 부모에 알림
+  const handleSetOpen = (value: boolean) => {
+    setOpen(value);
+    onOpenChange?.(value);
+  };
 
   useEffect(() => {
     if (!open) return;
 
     function handlePointerDown(event: PointerEvent) {
       if (!menuRef.current?.contains(event.target as Node)) {
-        setOpen(false);
+        handleSetOpen(false);
       }
     }
 
@@ -54,7 +61,7 @@ export function CardMenu({ onEdit, onShare, onDelete }: CardMenuProps): JSX.Elem
   }, [open]);
 
   function runAction(action: () => void) {
-    setOpen(false);
+    handleSetOpen(false);
     action();
   }
 
@@ -69,7 +76,7 @@ export function CardMenu({ onEdit, onShare, onDelete }: CardMenuProps): JSX.Elem
         type="button"
         aria-label="카드 메뉴 열기"
         size="sm"
-        onClick={() => setOpen((current) => !current)}
+        onClick={() => handleSetOpen(!open)}
         className="bg-surface opacity-0 shadow-overlay group-hover:opacity-100 focus:opacity-100"
         aria-haspopup="menu"
         aria-expanded={open}

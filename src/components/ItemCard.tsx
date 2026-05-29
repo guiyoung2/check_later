@@ -91,6 +91,7 @@ export function ItemCard({ item, onClick }: ItemCardProps): JSX.Element {
   const [translateX, setTranslateX] = useState(0);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const longPressTimer = useRef<number | null>(null);
@@ -218,7 +219,7 @@ export function ItemCard({ item, onClick }: ItemCardProps): JSX.Element {
     <>
       <div
         data-testid="item-card-gesture"
-        className="group relative touch-pan-y"
+        className={`group relative touch-pan-y${menuOpen ? ' z-50' : ''}`}
         style={gestureStyle}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -248,6 +249,7 @@ export function ItemCard({ item, onClick }: ItemCardProps): JSX.Element {
           onEdit={handleEdit}
           onShare={() => void handleShare(false)}
           onDelete={openDeleteConfirm}
+          onOpenChange={setMenuOpen}
         />
       </div>
 

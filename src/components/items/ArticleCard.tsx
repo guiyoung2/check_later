@@ -33,6 +33,7 @@ export function ArticleCard({ item, onClick }: ArticleCardProps): JSX.Element {
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap items-center gap-1.5">
             <Chip variant="type">글</Chip>
+            {item.image_path && <Chip variant="type">캡처</Chip>}
             <CardStatusBadge status={item.status} />
             <span aria-hidden="true" className="font-mono text-[12px] leading-[1.2] text-text-muted">·</span>
             <span className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
