@@ -39,7 +39,7 @@
       "name": "filter-chips",
       "status": "completed",
       "started_at": "2026-05-29T11:22:44+0900",
-      "completed_at": "2026-05-29T11:25:00+0900",
+      "completed_at": "2026-05-29T11:24:53+0900",
       "summary": "Chip.tsx type 변형: rounded-xs→rounded-full, font-mono text-[12px]→font-body text-[13px]로 type/status 일관화. AtomicComponents.test.tsx 단언 동반 갱신. 빌드·67 테스트 통과."
     },
     {
