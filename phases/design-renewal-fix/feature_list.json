@@ -78,9 +78,9 @@
       "id": "feat-10",
       "name": "New item rich form",
       "description": "새 항목 작성 경로가 ItemForm을 사용해 제목·다중 URL·다중 이미지를 지원(작성=수정 동일 패러다임). 빠른저장 단순 폼 폐기.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T16:00:00+0900",
+      "verified_by_step": 7
     },
     {
       "id": "feat-11",
