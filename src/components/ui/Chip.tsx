@@ -9,7 +9,7 @@ export interface ChipProps {
 }
 
 const variantClasses = {
-  type: 'rounded-xs font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em]',
+  type: 'rounded-full font-body text-[13px] leading-[1.2] font-medium tracking-[0.02em]',
   status: 'rounded-full font-body text-[13px] leading-[1.2] font-medium tracking-[0.02em]',
   count: 'rounded-full font-mono text-[13px] leading-[1.2] font-medium tracking-[0.02em]',
 };

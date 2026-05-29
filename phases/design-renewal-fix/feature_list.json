@@ -54,9 +54,9 @@
       "id": "feat-7",
       "name": "Filter chips readability",
       "description": "FilterBar 칩 코너/글자 가독성 개선(딱딱한 네모 완화), type/status 칩 일관화.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T11:25:00+0900",
+      "verified_by_step": 4
     },
     {
       "id": "feat-8",

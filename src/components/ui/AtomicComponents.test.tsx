@@ -39,7 +39,7 @@ describe('atomic UI components', () => {
       </Chip>,
     );
 
-    expect(screen.getByText('memo')).toHaveClass('font-mono', 'text-[12px]', 'rounded-xs');
+    expect(screen.getByText('memo')).toHaveClass('font-body', 'text-[13px]', 'rounded-full');
     expect(screen.getByText('memo')).toHaveAttribute('aria-pressed', 'true');
   });
 
