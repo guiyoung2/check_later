@@ -2,7 +2,6 @@ import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../ui/Card';
 import { Chip } from '../ui/Chip';
-import { Divider } from '../ui/Divider';
 import type { Item } from '../../types';
 import { formatCardDate } from './cardUtils';
 import { CardStatusBadge } from './CardStatusBadge';
@@ -13,7 +12,7 @@ interface ArticleCardProps {
   onClick?: () => void;
 }
 
-// 글 타입 카드
+// 글 타입 카드 (컴팩트 행)
 export function ArticleCard({ item, onClick }: ArticleCardProps): JSX.Element {
   const navigate = useNavigate();
   const handleClick = onClick ?? (() => navigate(`/items/${item.id}`));
@@ -25,40 +24,35 @@ export function ArticleCard({ item, onClick }: ArticleCardProps): JSX.Element {
 
   return (
     <Card hoverable as="article" onClick={handleClick}>
-      <div className="p-4 md:p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <Chip variant="type">글</Chip>
-          <div className="flex items-center gap-1.5">
+      <div className="flex items-start gap-3 p-3 md:p-4">
+        {signedImageUrl && (
+          <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-surface-sub">
+            <img src={signedImageUrl} alt="" className="h-full w-full object-contain" />
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex flex-wrap items-center gap-1.5">
+            <Chip variant="type">글</Chip>
             <CardStatusBadge status={item.status} />
             <span aria-hidden="true" className="font-mono text-[12px] leading-[1.2] text-text-muted">·</span>
             <span className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
               {formatCardDate(item.created_at)}
             </span>
           </div>
+          <h3 className="text-[15px] leading-[1.5] font-medium text-text-primary line-clamp-2">
+            {item.title}
+          </h3>
+          {item.memo && (
+            <p className="mt-0.5 text-[13px] leading-[1.5] text-text-secondary line-clamp-1">
+              {item.memo}
+            </p>
+          )}
+          {hostname && (
+            <p className="mt-0.5 font-mono text-[12px] leading-[1.2] text-text-muted truncate">
+              {hostname}
+            </p>
+          )}
         </div>
-        <h3 className="text-[24px] leading-[1.4] font-medium text-text-primary line-clamp-2">
-          {item.title}
-        </h3>
-        {item.memo && (
-          <p className="mt-2 text-[14px] leading-[1.5] text-text-secondary line-clamp-1">
-            {item.memo}
-          </p>
-        )}
-        {hostname && (
-          <>
-            <Divider className="my-4" />
-            <div className="flex items-center gap-3">
-              {signedImageUrl && (
-                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-surface-sub">
-                  <img src={signedImageUrl} alt="" className="h-full w-full object-cover" />
-                </div>
-              )}
-              <span className="font-mono text-[14px] leading-[1.5] text-text-muted truncate">
-                {hostname}
-              </span>
-            </div>
-          </>
-        )}
       </div>
     </Card>
   );

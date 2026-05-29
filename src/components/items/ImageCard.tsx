@@ -12,42 +12,42 @@ interface ImageCardProps {
   onClick?: () => void;
 }
 
-// 캡처(이미지) 타입 카드
+// 캡처(이미지) 타입 카드 (컴팩트 행)
 export function ImageCard({ item, onClick }: ImageCardProps): JSX.Element {
   const navigate = useNavigate();
   const handleClick = onClick ?? (() => navigate(`/items/${item.id}`));
   const signedImageUrl = useSignedUrl(item.image_path);
 
   return (
-    <Card hoverable as="article" onClick={handleClick} className="overflow-hidden">
-      <div className="h-64 bg-surface-sub">
+    <Card hoverable as="article" onClick={handleClick}>
+      <div className="flex items-start gap-3 p-3 md:p-4">
         {signedImageUrl && (
-          <img
-            src={signedImageUrl}
-            alt={`${item.title} 썸네일`}
-            className="h-full w-full object-cover"
-          />
+          <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-surface-sub">
+            <img
+              src={signedImageUrl}
+              alt={`${item.title} 썸네일`}
+              className="h-full w-full object-contain"
+            />
+          </div>
         )}
-      </div>
-      <div className="p-4 md:p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <Chip variant="type">캡처</Chip>
-          <div className="flex items-center gap-1.5">
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex flex-wrap items-center gap-1.5">
+            <Chip variant="type">캡처</Chip>
             <CardStatusBadge status={item.status} />
             <span aria-hidden="true" className="font-mono text-[12px] leading-[1.2] text-text-muted">·</span>
             <span className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
               {formatCardDate(item.created_at)}
             </span>
           </div>
+          <h3 className="text-[15px] leading-[1.5] font-medium text-text-primary line-clamp-2">
+            {item.title}
+          </h3>
+          {item.memo && (
+            <p className="mt-0.5 text-[13px] leading-[1.5] text-text-secondary line-clamp-1">
+              {item.memo}
+            </p>
+          )}
         </div>
-        <h3 className="mb-2 text-[24px] leading-[1.4] font-medium text-text-primary line-clamp-1">
-          {item.title}
-        </h3>
-        {item.memo && (
-          <p className="text-[14px] leading-[1.5] text-text-secondary line-clamp-1">
-            {item.memo}
-          </p>
-        )}
       </div>
     </Card>
   );

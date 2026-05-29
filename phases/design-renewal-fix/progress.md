@@ -1,7 +1,7 @@
 # design-renewal-fix 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T11:24:53+0900 — Step 5/9 완료
+2026-05-29T11:30:00+0900 — Step 6/9 완료
 
 ## 완료된 작업
 - Step 0: landing-redesign — LandingPage: 헤더 우상단 Login 버튼 추가, 히어로 2칼럼(텍스트+MiniPreview 목업), 카피 교체, 테스트 갱신. 빌드·68 테스트 통과.
@@ -9,15 +9,16 @@
 - Step 2: home-header-theme — HomePage TopAppBar rightAction에 ThemeToggleButton 추가(계정 아이콘 왼쪽). 빌드·68 테스트 통과.
 - Step 3: settings-remove-theme — SettingsPage에서 THEME 섹션·theme state·effect·themeOptions·joinClasses·lib/theme import 제거, 테마 테스트 1건 제거. 빌드·67 테스트 통과.
 - Step 4: filter-chips — Chip.tsx type 변형: rounded-xs→rounded-full, font-mono text-[12px]→font-body text-[13px]로 type/status 일관화. AtomicComponents.test.tsx 단언 동반 갱신. 빌드·67 테스트 통과.
+- Step 5: feed-card-redesign — 4종 카드(Article/Video/Memo/Image)를 컴팩트 리스트 행으로 재설계. 좌측 h-16 w-16 소형 썸네일+우측 메타·제목·메모. ImageCard object-contain, VideoCard PlayBadge 유지. Divider import 제거. 빌드·67 테스트 통과.
 
 ## 현재 진행 중
-- Step 5: feed-card-redesign
+- Step 6: item-form-extract
 
 ## 다음 할 일
-- 피드 카드를 컴팩트 리스트 행(좌측 소형 썸네일 + 제목/메타)으로 재설계
-- 썸네일 object-cover → 크롭 최소화 방향 검토
-- ItemCard.tsx 제스처(스와이프/롱프레스/메뉴) 회귀 없음 반드시 확인
-- 카드 관련 테스트 회귀 없음 확인
+- 공용 `ItemForm` 컴포넌트 추출 (mode: create | edit, 제목/다중 URL/다중 이미지/og:title)
+- `src/components/items/ItemForm.tsx` 신설 (컴포넌트만, 아직 페이지에 연결하지 않음)
+- 기존 NewItemPage/ItemDetailPage 로직 분석 후 공통 인터페이스 설계
+- 관련 테스트 작성
 
 ## 주의사항
 - step 0에서 `MiniPreview`가 `LandingPage.tsx` 내부 함수로 정의됨 (별도 파일 아님). 외부 재사용 불필요.
@@ -28,3 +29,6 @@
 - `lib/theme.ts`·`main.tsx`·`ThemeToggleButton.tsx`는 step 3에서 수정하지 않음. 테마 부트스트랩/토글 동작 그대로 유지.
 - Chip `type` 변형이 `font-mono`에서 `font-body`로 바뀜. `count` 변형은 여전히 `font-mono` 유지(숫자 표시용).
 - AtomicComponents.test.tsx의 Chip 단언이 `font-body`, `text-[13px]`, `rounded-full`로 갱신됨 — step 4 이전 단언(`font-mono`, `text-[12px]`, `rounded-xs`)은 더 이상 유효하지 않음.
+- 카드 레이아웃 변경: 모든 카드가 `flex items-start gap-3 p-3 md:p-4` 행 구조로 통일됨. 기존 `h-64`/`aspect-video` 대형 썸네일 영역 제거. ArticleCard의 `Divider` import도 제거됨.
+- ImageCard 썸네일은 `object-contain` (크롭 없이 전체 이미지), VideoCard 썸네일은 `object-cover` + PlayBadge 오버레이 유지.
+- 카드 title font-size: 24px → 15px (밀도 향상). 제스처/BottomSheet/삭제 확인 로직은 ItemCard.tsx에 그대로 보존됨.
