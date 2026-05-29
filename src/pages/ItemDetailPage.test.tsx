@@ -127,12 +127,12 @@ describe('ItemDetailPage', () => {
     renderPage();
 
     await startEdit(user);
-    await user.clear(document.querySelector('#edit-title') as HTMLInputElement);
-    await user.type(document.querySelector('#edit-title') as HTMLInputElement, 'Changed title');
+    await user.clear(document.querySelector('#item-form-title') as HTMLInputElement);
+    await user.type(document.querySelector('#item-form-title') as HTMLInputElement, 'Changed title');
     await user.clear(screen.getByLabelText('URL 1'));
     await user.type(screen.getByLabelText('URL 1'), 'https://changed.example');
-    await user.clear(document.querySelector('#edit-memo') as HTMLTextAreaElement);
-    await user.type(document.querySelector('#edit-memo') as HTMLTextAreaElement, 'Changed memo');
+    await user.clear(document.querySelector('#item-form-memo') as HTMLTextAreaElement);
+    await user.type(document.querySelector('#item-form-memo') as HTMLTextAreaElement, 'Changed memo');
     await submitEdit(user);
 
     expect(patchItem).toHaveBeenCalledWith({
@@ -149,7 +149,7 @@ describe('ItemDetailPage', () => {
   it('edit=1 쿼리로 진입하면 편집 폼을 연다', async () => {
     renderPageAt('/items/item-1?edit=1');
 
-    expect(await screen.findByLabelText('제목')).toHaveValue('Original title');
+    expect(await screen.findByLabelText('제목 *')).toHaveValue('Original title');
   });
 
   it('shows BottomNav with Home active on detail route', () => {
@@ -293,7 +293,7 @@ describe('ItemDetailPage', () => {
 
     await startEdit(user);
     await user.click(await screen.findByRole('button', { name: '기존 이미지 삭제' }));
-    const editImagesInput = document.querySelector('#edit-images') as HTMLInputElement;
+    const editImagesInput = document.querySelector('#item-form-images') as HTMLInputElement;
     await user.upload(editImagesInput, [new File(['a'], 'a.png', { type: 'image/png' })]);
     await user.upload(editImagesInput, [new File(['b'], 'b.png', { type: 'image/png' })]);
     await submitEdit(user);

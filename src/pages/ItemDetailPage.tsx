@@ -1,4 +1,4 @@
-import type { ChangeEvent, JSX } from 'react';
+import type { JSX } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useItem } from '../hooks/useItem';
@@ -17,6 +17,7 @@ import { SideNav } from '../components/ui/SideNav';
 import { Skeleton } from '../components/ui/Skeleton';
 import { useToast } from '../components/ui/Toast';
 import { formatCardDate } from '../components/items/cardUtils';
+import { ItemForm, type ItemFormValues } from '../components/items/ItemForm';
 
 const TYPE_LABELS: Record<ItemType, string> = {
   video: '영상',
@@ -130,11 +131,6 @@ export default function ItemDetailPage(): JSX.Element {
   const { showToast } = useToast();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState('');
-  const [editUrls, setEditUrls] = useState<string[]>(['']);
-  const [editMemo, setEditMemo] = useState('');
-  const [editImageFiles, setEditImageFiles] = useState<File[]>([]);
-  const [removedImagePaths, setRemovedImagePaths] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<ItemAttachment[] | null>(null);
   const [signedImages, setSignedImages] = useState<Record<string, string>>({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -197,11 +193,6 @@ export default function ItemDetailPage(): JSX.Element {
     () => currentAttachments.filter((attachment) => attachment.kind === 'image'),
     [currentAttachments],
   );
-  const editableImageAttachments = useMemo(
-    () => imageAttachments.filter((attachment) => !removedImagePaths.includes(attachment.value)),
-    [imageAttachments, removedImagePaths],
-  );
-
   // 이미지 signed URL 로드 (실패 시 조용히 숨김)
   useEffect(() => {
     let ignore = false;
@@ -258,11 +249,6 @@ export default function ItemDetailPage(): JSX.Element {
   const currentItem = item;
 
   function handleStartEdit() {
-    setEditTitle(currentItem.title);
-    setEditUrls(urlAttachments.length ? urlAttachments.map((attachment) => attachment.value) : ['']);
-    setEditMemo(currentItem.memo ?? '');
-    setEditImageFiles([]);
-    setRemovedImagePaths([]);
     setIsEditing(true);
   }
 
@@ -271,17 +257,16 @@ export default function ItemDetailPage(): JSX.Element {
     handleStartEdit();
   }
 
-  async function handleSaveEdit() {
-    if (!editTitle.trim()) return;
-    const trimmedUrls = editUrls.map((url) => url.trim()).filter(Boolean);
-    const existingImages = editableImageAttachments.map((attachment) => attachment.value);
+  // edit 폼 저장 오케스트레이션 (ItemForm은 값만 수집)
+  async function handleEditSubmit(values: ItemFormValues) {
+    const trimmedUrls = values.urls.map((u) => u.trim()).filter(Boolean);
     const uploadedImages: string[] = [];
 
-    for (const file of editImageFiles) {
+    for (const file of values.newImageFiles) {
       uploadedImages.push(await storageService.upload(file, currentItem.user_id, currentItem.id));
     }
 
-    const nextImages = [...existingImages, ...uploadedImages];
+    const nextImages = [...values.existingImagePaths, ...uploadedImages];
     const nextAttachments: ItemAttachmentInput[] = [
       ...trimmedUrls.map((value) => ({ kind: 'url' as const, value })),
       ...nextImages.map((value) => ({ kind: 'image' as const, value })),
@@ -290,42 +275,23 @@ export default function ItemDetailPage(): JSX.Element {
     patchItem({
       id: currentItem.id,
       input: {
-        title: editTitle.trim(),
+        title: values.title.trim(),
         url: trimmedUrls[0] ?? null,
-        memo: editMemo.trim() || null,
+        memo: values.memo.trim() || null,
         image_path: nextImages[0] ?? null,
       },
     });
     await itemAttachmentsService.replaceForItem(currentItem.id, currentItem.user_id, nextAttachments);
-    setAttachments(nextAttachments.map((attachment, index) => ({
+    setAttachments(nextAttachments.map((a, index) => ({
       id: `local-${index}`,
       item_id: currentItem.id,
       user_id: currentItem.user_id,
-      kind: attachment.kind,
-      value: attachment.value,
+      kind: a.kind,
+      value: a.value,
       sort_order: index,
       created_at: new Date().toISOString(),
     })));
-    setRemovedImagePaths([]);
     setIsEditing(false);
-  }
-
-  function updateEditUrl(index: number, value: string) {
-    setEditUrls((prev) => prev.map((url, currentIndex) => (currentIndex === index ? value : url)));
-  }
-
-  function addEditUrl() {
-    setEditUrls((prev) => [...prev, '']);
-  }
-
-  function removeExistingImage(path: string) {
-    setRemovedImagePaths((prev) => (prev.includes(path) ? prev : [...prev, path]));
-  }
-
-  function handleEditFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []);
-    setEditImageFiles((prev) => [...prev, ...files]);
-    e.target.value = '';
   }
 
   function handleDelete() {
@@ -441,123 +407,19 @@ export default function ItemDetailPage(): JSX.Element {
 
       <main className="mx-auto max-w-[800px] px-4 py-6">
         {isEditing ? (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSaveEdit();
+          <ItemForm
+            mode="edit"
+            initialValues={{
+              title: currentItem.title,
+              urls: urlAttachments.length ? urlAttachments.map((a) => a.value) : [''],
+              memo: currentItem.memo ?? '',
+              existingImagePaths: imageAttachments.map((a) => a.value),
             }}
-            className="flex flex-col gap-5"
-          >
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="edit-title" className="text-[13px] leading-[1.2] font-medium tracking-[0.02em] text-text-muted">
-                제목
-              </label>
-              <input
-                autoFocus
-                id="edit-title"
-                type="text"
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                className="min-h-[44px] rounded-sm border border-border bg-surface px-3 py-2 text-[16px] leading-[1.6] text-text-primary outline-none transition-[border-color] duration-200 hover:border-border-strong focus:border-border-strong focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-[13px] leading-[1.2] font-medium tracking-[0.02em] text-text-muted">URL</span>
-              {editUrls.map((url, index) => (
-                <input
-                  key={index}
-                  aria-label={`URL ${index + 1}`}
-                  type="text"
-                  value={url}
-                  onChange={(e) => updateEditUrl(index, e.target.value)}
-                  className="min-h-[44px] rounded-sm border border-border bg-surface px-3 py-2 text-[16px] leading-[1.6] text-text-primary outline-none transition-[border-color] duration-200 hover:border-border-strong focus:border-border-strong focus-visible:ring-2 focus-visible:ring-border-strong"
-                />
-              ))}
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={addEditUrl}
-                className="self-start"
-              >
-                URL 추가
-              </Button>
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="edit-images" className="text-[13px] leading-[1.2] font-medium tracking-[0.02em] text-text-muted">
-                이미지
-              </label>
-              {editableImageAttachments.length > 0 && (
-                <div className="grid grid-cols-3 gap-2">
-                  {editableImageAttachments.map((attachment) => (
-                    <div key={attachment.value} className="relative overflow-hidden rounded-sm bg-surface-sub">
-                      {signedImages[attachment.value] && (
-                        <img
-                          src={signedImages[attachment.value]}
-                          alt=""
-                          className="aspect-square w-full object-cover"
-                        />
-                      )}
-                      <button
-                        type="button"
-                        aria-label="기존 이미지 삭제"
-                        onClick={() => removeExistingImage(attachment.value)}
-                        className="absolute right-1 top-1 min-h-[28px] rounded-full bg-surface/90 px-2 text-[12px] font-medium text-text-secondary"
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <input
-                id="edit-images"
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleEditFileChange}
-                className="text-[14px] text-text-secondary file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-border file:bg-surface file:px-3 file:py-1.5 file:text-[13px] file:text-text-secondary"
-              />
-              {editImageFiles.length > 0 && (
-                <div className="flex flex-col gap-1">
-                  {editImageFiles.map((file, index) => (
-                    <span key={`${file.name}-${file.size}-${index}`} className="text-[12px] text-text-muted">
-                      {file.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="edit-memo" className="text-[13px] leading-[1.2] font-medium tracking-[0.02em] text-text-muted">
-                메모
-              </label>
-              <textarea
-                id="edit-memo"
-                value={editMemo}
-                onChange={(e) => setEditMemo(e.target.value)}
-                rows={4}
-                className="rounded-sm border border-border bg-surface px-3 py-2 text-[16px] leading-[1.6] text-text-primary outline-none resize-none transition-[border-color] duration-200 hover:border-border-strong focus:border-border-strong focus-visible:ring-2 focus-visible:ring-border-strong"
-              />
-            </div>
-            <div className="flex gap-3">
-              <button
-                type="submit"
-                disabled={isPatching || !editTitle.trim()}
-                className="flex-1 min-h-[44px] rounded-sm bg-text-primary px-4 py-2.5 text-[14px] font-medium text-bg transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                저장
-              </button>
-              <Button
-                type="button"
-                variant="secondary"
-                className="flex-1"
-                onClick={() => setIsEditing(false)}
-              >
-                취소
-              </Button>
-            </div>
-          </form>
+            existingImageSignedUrls={signedImages}
+            submitting={isPatching}
+            onSubmit={handleEditSubmit}
+            onCancel={() => setIsEditing(false)}
+          />
         ) : (
           <div className="flex flex-col gap-6">
             {/* 메타: type chip · 날짜 · status */}

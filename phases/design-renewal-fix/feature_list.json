@@ -86,9 +86,9 @@
       "id": "feat-11",
       "name": "Edit item migrated to ItemForm",
       "description": "항목 수정 경로가 ItemForm을 사용하도록 이전. 작성/수정 왕복 회귀 테스트 통과.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T16:12:00+0900",
+      "verified_by_step": 8
     }
   ]
 }
