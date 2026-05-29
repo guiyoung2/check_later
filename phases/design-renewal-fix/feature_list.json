@@ -38,9 +38,9 @@
       "id": "feat-5",
       "name": "Home header theme toggle",
       "description": "홈 TopAppBar rightAction에 계정 아이콘 왼쪽으로 테마 토글 추가.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T11:19:30+0900",
+      "verified_by_step": 2
     },
     {
       "id": "feat-6",

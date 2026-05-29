@@ -7,6 +7,7 @@ import { SideNav } from '../components/ui/SideNav';
 import { EmptyState } from '../components/ui/EmptyState';
 import { Skeleton } from '../components/ui/Skeleton';
 import { TopAppBar } from '../components/ui/TopAppBar';
+import { ThemeToggleButton } from '../components/ThemeToggleButton';
 import { FilterBar } from '../components/FilterBar';
 import { ItemCard } from '../components/ItemCard';
 
@@ -52,7 +53,15 @@ export default function HomePage(): JSX.Element {
   return (
     <div className="min-h-screen bg-bg pb-16 md:pl-60">
       <SideNav />
-      <TopAppBar title="Check Later" rightAction={<AccountLink />} />
+      <TopAppBar
+        title="Check Later"
+        rightAction={
+          <div className="flex items-center">
+            <ThemeToggleButton />
+            <AccountLink />
+          </div>
+        }
+      />
       <FilterBar />
 
       <main className="mx-auto flex max-w-[800px] flex-col gap-6 px-4 py-6 md:px-6">
