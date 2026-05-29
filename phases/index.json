@@ -18,7 +18,8 @@
     },
     {
       "dir": "design-renewal-fix",
-      "status": "in_progress"
+      "status": "completed",
+      "completed_at": "2026-05-29T16:10:56+0900"
     }
   ]
 }

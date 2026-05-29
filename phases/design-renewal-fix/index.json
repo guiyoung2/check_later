@@ -71,7 +71,7 @@
       "name": "edit-item-migrate",
       "status": "completed",
       "started_at": "2026-05-29T16:01:25+0900",
-      "completed_at": "2026-05-29T16:12:00+0900",
+      "completed_at": "2026-05-29T16:10:56+0900",
       "summary": "ItemDetailPage 수정 폼을 ItemForm(mode=edit)으로 이전. 고아 상태 5개·함수 5개 제거. 테스트 ID 기준 갱신. 빌드·74 테스트 통과."
     }
   ],
