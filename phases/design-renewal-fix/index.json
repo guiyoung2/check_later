@@ -55,7 +55,7 @@
       "name": "item-form-extract",
       "status": "completed",
       "started_at": "2026-05-29T11:30:47+0900",
-      "completed_at": "2026-05-29T11:35:30+0900",
+      "completed_at": "2026-05-29T11:36:51+0900",
       "summary": "ItemForm 공용 컴포넌트 신설(제목/다중URL/다중이미지/메모/og:title/type칩). 최소 렌더 테스트 6건 추가. 빌드·73 테스트 통과."
     },
     {
