@@ -23,7 +23,7 @@
       "name": "home-header-theme",
       "status": "completed",
       "started_at": "2026-05-29T11:18:40+0900",
-      "completed_at": "2026-05-29T11:19:30+0900",
+      "completed_at": "2026-05-29T11:19:55+0900",
       "summary": "HomePage TopAppBar rightAction에 ThemeToggleButton 추가(계정 아이콘 왼쪽). 빌드·68 테스트 통과."
     },
     {
