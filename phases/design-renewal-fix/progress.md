@@ -1,13 +1,13 @@
 # design-renewal-fix 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T11:23:00+0900 — Step 3/9 완료
+2026-05-29T11:22:44+0900 — Step 4/9 완료
 
 ## 완료된 작업
 - Step 0: landing-redesign — LandingPage: 헤더 우상단 Login 버튼 추가, 히어로 2칼럼(텍스트+MiniPreview 목업), 카피 교체, 테스트 갱신. 빌드·68 테스트 통과.
 - Step 1: login-copy — LoginPage: '로그인 / 회원가입' 문단 제거(Google OAuth 단일 반영). 동작 무변경. 빌드·68 테스트 통과.
 - Step 2: home-header-theme — HomePage TopAppBar rightAction에 ThemeToggleButton 추가(계정 아이콘 왼쪽). 빌드·68 테스트 통과.
-- Step 3: settings-remove-theme — SettingsPage THEME 섹션·관련 state/effect/import 전량 제거, 테마 테스트 1건 제거. 빌드·67 테스트 통과.
+- Step 3: settings-remove-theme — SettingsPage에서 THEME 섹션·theme state·effect·themeOptions·joinClasses·lib/theme import 제거, 테마 테스트 1건 제거. 빌드·67 테스트 통과.
 
 ## 현재 진행 중
 - Step 4: filter-chips
