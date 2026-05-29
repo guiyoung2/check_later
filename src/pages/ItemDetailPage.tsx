@@ -202,16 +202,6 @@ export default function ItemDetailPage(): JSX.Element {
     [imageAttachments, removedImagePaths],
   );
 
-  useEffect(() => {
-    if (!item || searchParams.get('edit') !== '1' || isEditing) return;
-    setEditTitle(item.title);
-    setEditUrls(urlAttachments.length ? urlAttachments.map((attachment) => attachment.value) : ['']);
-    setEditMemo(item.memo ?? '');
-    setEditImageFiles([]);
-    setRemovedImagePaths([]);
-    setIsEditing(true);
-  }, [isEditing, item, searchParams, urlAttachments]);
-
   // 이미지 signed URL 로드 (실패 시 조용히 숨김)
   useEffect(() => {
     let ignore = false;
@@ -274,6 +264,11 @@ export default function ItemDetailPage(): JSX.Element {
     setEditImageFiles([]);
     setRemovedImagePaths([]);
     setIsEditing(true);
+  }
+
+  // URL ?edit=1로 진입하면 편집 모드 자동 시작 (렌더 중 1회 조정)
+  if (searchParams.get('edit') === '1' && !isEditing) {
+    handleStartEdit();
   }
 
   async function handleSaveEdit() {
