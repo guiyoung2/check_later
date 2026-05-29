@@ -1,7 +1,7 @@
 # design-renewal-fix 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T11:25:00+0900 — Step 5/9 완료
+2026-05-29T11:24:53+0900 — Step 5/9 완료
 
 ## 완료된 작업
 - Step 0: landing-redesign — LandingPage: 헤더 우상단 Login 버튼 추가, 히어로 2칼럼(텍스트+MiniPreview 목업), 카피 교체, 테스트 갱신. 빌드·68 테스트 통과.
