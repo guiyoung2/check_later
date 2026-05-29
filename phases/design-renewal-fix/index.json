@@ -47,7 +47,7 @@
       "name": "feed-card-redesign",
       "status": "completed",
       "started_at": "2026-05-29T11:24:54+0900",
-      "completed_at": "2026-05-29T11:30:00+0900",
+      "completed_at": "2026-05-29T11:30:47+0900",
       "summary": "4종 카드(Article/Video/Memo/Image)를 컴팩트 리스트 행으로 재설계. 좌측 64x64 소형 썸네일+우측 메타·제목·메모. ImageCard object-contain, VideoCard play배지 유지. 빌드·67 테스트 통과."
     },
     {
