@@ -1,99 +1,105 @@
-﻿import type { JSX } from 'react';
-import { Link } from 'react-router-dom';
+import type { JSX } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useItems } from '../hooks/useItems';
+import { useFilterStore } from '../stores/filterStore';
+import { BottomNav } from '../components/ui/BottomNav';
+import { SideNav } from '../components/ui/SideNav';
+import { EmptyState } from '../components/ui/EmptyState';
+import { Skeleton } from '../components/ui/Skeleton';
+import { TopAppBar } from '../components/ui/TopAppBar';
+import { ThemeToggleButton } from '../components/ThemeToggleButton';
 import { FilterBar } from '../components/FilterBar';
 import { ItemCard } from '../components/ItemCard';
-import { ThemeToggleButton } from '../components/ThemeToggleButton';
 
-const EMPTY_STATE_POINTS = [
-  '공유 메뉴나 + 버튼으로 URL, 영상, 메모를 저장하세요.',
-  '저장한 항목은 형태와 상태 필터로 다시 찾을 수 있어요.',
-  '봤으면 상태를 바꾸고, 필요 없으면 보관하세요.',
-];
+function AccountIcon(): JSX.Element {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M5 20a7 7 0 0 1 14 0" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-// 메인 목록 페이지
+function AccountLink(): JSX.Element {
+  return (
+    <Link
+      to="/settings"
+      aria-label="설정"
+      className="flex h-11 w-11 items-center justify-center rounded-sm text-text-primary transition-[background-color,box-shadow] duration-200 ease-out hover:bg-surface-sub focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none"
+    >
+      <AccountIcon />
+    </Link>
+  );
+}
+
+function LoadingFeed(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-6" aria-label="목록 로딩 중">
+      <Skeleton className="h-40 w-full" />
+      <Skeleton className="h-64 w-full" />
+      <Skeleton className="h-32 w-full" />
+    </div>
+  );
+}
+
 export default function HomePage(): JSX.Element {
+  const navigate = useNavigate();
   const { data: items, isLoading, isError } = useItems();
+  const type = useFilterStore((s) => s.type);
+  const status = useFilterStore((s) => s.status);
+  const clearFilters = useFilterStore((s) => s.reset);
+  const hasFilters = type !== null || status !== null;
 
   return (
-    <div className="min-h-screen bg-bg">
-      <header className="sticky top-0 z-10 bg-bg border-b border-border flex items-center justify-between px-4 h-14">
-        <span className="font-semibold text-text-primary text-base">Check Later</span>
-        <div className="flex items-center gap-1">
-          <ThemeToggleButton />
-          <Link
-            to="/settings"
-            aria-label="설정"
-            className="flex h-11 w-11 items-center justify-center rounded-[8px] text-text-sub hover:bg-surface hover:text-text-primary transition-colors"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-          </Link>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-bg pb-16 md:pl-60">
+      <SideNav />
+      <TopAppBar
+        title="Check Later"
+        rightAction={
+          <div className="flex items-center">
+            <ThemeToggleButton />
+            <AccountLink />
+          </div>
+        }
+      />
       <FilterBar />
 
-      <main className="px-4 py-2">
-        <Link
-          to="/new"
-          className="mb-3 flex min-h-11 items-center justify-center rounded-[8px] bg-accent px-4 text-sm font-medium text-white"
-        >
-          새 항목 추가
-        </Link>
-
-        {isLoading && (
-          <p className="text-text-sub text-sm py-8 text-center">불러오는 중...</p>
-        )}
-
-        {isError && (
-          <p className="text-text-sub text-sm py-8 text-center">
-            잠시 후 다시 시도해주세요
-          </p>
-        )}
-
-        {!isLoading && !isError && items?.length === 0 && (
-          <div className="mx-auto flex max-w-sm flex-col gap-8 py-14">
-            <div className="flex flex-col gap-3">
-              <p className="text-xs font-medium text-accent">아직 저장한 항목이 없어요</p>
-              <h1 className="text-xl font-semibold leading-snug text-text-primary">
-                나중에 볼 것들을 빠르게 저장하고, 원할 때 바로 찾아보세요.
-              </h1>
-              <p className="text-sm leading-6 text-text-sub">
-                URL, 영상, 메모를 던져두고 필터로 다시 꺼내는 개인 보관함입니다.
-              </p>
-            </div>
-            <Link
-              to="/new"
-              className="self-start px-5 py-2.5 rounded-[8px] bg-accent text-white text-sm font-medium"
-            >
-              첫 항목 저장하기
-            </Link>
-            <ul className="flex flex-col gap-3 border-t border-border pt-6">
-              {EMPTY_STATE_POINTS.map((point) => (
-                <li key={point} className="flex gap-2 text-sm leading-6 text-text-sub">
-                  <span className="text-accent" aria-hidden="true">
-                    ✓
-                  </span>
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
+      <main className="mx-auto flex max-w-[800px] flex-col gap-6 px-4 py-6 md:px-6">
+        {isError ? (
+          <div
+            role="alert"
+            className="rounded-sm border border-error/30 bg-surface px-4 py-3 text-[14px] leading-[1.5] text-error"
+          >
+            불러오는 중 오류가 생겼어요. 잠시 후 다시 시도해 주세요.
           </div>
-        )}
+        ) : null}
 
-        {!isLoading && !isError && items && items.length > 0 && (
-          <ul className="flex flex-col gap-2">
+        {isLoading ? <LoadingFeed /> : null}
+
+        {!isLoading && !isError && items?.length === 0 && !hasFilters ? (
+          <EmptyState
+            title="아직 저장한 것이 없어요"
+            description="공유 메뉴에서 던지거나 + 버튼으로 적어보세요"
+            action={{ label: '새로 추가', onClick: () => navigate('/new') }}
+          />
+        ) : null}
+
+        {!isLoading && !isError && items?.length === 0 && hasFilters ? (
+          <EmptyState title="조건에 맞는 것이 없어요" action={{ label: '필터 초기화', onClick: clearFilters }} />
+        ) : null}
+
+        {!isLoading && !isError && items && items.length > 0 ? (
+          <ul className="flex flex-col gap-6">
             {items.map((item) => (
               <li key={item.id}>
                 <ItemCard item={item} />
               </li>
             ))}
           </ul>
-        )}
+        ) : null}
       </main>
+
+      <BottomNav />
     </div>
   );
 }

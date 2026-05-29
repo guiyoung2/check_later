@@ -1,108 +1,117 @@
 # UI 디자인 가이드 — Check Later
 
-## 테마 씬
+## 디자인 토큰
 
-> "저녁 7시, 소파에 기대어 폰을 꺼내 오늘 저장한 것들을 훑는다. 방에는 전구색 조명이 켜져 있다."
+Check Later의 디자인은 순수 모노톤 문서형 UI를 기준으로 한다. 강조는 채색 accent가 아니라 weight, size, fill, position으로만 만든다.
 
-Lane 이름: **Warm-Minimal Personal Tool**
-레퍼런스 조합: Bear(따뜻함, 목록 중심) + Linear(밀도, 빠른 필터) + Things 3(상태 관리 명확함)
+### 컬러 토큰
 
-## 디자인 원칙
+HEX는 직관적 확인용이고, OKLCH는 구현 시 보조 기준이다.
 
-1. **저장은 반사적으로, 조회는 집중적으로** — 두 모드의 마찰을 따로 최적화한다
-2. **도구가 배경으로 사라진다** — UI가 콘텐츠보다 눈에 띄면 실패
-3. **따뜻한 비어있음** — 빈 상태조차 "내 공간"처럼 느껴져야 한다
-4. **3축으로 끝낸다** — 태그·폴더·계층은 추가하지 않는다
+#### Light
 
-## 컬러 토큰 (oklch 기반)
+| Token | HEX | OKLCH | 용도 |
+|---|---:|---:|---|
+| `--bg` | `#F7F7F4` | `oklch(97% 0.004 80)` | 기본 배경, warm off-white |
+| `--surface` | `#FFFFFF` | `oklch(100% 0 0)` | card/panel |
+| `--surface-sub` | `#EEEEEB` | `oklch(94% 0.004 80)` | surface-container, 비활성/배지 |
+| `--border` | `#E3E3DE` | `oklch(90% 0.005 80)` | divider, card border |
+| `--border-strong` | `#CBC6BC` | `oklch(81% 0.015 80)` | 입력 포커스, focus ring |
+| `--text-primary` | `#080603` | `oklch(10% 0.006 80)` | near-black 본문 |
+| `--text-secondary` | `#49473F` | `oklch(39% 0.012 80)` | 본문 보조 |
+| `--text-muted` | `#605E58` | `oklch(49% 0.010 80)` | meta/label |
+| `--error` | `#B94A42` | `oklch(58% 0.13 25)` | 강도 낮춘 오류 |
+
+#### Dark
+
+| Token | HEX | OKLCH | 용도 |
+|---|---:|---:|---|
+| `--bg` | `#131313` | `oklch(18% 0 0)` | 기본 배경, 시스템 따라가기 |
+| `--surface` | `#1C1B1B` | `oklch(23% 0.003 80)` | card/panel |
+| `--surface-sub` | `#201F1F` | `oklch(25% 0.003 80)` | surface-container, 비활성/배지 |
+| `--border` | `#2A2A2A` | `oklch(30% 0 0)` | divider, card border |
+| `--border-strong` | `#444748` | `oklch(40% 0.004 230)` | 입력 포커스, focus ring |
+| `--text-primary` | `#E5E2E1` | `oklch(91% 0.004 80)` | 기본 본문 |
+| `--text-secondary` | `#C4C7C8` | `oklch(81% 0.004 230)` | 본문 보조 |
+| `--text-muted` | `#8E9192` | `oklch(64% 0.004 230)` | meta/label |
+| `--error` | `#F38178` | `oklch(75% 0.13 25)` | 다크 모드 오류 |
+
+#### 금지 사항
+
+- `#000`/`#fff` 직접 사용 금지. 중성색도 warm tint 토큰을 사용한다.
+- chromatic accent 추가 금지. 강조는 색이 아니라 weight, size, fill, position으로 처리한다.
+- glassmorphism, blur, mix-blend-overlay, gradient text 금지.
+- `border-left: 3px+ color` side-stripe 금지. blockquote도 예외가 아니다.
+
+### 폰트 조합
+
+- 본문 한글: Pretendard
+- 영문/숫자: Geist
+- mono 라벨: JetBrains Mono
 
 ```css
-/* Light mode */
---bg:           oklch(97% 0.006 80);   /* 따뜻한 off-white */
---surface:      oklch(99% 0.003 80);   /* 카드/패널 */
---border:       oklch(87% 0.007 80);   /* 따뜻하되 누렇지 않게 */
---text-primary: oklch(18% 0.008 80);   /* 충분히 짙게 — 대비 우선 */
---text-sub:     oklch(52% 0.010 80);
---accent:       oklch(62% 0.14  55);   /* terracotta/amber 액센트 */
---accent-bg:    oklch(93% 0.04  55);   /* 선택된 상태 배경 */
-
-/* Dark mode */
---bg:           oklch(16% 0.010 80);
---surface:      oklch(21% 0.008 80);
---border:       oklch(32% 0.010 80);
---text-primary: oklch(90% 0.006 80);
---text-sub:     oklch(65% 0.008 80);
---accent:       oklch(68% 0.13  55);
---accent-bg:    oklch(28% 0.06  55);
+font-family-body: "Pretendard", "Geist", -apple-system, system-ui, sans-serif;
+font-family-mono: "JetBrains Mono", ui-monospace, monospace;
 ```
 
-> **주의**: border chroma는 0.006~0.008 유지 (높이면 "누런" 느낌).
-> text-primary는 라이트에서 oklch 22% 이하로 대비 충분히.
-> 상태 구분은 색보다 문구/위치/아이콘으로.
+### 타이포그래피 스케일
 
-## 타이포그래피
+| Role | Size | Line-height | Weight | Letter-spacing |
+|---|---:|---:|---:|---:|
+| display | 32px | 1.2 | 600 | -0.02em |
+| display-mobile | 26px | 1.3 | 600 | 0 |
+| headline | 24px | 1.4 | 500 | 0 |
+| subhead | 18px | 1.5 | 500 | 0 |
+| body | 16px | 1.6 | 400 | 0 |
+| body-sm | 14px | 1.5 | 400 | 0 |
+| label | 13px | 1.2 | 500 | 0.02em |
+| label-mono | 12px | 1.2 | 500 | 0.04em |
 
-- 폰트: `"Pretendard", -apple-system, "Noto Sans KR", sans-serif`
-- 스케일: 12 / 14 / 16 / 20px
-- 웨이트: 400(본문) / 500(레이블) / 600(제목)
-- 줄 길이: 65ch 이하 (메모/제목 텍스트)
+- 줄 길이는 65ch 이하로 제한한다.
+- 숫자, 카운트, 타임스탬프는 `font-family-mono`를 사용한다.
 
-## 간격
+### Spacing & Radius
 
-- 베이스 단위: 4px
-- 주요 값: 4 / 8 / 12 / 16 / 20 / 24 / 32 / 48px
+```text
+spacing: 4 / 8 / 12 / 16 / 20 / 24 / 32 / 48 (base 4px)
+gutter-mobile: 16px
+gutter-desktop: 24~32px
+max-content-width: 800px (단일 칼럼) / 1200px (Folders 그리드)
+```
 
-## 컴포넌트
+| Token | Value | 용도 |
+|---|---:|---|
+| `radius-xs` | 2px | chip |
+| `radius-sm` | 4px | button, input |
+| `radius-md` | 6px | card |
+| `radius-lg` | 8px | modal, bottomsheet |
+| `radius-full` | 9999px | avatar, pill |
 
-- **border-radius**: 리스트 아이템 6px / 버튼 8px / 입력 6px / 칩 999px
-  - 10px 이상은 앱스토어 카드 느낌 — 이 앱은 리스트형 도구이므로 납작하게
-- **그림자**: `0 1px 3px oklch(20% 0.01 80 / 0.08)` (라이트), 없음(다크)
-- **버튼**: primary = accent 배경, secondary = surface + border
-- **뱃지/칩**: accent-bg + accent 텍스트
+### 그림자/모션
 
-## 모션
+```text
+shadow-card:    0 1px 3px rgba(8,6,3,0.04)
+shadow-overlay: 0 4px 16px rgba(8,6,3,0.08)
+shadow-modal:   0 8px 32px rgba(8,6,3,0.12)
+```
 
-- 전환: 150~200ms, `cubic-bezier(0.16, 1, 0.3, 1)` (ease-out-quint)
-- 상태 전달 목적만 — 데코레이션 없음
+- 다크 모드에서는 그림자를 사용하지 않는다.
+- transition은 `150–200ms cubic-bezier(0.16, 1, 0.3, 1)`을 사용한다.
+- bounce/elastic 모션 금지.
+- layout 속성 애니메이션 금지.
 
-## 접근성
+## 안티패턴 가드레일
 
-- WCAG AA 준수
-- 모바일 터치 타깃 최소 44×44px
-- 시스템 다크 모드 지원 (기본: 라이트)
-- 한국어 전용 UI
+작업하는 모든 step에서 PR/커밋 전에 반드시 점검:
 
----
-
-## AI Slop 안티패턴 — 절대 금지
-
-### 공통
-
-| 패턴 | 대안 |
-|---|---|
-| 사이드 보더 accent (`border-left` 3px+ 컬러) | 배경 tint 또는 없앰 |
-| 그라디언트 텍스트 (`background-clip: text`) | 단색 액센트 컬러 |
-| 동일 크기 카드 반복 그리드 | 텍스트 중심 리스트 행 |
-| 모달을 첫 번째 해결책으로 | 인라인 액션 or 바텀 시트 |
-
-### 이 프로젝트 특화
-
-| 패턴 | 왜 안 되는가 | 대안 |
-|---|---|---|
-| 뉴스/피드 썸네일 그리드 | 안티레퍼런스 직접 해당 | 텍스트 우선 리스트, 썸네일은 보조 |
-| 순백색 배경 + 회색 카드 | 안티레퍼런스 직접 해당 | 따뜻한 off-white 베이스 |
-| 파란 계열 액센트 (blue/indigo/violet) | 차가운 SaaS 연상 | amber/terracotta 유지 |
-| 히어로 메트릭 ("저장한 항목 47개") | 개인 도구에 불필요한 대시보드 느낌 | 없앰 |
-| "Nothing here yet" 빈 상태 | 빈 공간을 낭비로 처리 | 따뜻하게 유도하는 문구 + 행동 유도 |
-| 글로우 / 블러 / glassmorphism | 다크 SaaS 연상 | 없앰 |
-| 다크 모드를 기본으로 설정 | 씬 문장이 라이트를 강제 | 라이트 기본, 시스템 따라가기 |
-| FAB에 그라디언트 | AI 앱 클리셰 | accent 단색 |
-| 상태 변경 전용 모달 | 모달 남용 | 좌스와이프(즉시) or 길게 누르기(바텀 시트) |
-| border-radius 10px 이상 카드 | 앱스토어 카드 느낌 | 6px 이하 유지 |
-
-## Tailwind CSS v4 token usage
-
-- 색상 값은 `src/index.css`의 `@theme inline`에서 Tailwind theme token으로 노출한다.
-- 컴포넌트에서는 `bg-[var(--color-bg)]`, `text-[var(--color-text-sub)]` 같은 arbitrary value 대신 `bg-bg`, `bg-surface`, `border-border`, `text-text-primary`, `text-text-sub`, `bg-accent`, `text-accent`, `bg-accent-bg`를 사용한다.
-- 라이트/다크 모드 값은 `:root`와 `.dark`의 `--app-color-*` 런타임 변수에서만 바꾼다. 컴포넌트에서 직접 CSS 변수 이름을 참조하지 않는다.
-- 이 앱은 Vite 프로젝트 루트에서 빌드하므로 `@import "tailwindcss";`를 사용한다. `source("../src")`는 Tailwind v4 공식 문법이지만 일부 에디터 CSS 파서가 오진할 수 있어 monorepo처럼 base path 지정이 필요한 경우에만 쓴다.
+- [ ] `border-left: Npx (N≥2) color` 사용처 0개 (side-stripe 금지)
+- [ ] `background-clip: text` 사용처 0개 (gradient text 금지)
+- [ ] `backdrop-filter: blur`, `mix-blend-overlay` 사용처 0개 (glass/blend 금지)
+- [ ] `border-radius >= 10px` on cards (앱스토어 카드 느낌 금지)
+- [ ] 메인 색 외 chromatic accent 토큰 추가 안 했는지
+- [ ] `#000`/`#fff` 직접 사용 0개 (warm tint 토큰만)
+- [ ] 모든 새 컴포넌트가 `src/components/ui/` 또는 도메인 폴더에 있고 페이지 인라인 아님
+- [ ] 모바일 터치 타깃 ≥ 44×44
+- [ ] 모든 카드/버튼/입력의 hover/active/focus/disabled 상태 정의됨
+- [ ] em dash(—) 직접 입력 금지. UI 카피에서 콜론/마침표/괄호 사용
+- [ ] 모달은 진짜 파괴적 액션(삭제)만. 그 외 BottomSheet/Inline

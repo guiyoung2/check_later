@@ -41,4 +41,18 @@ describe('LoginPage', () => {
       },
     });
   });
+
+  it('이메일 로그인 없이 Google OAuth 진입만 제공한다', () => {
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Check Later' })).toBeInTheDocument();
+    expect(screen.getByText('조용한 메모 도구')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /google로 계속하기/i })).toBeInTheDocument();
+    expect(screen.queryByLabelText(/email|이메일/i)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/password|비밀번호/i)).not.toBeInTheDocument();
+  });
 });

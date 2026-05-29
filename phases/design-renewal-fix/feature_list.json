@@ -1,0 +1,94 @@
+{
+  "task": "design-renewal-fix",
+  "created_at": "2026-05-29T00:00:00+0900",
+  "features": [
+    {
+      "id": "feat-1",
+      "name": "Landing elevation",
+      "description": "랜딩을 절제된 elevation으로 개선(타이포·여백 강화 + 소형 제품 프리뷰). warm-minimal 유지.",
+      "passes": true,
+      "verified_at": "2026-05-29T11:20:00+0900",
+      "verified_by_step": 0
+    },
+    {
+      "id": "feat-2",
+      "name": "Landing login top-right",
+      "description": "랜딩 우상단 헤더에 [테마 토글] 오른쪽으로 Login 버튼 배치, 히어로 보조 로그인 버튼 제거.",
+      "passes": true,
+      "verified_at": "2026-05-29T11:20:00+0900",
+      "verified_by_step": 0
+    },
+    {
+      "id": "feat-3",
+      "name": "Landing copy rewrite",
+      "description": "히어로 h1/보조문구 및 3블록 문구를 담백하게 교체(AI스러움 제거).",
+      "passes": true,
+      "verified_at": "2026-05-29T11:20:00+0900",
+      "verified_by_step": 0
+    },
+    {
+      "id": "feat-4",
+      "name": "Login page copy fix",
+      "description": "로그인 페이지에서 '회원가입' 문구 제거(Google OAuth 단일 반영).",
+      "passes": true,
+      "verified_at": "2026-05-29T11:18:00+0900",
+      "verified_by_step": 1
+    },
+    {
+      "id": "feat-5",
+      "name": "Home header theme toggle",
+      "description": "홈 TopAppBar rightAction에 계정 아이콘 왼쪽으로 테마 토글 추가.",
+      "passes": true,
+      "verified_at": "2026-05-29T11:19:30+0900",
+      "verified_by_step": 2
+    },
+    {
+      "id": "feat-6",
+      "name": "Settings theme section removed",
+      "description": "설정 페이지에서 THEME 섹션과 관련 state/effect 제거, 관련 테스트 정리.",
+      "passes": true,
+      "verified_at": "2026-05-29T11:23:00+0900",
+      "verified_by_step": 3
+    },
+    {
+      "id": "feat-7",
+      "name": "Filter chips readability",
+      "description": "FilterBar 칩 코너/글자 가독성 개선(딱딱한 네모 완화), type/status 칩 일관화.",
+      "passes": true,
+      "verified_at": "2026-05-29T11:25:00+0900",
+      "verified_by_step": 4
+    },
+    {
+      "id": "feat-8",
+      "name": "Compact feed cards",
+      "description": "피드 카드를 컴팩트 리스트 행(좌측 소형 썸네일 + 제목/메타)으로 재설계, 썸네일 크롭 개선. 스와이프/롱프레스/메뉴 회귀 없음.",
+      "passes": true,
+      "verified_at": "2026-05-29T11:30:00+0900",
+      "verified_by_step": 5
+    },
+    {
+      "id": "feat-9",
+      "name": "Shared ItemForm extracted",
+      "description": "작성·수정이 공유하는 공용 ItemForm 컴포넌트 추출(제목/다중 URL/다중 이미지/og:title).",
+      "passes": true,
+      "verified_at": "2026-05-29T11:35:30+0900",
+      "verified_by_step": 6
+    },
+    {
+      "id": "feat-10",
+      "name": "New item rich form",
+      "description": "새 항목 작성 경로가 ItemForm을 사용해 제목·다중 URL·다중 이미지를 지원(작성=수정 동일 패러다임). 빠른저장 단순 폼 폐기.",
+      "passes": true,
+      "verified_at": "2026-05-29T16:00:00+0900",
+      "verified_by_step": 7
+    },
+    {
+      "id": "feat-11",
+      "name": "Edit item migrated to ItemForm",
+      "description": "항목 수정 경로가 ItemForm을 사용하도록 이전. 작성/수정 왕복 회귀 테스트 통과.",
+      "passes": true,
+      "verified_at": "2026-05-29T16:12:00+0900",
+      "verified_by_step": 8
+    }
+  ]
+}

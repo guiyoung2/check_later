@@ -2,24 +2,158 @@
   "project": "check_later",
   "phase": "design-renewal",
   "steps": [
-    { "step": 0, "name": "ui-guide-rewrite", "status": "pending" },
-    { "step": 1, "name": "design-tokens", "status": "pending" },
-    { "step": 2, "name": "atomic-ui-components", "status": "pending" },
-    { "step": 3, "name": "layout-components", "status": "pending" },
-    { "step": 4, "name": "font-loading", "status": "pending" },
-    { "step": 5, "name": "home-page-renewal", "status": "pending" },
-    { "step": 6, "name": "type-variant-cards", "status": "pending" },
-    { "step": 7, "name": "new-item-page-renewal", "status": "pending" },
-    { "step": 8, "name": "item-detail-page-renewal", "status": "pending" },
-    { "step": 9, "name": "mobile-gestures", "status": "pending" },
-    { "step": 10, "name": "folders-page", "status": "pending" },
-    { "step": 11, "name": "settings-page-renewal", "status": "pending" },
-    { "step": 12, "name": "login-landing-renewal", "status": "pending" },
-    { "step": 13, "name": "bottomnav-routing", "status": "pending" },
-    { "step": 14, "name": "empty-loading-error-states", "status": "pending" },
-    { "step": 15, "name": "antipattern-guard", "status": "pending" },
-    { "step": 16, "name": "dark-mode-check", "status": "pending" },
-    { "step": 17, "name": "a11y-check", "status": "pending" },
-    { "step": 18, "name": "pwa-regression", "status": "pending" }
-  ]
+    {
+      "step": 0,
+      "name": "ui-guide-rewrite",
+      "status": "completed",
+      "started_at": "2026-05-28T16:49:37+0900",
+      "completed_at": "2026-05-28T16:58:19+0900",
+      "summary": "docs/UI_GUIDE.md 전면 재작성 완료 — 모노톤 토큰 + 안티패턴 가드레일 포함"
+    },
+    {
+      "step": 1,
+      "name": "design-tokens",
+      "status": "completed",
+      "started_at": "2026-05-28T16:58:20+0900",
+      "completed_at": "2026-05-28T17:01:21+0900",
+      "summary": "src/index.css 모노톤 CSS 변수 + Tailwind v4 @theme inline 갱신 완료, amber/terracotta 제거"
+    },
+    {
+      "step": 2,
+      "name": "atomic-ui-components",
+      "status": "completed",
+      "started_at": "2026-05-28T17:01:22+0900",
+      "completed_at": "2026-05-28T17:06:30+0900",
+      "summary": "src/components/ui/ 신설 — Button/IconButton/Chip/Card/Input/Textarea/Divider/Skeleton 8개 구현 완료"
+    },
+    {
+      "step": 3,
+      "name": "layout-components",
+      "status": "completed",
+      "started_at": "2026-05-28T17:06:31+0900",
+      "completed_at": "2026-05-28T17:12:49+0900",
+      "summary": "EmptyState/Toast/BottomSheet/TopAppBar/BottomNav 구현 완료, useToast hook 포함"
+    },
+    {
+      "step": 4,
+      "name": "font-loading",
+      "status": "completed",
+      "started_at": "2026-05-28T17:12:49+0900",
+      "completed_at": "2026-05-28T17:18:28+0900",
+      "summary": "Pretendard/Geist/JetBrains Mono ?? ?? ??, font-display:swap ??"
+    },
+    {
+      "step": 5,
+      "name": "home-page-renewal",
+      "status": "completed",
+      "started_at": "2026-05-28T17:18:28+0900",
+      "completed_at": "2026-05-28T17:30:02+0900",
+      "summary": "HomePage 리뉴얼 — TopAppBar/FilterBar/BottomNav 적용, 3가지 상태(로딩/빈/에러) 처리 완료"
+    },
+    {
+      "step": 6,
+      "name": "type-variant-cards",
+      "status": "completed",
+      "started_at": "2026-05-28T21:38:59+0900",
+      "completed_at": "2026-05-28T21:47:46+0900",
+      "summary": "MemoCard/VideoCard/ImageCard/ArticleCard 4변형 구현, ItemCard type dispatch 완료"
+    },
+    {
+      "step": 7,
+      "name": "new-item-page-renewal",
+      "status": "completed",
+      "started_at": "2026-05-28T23:21:39+0900",
+      "completed_at": "2026-05-28T23:46:50+0900",
+      "summary": "NewItemPage 리뉴얼 — BottomSheet 스타일, 3-grid chip, URL 자동 감지, Web Share Target 회귀 테스트 통과"
+    },
+    {
+      "step": 8,
+      "name": "item-detail-page-renewal",
+      "status": "completed",
+      "started_at": "2026-05-28T23:46:51+0900",
+      "summary": "ItemDetailPage 리뉴얼 — sticky 헤더, type별 헤드, status 3-segment, blockquote 제거, ConfirmDialog 추가",
+      "completed_at": "2026-05-29T00:06:54+0900"
+    },
+    {
+      "step": 9,
+      "name": "mobile-gestures",
+      "status": "completed",
+      "started_at": "2026-05-29T00:06:54+0900",
+      "summary": "스와이프 status 토글, 길게 누르기 BottomSheet, 데스크탑 hover 메뉴 구현 완료",
+      "completed_at": "2026-05-29T00:15:16+0900"
+    },
+    {
+      "step": 10,
+      "name": "folders-page",
+      "status": "completed",
+      "started_at": "2026-05-29T00:15:16+0900",
+      "completed_at": "2026-05-29T00:21:43+0900",
+      "summary": "/folders 페이지 신설 — type×status 카운트 그리드, 클릭 시 Home 필터 이동, 라우트 등록 완료"
+    },
+    {
+      "step": 11,
+      "name": "settings-page-renewal",
+      "status": "completed",
+      "started_at": "2026-05-29T00:21:43+0900",
+      "completed_at": "2026-05-29T00:26:21+0900",
+      "summary": "SettingsPage 리뉴얼 — 4섹션 구조, 테마 3-segment toggle(dark class 토글), PWA 설치 감지 완료"
+    },
+    {
+      "step": 12,
+      "name": "login-landing-renewal",
+      "status": "completed",
+      "started_at": "2026-05-29T00:26:21+0900",
+      "completed_at": "2026-05-29T00:31:31+0900",
+      "summary": "LoginPage 중앙 카드 스타일, LandingPage 1-viewport 단순화 완료, 비로그인 분기 정상"
+    },
+    {
+      "step": 13,
+      "name": "bottomnav-routing",
+      "status": "completed",
+      "started_at": "2026-05-29T00:31:31+0900",
+      "completed_at": "2026-05-29T00:36:28+0900",
+      "summary": "BottomNav 라우트 활성 상태 동기화 완료 — 4탭 경로 매칭 정확, /folders 탭 정상 동작"
+    },
+    {
+      "step": 14,
+      "name": "empty-loading-error-states",
+      "status": "completed",
+      "started_at": "2026-05-29T00:36:28+0900",
+      "completed_at": "2026-05-29T00:41:15+0900",
+      "summary": "전체 페이지 Empty/Loading/Error 3종 상태 전수 보완 완료"
+    },
+    {
+      "step": 15,
+      "name": "antipattern-guard",
+      "status": "completed",
+      "started_at": "2026-05-29T00:41:15+0900",
+      "completed_at": "2026-05-29T00:43:10+0900",
+      "summary": "scripts/check-antipatterns.mjs 신설, 현재 src/ 위반 0건 확인, npm run check:antipatterns 등록"
+    },
+    {
+      "step": 16,
+      "name": "dark-mode-check",
+      "status": "completed",
+      "started_at": "2026-05-29T00:43:10+0900",
+      "completed_at": "2026-05-29T00:44:07+0900",
+      "summary": "다크 모드 전수 점검 — 하드코딩 색상 제거, 시스템/.dark 두 경로 모두 동작, 그림자 없음 확인"
+    },
+    {
+      "step": 17,
+      "name": "a11y-check",
+      "status": "completed",
+      "started_at": "2026-05-29T00:44:07+0900",
+      "completed_at": "2026-05-29T00:46:58+0900",
+      "summary": "a11y 전수 점검 — focus ring, ARIA 레이블, 키보드 네비, 색 대비 WCAG AA, 터치 타깃 ≥44px 보완 완료"
+    },
+    {
+      "step": 18,
+      "name": "pwa-regression",
+      "status": "completed",
+      "started_at": "2026-05-29T00:46:58+0900",
+      "completed_at": "2026-05-29T00:48:01+0900",
+      "summary": "PWA + Web Share Target 회귀 점검 완료 — manifest 무결, SW 생성 확인, URL 파라미터 자동 채움 테스트 통과"
+    }
+  ],
+  "created_at": "2026-05-28T16:49:37+0900"
 }

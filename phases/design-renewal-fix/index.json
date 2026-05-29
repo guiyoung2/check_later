@@ -1,0 +1,79 @@
+{
+  "project": "check_later",
+  "phase": "design-renewal-fix",
+  "steps": [
+    {
+      "step": 0,
+      "name": "landing-redesign",
+      "status": "completed",
+      "started_at": "2026-05-29T11:12:09+0900",
+      "completed_at": "2026-05-29T11:16:31+0900",
+      "summary": "LandingPage: 헤더 우상단 Login 버튼 추가, 히어로 2칼럼(텍스트+MiniPreview 목업), 카피 교체, 테스트 갱신. 빌드·68 테스트 통과."
+    },
+    {
+      "step": 1,
+      "name": "login-copy",
+      "status": "completed",
+      "started_at": "2026-05-29T11:16:57+0900",
+      "completed_at": "2026-05-29T11:18:12+0900",
+      "summary": "LoginPage: '로그인 / 회원가입' 문단 제거(Google OAuth 단일 반영). 동작 무변경. 빌드·68 테스트 통과."
+    },
+    {
+      "step": 2,
+      "name": "home-header-theme",
+      "status": "completed",
+      "started_at": "2026-05-29T11:18:40+0900",
+      "completed_at": "2026-05-29T11:19:55+0900",
+      "summary": "HomePage TopAppBar rightAction에 ThemeToggleButton 추가(계정 아이콘 왼쪽). 빌드·68 테스트 통과."
+    },
+    {
+      "step": 3,
+      "name": "settings-remove-theme",
+      "status": "completed",
+      "started_at": "2026-05-29T11:19:56+0900",
+      "completed_at": "2026-05-29T11:22:44+0900",
+      "summary": "SettingsPage에서 THEME 섹션·theme state·effect·themeOptions·joinClasses·lib/theme import 제거, 테마 테스트 1건 제거. 빌드·67 테스트 통과."
+    },
+    {
+      "step": 4,
+      "name": "filter-chips",
+      "status": "completed",
+      "started_at": "2026-05-29T11:22:44+0900",
+      "completed_at": "2026-05-29T11:24:53+0900",
+      "summary": "Chip.tsx type 변형: rounded-xs→rounded-full, font-mono text-[12px]→font-body text-[13px]로 type/status 일관화. AtomicComponents.test.tsx 단언 동반 갱신. 빌드·67 테스트 통과."
+    },
+    {
+      "step": 5,
+      "name": "feed-card-redesign",
+      "status": "completed",
+      "started_at": "2026-05-29T11:24:54+0900",
+      "completed_at": "2026-05-29T11:30:47+0900",
+      "summary": "4종 카드(Article/Video/Memo/Image)를 컴팩트 리스트 행으로 재설계. 좌측 64x64 소형 썸네일+우측 메타·제목·메모. ImageCard object-contain, VideoCard play배지 유지. 빌드·67 테스트 통과."
+    },
+    {
+      "step": 6,
+      "name": "item-form-extract",
+      "status": "completed",
+      "started_at": "2026-05-29T11:30:47+0900",
+      "completed_at": "2026-05-29T11:36:51+0900",
+      "summary": "ItemForm 공용 컴포넌트 신설(제목/다중URL/다중이미지/메모/og:title/type칩). 최소 렌더 테스트 6건 추가. 빌드·73 테스트 통과."
+    },
+    {
+      "step": 7,
+      "name": "new-item-rich",
+      "status": "completed",
+      "started_at": "2026-05-29T15:55:09+0900",
+      "completed_at": "2026-05-29T16:01:12+0900",
+      "summary": "NewItemPage를 ItemForm(mode=create) 기반으로 교체. Web Share Target(?title/?url/?text) initialValues 매핑 보존. 다중 URL/이미지 첨부 저장. 테스트 갱신+다중 URL 테스트 추가. 빌드·74 테스트 통과."
+    },
+    {
+      "step": 8,
+      "name": "edit-item-migrate",
+      "status": "completed",
+      "started_at": "2026-05-29T16:01:25+0900",
+      "completed_at": "2026-05-29T16:10:56+0900",
+      "summary": "ItemDetailPage 수정 폼을 ItemForm(mode=edit)으로 이전. 고아 상태 5개·함수 5개 제거. 테스트 ID 기준 갱신. 빌드·74 테스트 통과."
+    }
+  ],
+  "created_at": "2026-05-29T11:12:09+0900"
+}

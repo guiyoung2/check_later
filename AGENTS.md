@@ -175,6 +175,6 @@ python3 scripts/execute.py {task-name} --push  # 실행 후 push
 
 # Python 환경
 
-- 필요 버전: Python 3.11
-- Mac: `python3.11 scripts/execute.py <task-name>`
-- Windows: `py -3.11 scripts/execute.py <task-name>`
+- 필요 버전: Python 3.8 이상 (3.8, 3.9, 3.10, 3.11, 3.12, 3.13 모두 가능)
+- Mac: `python3 scripts/execute.py <task-name>`
+- Windows: `python scripts/execute.py <task-name>`

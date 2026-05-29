@@ -1,24 +1,33 @@
 import type { JSX } from 'react';
-import { useTheme } from '../hooks/useTheme';
+import { useState } from 'react';
+import { isDarkActive, setThemePreference, type ThemePreference } from '../lib/theme';
 
 interface ThemeToggleButtonProps {
   className?: string;
 }
 
+// 다크/라이트 토글 버튼 (설정과 동일한 영속 저장을 공유)
 export function ThemeToggleButton({ className = '' }: ThemeToggleButtonProps): JSX.Element {
-  const { isDark, toggleTheme } = useTheme();
-  const label = isDark ? '라이트 모드로 전환' : '다크 모드로 전환';
+  const [dark, setDark] = useState(isDarkActive);
+  const label = dark ? '라이트 모드로 전환' : '다크 모드로 전환';
+
+  function handleToggle() {
+    const next: ThemePreference = dark ? 'light' : 'dark';
+    setThemePreference(next);
+    setDark(next === 'dark');
+  }
+
   const baseClassName =
-    'flex h-11 w-11 items-center justify-center rounded-[8px] text-text-sub hover:bg-surface hover:text-text-primary transition-colors';
+    'flex h-11 w-11 items-center justify-center rounded-sm text-text-muted transition-[background-color,color] duration-200 ease-out hover:bg-surface-sub hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none';
 
   return (
     <button
       type="button"
-      onClick={toggleTheme}
+      onClick={handleToggle}
       aria-label={label}
       className={`${baseClassName} ${className}`.trim()}
     >
-      {isDark ? <SunIcon /> : <MoonIcon />}
+      {dark ? <SunIcon /> : <MoonIcon />}
     </button>
   );
 }

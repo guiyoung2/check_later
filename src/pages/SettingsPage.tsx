@@ -1,23 +1,54 @@
 import type { JSX } from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { BottomNav } from '../components/ui/BottomNav';
+import { Button } from '../components/ui/Button';
+import { Divider } from '../components/ui/Divider';
+import { SideNav } from '../components/ui/SideNav';
+import { TopAppBar } from '../components/ui/TopAppBar';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
-
+import { itemsService } from '../services/itemsService';
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-// 설정 페이지: 계정 정보, 로그아웃, PWA 설치
+interface NavigatorWithStandalone extends Navigator {
+  standalone?: boolean;
+}
+
+const numberFormatter = new Intl.NumberFormat('ko-KR');
+
+function isAppInstalled() {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    Boolean((navigator as NavigatorWithStandalone).standalone)
+  );
+}
+
+function SectionHeader({ children }: { children: string }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <h2 className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.08em] text-text-muted uppercase">
+        {children}
+      </h2>
+      <Divider />
+    </div>
+  );
+}
+
+// 설정 페이지: 계정, 설치, 데이터 상태
 export default function SettingsPage(): JSX.Element {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  // lazy initializer로 초기값 설정 → useEffect 안에서 setState 호출 불필요
-  const [isInstalled] = useState(
-    () => window.matchMedia('(display-mode: standalone)').matches
-  );
+  const [isInstalled, setIsInstalled] = useState(isAppInstalled);
+  const { data: items, isLoading: isCountLoading, isError: isCountError } = useQuery({
+    queryKey: ['items', 'settings-count'],
+    queryFn: () => itemsService.list(),
+  });
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -28,11 +59,11 @@ export default function SettingsPage(): JSX.Element {
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
-  // PWA 설치 프롬프트 호출
   async function handleInstall() {
     if (!deferredPrompt) return;
     await deferredPrompt.prompt();
     setDeferredPrompt(null);
+    setIsInstalled(isAppInstalled());
   }
 
   // 로그아웃 후 루트에서 비인증 랜딩을 보여준다
@@ -41,59 +72,61 @@ export default function SettingsPage(): JSX.Element {
     await supabase.auth.signOut();
   }
 
-  return (
-    <div className="min-h-screen bg-bg">
-      <header className="sticky top-0 z-10 bg-bg border-b border-border flex items-center px-4 h-14">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          aria-label="뒤로가기"
-          className="flex items-center justify-center w-9 h-9 rounded-[8px] text-text-sub hover:text-text-primary hover:bg-surface"
-        >
-          ←
-        </button>
-        <span className="ml-3 text-base font-semibold text-text-primary">설정</span>
-      </header>
+  const itemCount = isCountLoading || isCountError ? '—' : `${numberFormatter.format(items?.length ?? 0)}개`;
 
-      <div className="px-4 py-5 max-w-lg mx-auto flex flex-col gap-6">
-        {/* 계정 정보 섹션 */}
-        <section className="flex flex-col gap-3">
-          <h2 className="text-xs font-medium text-text-sub uppercase tracking-wide">계정</h2>
-          <div className="bg-surface border border-border rounded-[6px] px-4 py-3 flex flex-col gap-3">
-            <p className="text-sm text-text-primary">{user?.email ?? '—'}</p>
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="self-start px-3 py-1.5 rounded-[8px] border border-border text-sm text-text-sub hover:text-text-primary hover:bg-bg transition-colors"
-            >
+  return (
+    <div className="min-h-screen bg-bg pb-16 md:pl-60">
+      <SideNav />
+      <TopAppBar title="설정" />
+
+      <main className="mx-auto flex max-w-[600px] flex-col gap-8 px-6 py-6">
+        <section className="flex flex-col gap-4" aria-labelledby="settings-account">
+          <SectionHeader>ACCOUNT</SectionHeader>
+          <div className="flex min-h-[44px] items-center justify-between gap-4">
+            <p id="settings-account" className="truncate font-body text-[14px] leading-[1.5] text-text-primary">
+              {user?.email ?? '로그인 정보 없음'}
+            </p>
+            <Button type="button" variant="secondary" size="sm" onClick={handleSignOut}>
               로그아웃
-            </button>
+            </Button>
           </div>
         </section>
 
-        {/* PWA 설치 섹션 */}
-        {(deferredPrompt || isInstalled) && (
-          <section className="flex flex-col gap-3">
-            <h2 className="text-xs font-medium text-text-sub uppercase tracking-wide">앱 설치</h2>
-            <div className="bg-surface border border-border rounded-[6px] px-4 py-3 flex flex-col gap-3">
-              {isInstalled ? (
-                <p className="text-sm text-text-sub">이미 홈 화면에 설치되어 있어요</p>
-              ) : (
-                <>
-                  <p className="text-sm text-text-sub">홈 화면에 추가하면 앱처럼 빠르게 열 수 있어요</p>
-                  <button
-                    type="button"
-                    onClick={handleInstall}
-                    className="self-start px-3 py-1.5 rounded-[8px] bg-accent text-white text-sm font-medium"
-                  >
-                    홈 화면에 추가
-                  </button>
-                </>
-              )}
+        <section className="flex flex-col gap-4" aria-labelledby="settings-app">
+          <SectionHeader>APP</SectionHeader>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <h3 id="settings-app" className="font-body text-[16px] leading-[1.6] font-medium text-text-primary">
+                앱 설치
+              </h3>
+              <p className="font-body text-[14px] leading-[1.5] text-text-muted">
+                홈 화면에 추가하면 더 빠르게 사용할 수 있어요
+              </p>
             </div>
-          </section>
-        )}
-      </div>
+            {isInstalled ? (
+              <p className="font-body text-[14px] leading-[1.5] text-text-muted">이미 설치되어 있어요</p>
+            ) : (
+              <Button type="button" variant="secondary" size="sm" className="self-start" onClick={handleInstall}>
+                홈 화면에 추가
+              </Button>
+            )}
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-4" aria-labelledby="settings-data">
+          <SectionHeader>DATA</SectionHeader>
+          <div className="flex min-h-[44px] items-center justify-between gap-4">
+            <p id="settings-data" className="font-body text-[14px] leading-[1.5] text-text-primary">
+              저장된 항목
+            </p>
+            <p className="font-mono text-[12px] leading-[1.2] font-medium tracking-[0.04em] text-text-muted">
+              {itemCount}
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <BottomNav />
     </div>
   );
 }

@@ -2,17 +2,12 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
+import { applyThemePreference, getStoredTheme } from './lib/theme'
 
-// 시스템 감지 + localStorage override 우선
-const _mql = window.matchMedia('(prefers-color-scheme: dark)');
-const _stored = localStorage.getItem('theme');
-const _isDark = _stored !== null ? _stored === 'dark' : _mql.matches;
-document.documentElement.classList.toggle('dark', _isDark);
-_mql.addEventListener('change', (e) => {
-  // 수동 설정이 없을 때만 시스템 따라감
-  if (localStorage.getItem('theme') === null) {
-    document.documentElement.classList.toggle('dark', e.matches);
-  }
+// 저장된 테마 환경설정을 초기 적용 (system이면 OS 선호 따라감)
+applyThemePreference(getStoredTheme());
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  if (getStoredTheme() === 'system') applyThemePreference('system');
 });
 
 import App from './App.tsx'
