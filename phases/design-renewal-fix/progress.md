@@ -1,7 +1,7 @@
 # design-renewal-fix 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T16:00:00+0900 — Step 8/9 시작 전
+2026-05-29T16:01:12+0900 — Step 8/9 완료
 
 ## 완료된 작업
 - Step 0: landing-redesign — LandingPage: 헤더 우상단 Login 버튼 추가, 히어로 2칼럼(텍스트+MiniPreview 목업), 카피 교체, 테스트 갱신. 빌드·68 테스트 통과.
@@ -11,7 +11,7 @@
 - Step 4: filter-chips — Chip.tsx type 변형: rounded-xs→rounded-full, font-mono text-[12px]→font-body text-[13px]로 type/status 일관화. AtomicComponents.test.tsx 단언 동반 갱신. 빌드·67 테스트 통과.
 - Step 5: feed-card-redesign — 4종 카드(Article/Video/Memo/Image)를 컴팩트 리스트 행으로 재설계. 좌측 64x64 소형 썸네일+우측 메타·제목·메모. ImageCard object-contain, VideoCard play배지 유지. 빌드·67 테스트 통과.
 - Step 6: item-form-extract — ItemForm 공용 컴포넌트 신설(제목/다중URL/다중이미지/메모/og:title/type칩). 최소 렌더 테스트 6건 추가. 빌드·73 테스트 통과.
-- Step 7: new-item-rich — NewItemPage를 ItemForm(mode="create") 기반으로 교체. Web Share Target(?title/?url/?text) initialValues 매핑 보존. 다중 URL/이미지 첨부 저장. 테스트 갱신+다중 URL 테스트 추가. 빌드·74 테스트 통과.
+- Step 7: new-item-rich — NewItemPage를 ItemForm(mode=create) 기반으로 교체. Web Share Target(?title/?url/?text) initialValues 매핑 보존. 다중 URL/이미지 첨부 저장. 테스트 갱신+다중 URL 테스트 추가. 빌드·74 테스트 통과.
 
 ## 현재 진행 중
 - Step 8: edit-item-migrate
