@@ -1,10 +1,16 @@
-// URL에서 og:title 추출 시도. CORS 실패 또는 파싱 실패 시 null 반환.
+// URL에서 제목 추출. YouTube는 oEmbed, 나머지는 CORS 차단으로 skip.
 export async function fetchOgTitle(url: string): Promise<string | null> {
   try {
-    const res = await fetch(url);
-    const html = await res.text();
-    const match = html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i);
-    return match ? match[1] : null;
+    if (/youtube\.com|youtu\.be/i.test(url)) {
+      const res = await fetch(
+        `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`,
+      );
+      if (!res.ok) return null;
+      const data = await res.json();
+      return (data.title as string) ?? null;
+    }
+    // 비YouTube: 브라우저 CORS 차단으로 실패하므로 시도하지 않음
+    return null;
   } catch {
     return null;
   }
