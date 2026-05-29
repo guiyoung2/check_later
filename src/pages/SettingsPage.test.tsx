@@ -90,8 +90,6 @@ describe('SettingsPage', () => {
     vi.mocked(supabase.auth.signOut).mockResolvedValue({ error: null });
     vi.mocked(itemsService.list).mockResolvedValue(items);
     window.matchMedia = createMatchMedia(false);
-    localStorage.clear();
-    document.documentElement.classList.remove('light', 'dark');
   });
 
   it('로그아웃 후 루트 경로로 이동한다', async () => {
@@ -120,24 +118,6 @@ describe('SettingsPage', () => {
 
     expect(screen.getByText('랜딩')).toBeInTheDocument();
     resolveSignOut({ error: null });
-  });
-
-  it('테마 세그먼트 선택에 따라 documentElement class를 토글한다', async () => {
-    const user = userEvent.setup();
-
-    renderSettingsPage();
-
-    await user.click(screen.getByRole('button', { name: '다크' }));
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-
-    await user.click(screen.getByRole('button', { name: '라이트' }));
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
-    expect(document.documentElement.classList.contains('light')).toBe(true);
-
-    window.matchMedia = createMatchMedia(true);
-    await user.click(screen.getByRole('button', { name: '시스템' }));
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(document.documentElement.classList.contains('light')).toBe(false);
   });
 
   it('저장된 항목 수를 표시한다', async () => {

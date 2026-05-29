@@ -10,13 +10,6 @@ import { TopAppBar } from '../components/ui/TopAppBar';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
 import { itemsService } from '../services/itemsService';
-import {
-  applyThemePreference,
-  getStoredTheme,
-  setThemePreference,
-  type ThemePreference,
-} from '../lib/theme';
-
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
@@ -26,11 +19,6 @@ interface NavigatorWithStandalone extends Navigator {
   standalone?: boolean;
 }
 
-const themeOptions: Array<{ value: ThemePreference; label: string }> = [
-  { value: 'system', label: '시스템' },
-  { value: 'light', label: '라이트' },
-  { value: 'dark', label: '다크' },
-];
 const numberFormatter = new Intl.NumberFormat('ko-KR');
 
 function isAppInstalled() {
@@ -51,17 +39,12 @@ function SectionHeader({ children }: { children: string }) {
   );
 }
 
-function joinClasses(...classes: Array<string | false | undefined>) {
-  return classes.filter(Boolean).join(' ');
-}
-
-// 설정 페이지: 계정, 설치, 테마, 데이터 상태
+// 설정 페이지: 계정, 설치, 데이터 상태
 export default function SettingsPage(): JSX.Element {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(isAppInstalled);
-  const [theme, setTheme] = useState<ThemePreference>(getStoredTheme);
   const { data: items, isLoading: isCountLoading, isError: isCountError } = useQuery({
     queryKey: ['items', 'settings-count'],
     queryFn: () => itemsService.list(),
@@ -75,17 +58,6 @@ export default function SettingsPage(): JSX.Element {
     window.addEventListener('beforeinstallprompt', handler);
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
-
-  useEffect(() => {
-    setThemePreference(theme);
-
-    if (theme !== 'system') return undefined;
-
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => applyThemePreference('system');
-    media.addEventListener('change', handleChange);
-    return () => media.removeEventListener('change', handleChange);
-  }, [theme]);
 
   async function handleInstall() {
     if (!deferredPrompt) return;
@@ -138,30 +110,6 @@ export default function SettingsPage(): JSX.Element {
                 홈 화면에 추가
               </Button>
             )}
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-4" aria-labelledby="settings-theme">
-          <SectionHeader>THEME</SectionHeader>
-          <div id="settings-theme" className="grid grid-cols-3 rounded-sm border border-border bg-surface p-1">
-            {themeOptions.map((option) => {
-              const isSelected = theme === option.value;
-
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => setTheme(option.value)}
-                  aria-pressed={isSelected}
-                  className={joinClasses(
-                    'min-h-[44px] rounded-xs px-3 font-body text-[13px] leading-[1.2] font-medium tracking-[0.02em] transition-[background-color,color,box-shadow] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:outline-none',
-                    isSelected ? 'bg-text-primary text-bg' : 'text-text-muted hover:bg-surface-sub hover:text-text-primary',
-                  )}
-                >
-                  {option.label}
-                </button>
-              );
-            })}
           </div>
         </section>
 

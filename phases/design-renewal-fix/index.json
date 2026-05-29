@@ -29,7 +29,10 @@
     {
       "step": 3,
       "name": "settings-remove-theme",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-05-29T11:19:56+0900",
+      "completed_at": "2026-05-29T11:23:00+0900",
+      "summary": "SettingsPage에서 THEME 섹션·theme state·effect·themeOptions·joinClasses·lib/theme import 제거, 테마 테스트 1건 제거. 빌드·67 테스트 통과."
     },
     {
       "step": 4,

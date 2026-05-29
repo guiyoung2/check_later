@@ -46,9 +46,9 @@
       "id": "feat-6",
       "name": "Settings theme section removed",
       "description": "설정 페이지에서 THEME 섹션과 관련 state/effect 제거, 관련 테스트 정리.",
-      "passes": false,
-      "verified_at": null,
-      "verified_by_step": null
+      "passes": true,
+      "verified_at": "2026-05-29T11:23:00+0900",
+      "verified_by_step": 3
     },
     {
       "id": "feat-7",
