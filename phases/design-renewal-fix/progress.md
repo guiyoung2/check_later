@@ -1,7 +1,7 @@
 # design-renewal-fix 진행 현황
 
 ## 마지막 업데이트
-2026-05-29T16:12:00+0900 — Step 9/9 완료 (task 전체 완료)
+2026-05-29T16:10:56+0900 — Step 9/9 완료
 
 ## 완료된 작업
 - Step 0: landing-redesign — LandingPage: 헤더 우상단 Login 버튼 추가, 히어로 2칼럼(텍스트+MiniPreview 목업), 카피 교체, 테스트 갱신. 빌드·68 테스트 통과.
@@ -15,7 +15,7 @@
 - Step 8: edit-item-migrate — ItemDetailPage 수정 폼을 ItemForm(mode=edit)으로 이전. 고아 상태 5개·함수 5개 제거. 테스트 ID 기준 갱신. 빌드·74 테스트 통과.
 
 ## 현재 진행 중
-없음 — task 전체 완료
+- 모든 step 완료
 
 ## 다음 할 일
 없음 — feat-1~feat-11 모두 passes: true 확인됨.
