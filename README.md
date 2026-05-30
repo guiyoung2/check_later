@@ -3,7 +3,9 @@
 > "나중에 봐야지"를 실제로 다시 꺼내 볼 수 있게 — 카톡만큼 빠른 저장, 카톡에 없는 분류·조회.
 
 영상 링크·글 URL·캡처 이미지·짧은 메모를 한 곳에 모아두고,  
-**형태(영상/글/캡처/메모)와 상태(안 봄/봤음/보관) 두 축으로 필터링**해서 1주일 뒤에도 30초 안에 찾아볼 수 있는 개인용 북마크 PWA.
+**형태(영상/글/캡처/메모)와 상태(안 봄/봤음/보관) 두 축으로 필터링**해서 1주일 뒤에도 30초 안에 찾아볼 수 있는 **모바일 우선 PWA**.
+
+홈 화면에 설치하면 네이티브 앱처럼 동작합니다 — 외부 앱 공유 메뉴에 바로 뜨고, 주소창 없이 전체 화면으로 실행됩니다.
 
 **→ 배포 주소: [https://check-later.vercel.app](https://check-later.vercel.app)**  
 **→ 레포지토리: [github.com/guiyoung2/check_later](https://github.com/guiyoung2/check_later)**
@@ -12,6 +14,7 @@
 
 ## 목차
 
+- [모바일 앱으로 설치하기](#모바일-앱으로-설치하기)
 - [프로젝트 배경](#프로젝트-배경)
 - [핵심 기능](#핵심-기능)
 - [기술 스택과 선택 이유](#기술-스택과-선택-이유)
@@ -20,6 +23,38 @@
 - [아키텍처](#아키텍처)
 - [로컬 실행](#로컬-실행)
 - [개발 과정 기록](#개발-과정-기록)
+
+---
+
+## 모바일 앱으로 설치하기
+
+PWA(Progressive Web App)로 제작되어 **홈 화면에 설치하면 앱스토어 없이 네이티브 앱과 동일한 UX**로 사용할 수 있습니다.
+
+<div align="center">
+  <img src="docs/screenshots/01-landing.jpg" width="22%" alt="랜딩 화면" />
+  <img src="docs/screenshots/03-feed.jpg" width="22%" alt="메인 피드" />
+  <img src="docs/screenshots/02-form.jpg" width="22%" alt="항목 저장" />
+  <img src="docs/screenshots/04-folder.jpg" width="22%" alt="폴더 뷰" />
+</div>
+<div align="center">
+  <sub>랜딩 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 메인 피드 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 항목 저장 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 폴더 뷰</sub>
+</div>
+
+### iOS (Safari)
+
+1. Safari에서 **[check-later.vercel.app](https://check-later.vercel.app)** 접속
+2. 하단 **공유 버튼** (□↑) 탭
+3. **"홈 화면에 추가"** 선택
+4. 이름 확인 후 오른쪽 위 **추가** 탭
+
+### Android (Chrome)
+
+1. Chrome에서 **[check-later.vercel.app](https://check-later.vercel.app)** 접속
+2. 주소창 오른쪽 **설치 버튼** 탭 (또는 우상단 메뉴 → **앱 설치**)
+3. **설치** 확인
+
+> 설치 후 유튜브·크롬 등 외부 앱의 **공유 메뉴**에 Check Later가 나타납니다.  
+> 탭 한 번으로 현재 앱을 떠나지 않고 바로 저장됩니다.
 
 ---
 
@@ -201,6 +236,34 @@ const [menuOpen, setMenuOpen] = useState(false);
 | **소스 파일** | 48개 (`.tsx`/`.ts`, 테스트 제외) |
 | **접근성** | WCAG AA 기준, 터치 타깃 ≥44px, 키보드 네비게이션 |
 | **PWA** | Lighthouse PWA 체크리스트 충족, 홈 화면 설치 가능 |
+
+### Lighthouse 실측 (모바일 · 배포 환경)
+
+`check-later.vercel.app`를 Lighthouse(모바일, CLI)로 측정한 결과입니다.
+
+| 카테고리 | 점수 |
+|---|---|
+| Accessibility | **100** |
+| Best Practices | **100** |
+| Performance | 76 |
+| SEO | 54 |
+
+| Core Web Vitals | 값 | 평가 |
+|---|---|---|
+| CLS (누적 레이아웃 이동) | **0.002** | Good |
+| TBT (총 차단 시간) | **0 ms** | Good |
+| FCP (최초 콘텐츠 페인트) | 1.9 s | — |
+| LCP (최대 콘텐츠 페인트) | 5.8 s | 개선 과제 |
+
+### 번들 크기 (프로덕션 빌드)
+
+| 자산 | Raw | Gzip |
+|---|---|---|
+| JS (`index`) | 543.88 kB | **152.93 kB** |
+| CSS | 39.54 kB | **7.77 kB** |
+| 초기 전송 합계 | — | **≈ 160.7 kB** |
+
+> 165개 모듈, 단일 청크 구성. CSR 구조상 LCP(5.8s)는 메인 번들 파싱·실행 이후 콘텐츠가 렌더되는 데서 발생하며, **라우트 기반 코드 스플리팅을 다음 개선 과제로 식별**했습니다. CLS 0.002 · TBT 0 ms · Accessibility 100 · Best Practices 100은 레이아웃 안정성·메인 스레드 응답성·접근성 측면의 강점을 보여줍니다. SEO 54는 인증 기반 개인용 앱 특성상 우선순위가 낮은 항목입니다.
 
 ---
 
