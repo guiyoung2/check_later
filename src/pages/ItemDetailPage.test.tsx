@@ -46,6 +46,7 @@ vi.mock('../components/ui/Toast', () => ({
 vi.mock('../services/storageService', () => ({
   storageService: {
     getSignedUrl: vi.fn(),
+    getSignedUrls: vi.fn(),
     upload: vi.fn(),
   },
 }));
@@ -92,6 +93,7 @@ describe('ItemDetailPage', () => {
     vi.clearAllMocks();
     useItemState.value = { data: item, isLoading: false, isError: false };
     vi.mocked(itemAttachmentsService.listByItemId).mockResolvedValue([]);
+    vi.mocked(storageService.getSignedUrls).mockResolvedValue({});
   });
 
   it('로딩 중에는 상세 레이아웃 skeleton을 표시한다', () => {
@@ -170,7 +172,9 @@ describe('ItemDetailPage', () => {
         created_at: new Date().toISOString(),
       },
     ]);
-    vi.mocked(storageService.getSignedUrl).mockResolvedValue('https://signed.example/image.png');
+    vi.mocked(storageService.getSignedUrls).mockResolvedValue({
+      'user-1/item-1.png': 'https://signed.example/image.png',
+    });
 
     renderPage();
 

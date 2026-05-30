@@ -17,14 +17,14 @@ vi.mock('../lib/supabase', () => ({
 }));
 
 describe('storageService', () => {
-  it('파일이 없으면 signed URL 요청을 보내지 않고 null을 반환한다', async () => {
-    list.mockResolvedValue({ data: [], error: null });
+  it('createSignedUrl 에러 시 null을 반환한다', async () => {
+    createSignedUrl.mockResolvedValue({ data: null, error: { message: 'not found' } });
 
     const result = await storageService.getSignedUrl('user-1/item-1.webp');
 
     expect(result).toBeNull();
     expect(supabase.storage.from).toHaveBeenCalledWith('item-images');
-    expect(list).toHaveBeenCalledWith('user-1', { search: 'item-1.webp', limit: 1 });
-    expect(createSignedUrl).not.toHaveBeenCalled();
+    expect(createSignedUrl).toHaveBeenCalledWith('user-1/item-1.webp', 3600);
+    expect(list).not.toHaveBeenCalled();
   });
 });

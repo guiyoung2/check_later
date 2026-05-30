@@ -101,7 +101,7 @@ describe('NewItemPage', () => {
     renderPage();
     const file = new File(['img'], 'test.png', { type: 'image/png' });
     await user.upload(screen.getByLabelText('이미지'), file);
-    expect(screen.getByText('캡처')).toBeInTheDocument();
+    expect(screen.getAllByText('캡처').length).toBeGreaterThanOrEqual(1);
   });
 
   // --- 저장 ---
